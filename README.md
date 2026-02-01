@@ -9,8 +9,8 @@
  ## 🚀 Sessão 1: Configuração do Ambiente
 
  ### 1. Infraestrutura
- - Banco de Dados: PostgreSQL 18.
- - Versão do .NET SDK: 10.0.102.
+ - Banco de Dados: PostgreSQL 18. (Necessita Instalar)
+ - Versão do .NET SDK: 10.0.102. (Necessita Instalar)
  - .NET WebApi.
  - .NET Blazor.
 
@@ -19,6 +19,9 @@
  ## 🚀 Sessão 2: Criação da API
 
  ### 1. Criação da pasta Source
+
+(Todos os comandos a seguir são utilizados )
+
  Criação da pasta "src" na raiz para organizar o código fonte.
 
  ```bash
@@ -51,7 +54,7 @@
 
  ### 1. Modelagem de Dados (Code-First)
 
- Acesse a pasta do projeto e crie as pastas organizacionais.
+ Acesse a pasta do projeto API e crie as pastas organizacionais.
 
  ```bash
  mkdir Models
