@@ -317,3 +317,413 @@
  1. Observe no terminal qual porta local foi aberta (geralmente `http:localhost:5000` ou similar).
  2. Abra o navegador e acesse: `http:localhost:5000/swagger`.
  3. Você verá a lista de endpoints. Clique em **POST /api/livros**, depois em "Try it out" e insira um JSON de exemplo para cadastrar seu primeiro livro.
+
+  ## 🚀 Sessão 5: Criação do Frontend (Blazor WebAssembly)
+
+ O Frontend será uma aplicação Single Page Application (SPA) que consome a API.
+ Utilizaremos a biblioteca MudBlazor para agilizar o design (Material Design).
+
+ ### 1. Criação do Projeto
+
+ Volte para a pasta `src` e crie o projeto web ao lado da API.
+
+ ```bash
+ cd ..
+ # (Certifique-se de que está na pasta "src")
+
+ # Cria o projeto Blazor WebAssembly Standalone
+ dotnet new blazorwasm -n LivrariaCentral.Web
+
+ # Entra na pasta
+ cd LivrariaCentral.Web
+ ```
+
+ ### 2. Instalação da Biblioteca Visual (MudBlazor)
+
+ Instala o pacote de componentes (Gráficos, Tabelas, Botões).
+
+ ```bash
+ dotnet add package MudBlazor
+ ```
+
+ ### 3. Configuração Inicial do Layout
+
+ Precisamos configurar o MudBlazor nos arquivos base do projeto.
+
+ #### A. Importações Globais (_Imports.razor)
+ Adicione as linhas abaixo no arquivo `_Imports.razor` para não precisar repetir em toda página.
+
+ ```razor
+ @using System.Net.Http
+ @using System.Net.Http.Json
+ @using Microsoft.AspNetCore.Components.Forms
+ @using Microsoft.AspNetCore.Components.Routing
+ @using Microsoft.AspNetCore.Components.Web
+ @using Microsoft.AspNetCore.Components.Web.Virtualization
+ @using Microsoft.AspNetCore.Components.WebAssembly.Http
+ @using Microsoft.JSInterop
+ @using LivrariaCentral.Web
+ @using LivrariaCentral.Web.Layout
+ // --- Adicione estas linhas do MudBlazor ---
+ @using MudBlazor
+ @using MudBlazor.Components
+ ```
+
+ #### B. Referências de CSS e JS (wwwroot/index.html)
+ Abra o arquivo `wwwroot/index.html` e adicione as referências dentro da tag `<head>` e `<body>`.
+
+ ```html
+ <head>
+     ...
+          <link href="[https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap](https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap)" rel="stylesheet" />
+     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+ </head>
+
+ <body>
+     ...
+          <script src="_framework/blazor.webassembly.js"></script>
+     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+ </body>
+ ```
+
+ #### C. Registro de Serviços (Program.cs)
+ Precisamos avisar o .NET para carregar o MudBlazor na memória.
+ Substitua o conteúdo do `Program.cs` por:
+
+ ```csharp
+ using Microsoft.AspNetCore.Components.Web;
+ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+ using LivrariaCentral.Web;
+ using MudBlazor.Services; // Importante
+
+ var builder = WebAssemblyHostBuilder.CreateDefault(args);
+ builder.RootComponents.Add<App>("#app");
+ builder.RootComponents.Add<HeadOutlet>("head::after");
+
+ // Configura o HttpClient para apontar para nossa API (Endereço Local)
+ // Nota: Vamos ajustar essa URL mais tarde quando rodarmos os dois juntos
+ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5000") });
+
+ // Adiciona os serviços do MudBlazor
+ builder.Services.AddMudServices();
+
+ await builder.Build().RunAsync();
+ ```
+
+ ### 4. Teste Inicial
+ Rode o projeto para ver se a estrutura básica e o MudBlazor carregam sem erros.
+
+ ```bash
+ dotnet run
+ ```
+ Abra o link mostrado no terminal (ex: http://localhost:5xxx). Você verá a tela padrão do Blazor.
+
+  ### 5. Aplicando o Layout de Dashboard (MainLayout)
+
+ Vamos substituir o layout padrão pelo layout do MudBlazor (Menu Lateral + Barra Superior).
+
+ **Arquivo: `Layout/MainLayout.razor`**
+ Apague TODO o conteúdo deste arquivo e cole o código abaixo:
+
+ ```razor
+ @inherits LayoutComponentBase
+
+<MudThemeProvider /> 
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudText Typo="Typo.h6" Class="ml-3">Livraria Central</MudText>
+        <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Filled.Person" Color="Color.Inherit" />
+    </MudAppBar>
+
+    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+        <MudNavMenu>
+            <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+            <MudNavLink Href="/livros" Icon="@Icons.Material.Filled.LibraryBooks">Livros</MudNavLink>
+            <MudNavLink Href="/configuracoes" Icon="@Icons.Material.Filled.Settings">Configurações</MudNavLink>
+        </MudNavMenu>
+    </MudDrawer>
+
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    bool _drawerOpen = true;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}
+ ```
+
+ ### 6. Testando o Novo Visual
+
+ Salve o arquivo. Se o comando `dotnet run` ainda estiver rodando, pare (Ctrl+C) e rode de novo.
+ Agora você deve ver uma barra azul/roxa no topo e um menu lateral branco clean. O "Hello World" vai aparecer no meio.
+
+  ## 🚀 Sessão 6: Criando o Dashboard (Visual)
+
+ Vamos criar a tela inicial com indicadores de desempenho (KPIs) e um gráfico de vendas.
+ Por enquanto, usaremos dados falsos (hardcoded) para estruturar o layout.
+
+ ### 1. Editando a Página Inicial (Home.razor)
+
+ Vá na pasta `Pages` e abra o arquivo `Home.razor`.
+ Apague TODO o conteúdo e cole o código abaixo:
+
+ ```razor
+ @page "/"
+
+ <MudText Typo="Typo.h4" Class="mb-4">Dashboard</MudText>
+
+ <MudGrid>
+          
+          <MudItem xs="12" sm="6" md="3">
+         <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+             <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;" />
+             <div>
+                 <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Vendas Hoje</MudText>
+                 <MudText Typo="Typo.h5">R$ 1.250,00</MudText>
+             </div>
+         </MudPaper>
+     </MudItem>
+
+          <MudItem xs="12" sm="6" md="3">
+         <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+             <MudIcon Icon="@Icons.Material.Filled.LibraryBooks" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;" />
+             <div>
+                 <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Livros Vendidos</MudText>
+                 <MudText Typo="Typo.h5">45</MudText>
+             </div>
+         </MudPaper>
+     </MudItem>
+
+          <MudItem xs="12" sm="6" md="3">
+         <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+             <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Warning" Class="mx-4" Style="width:54px; height:54px;" />
+             <div>
+                 <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Estoque Baixo</MudText>
+                 <MudText Typo="Typo.h5">3 Títulos</MudText>
+             </div>
+         </MudPaper>
+     </MudItem>
+
+          <MudItem xs="12" sm="6" md="3">
+         <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+             <MudIcon Icon="@Icons.Material.Filled.People" Color="Color.Info" Class="mx-4" Style="width:54px; height:54px;" />
+             <div>
+                 <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Clientes</MudText>
+                 <MudText Typo="Typo.h5">120</MudText>
+             </div>
+         </MudPaper>
+     </MudItem>
+
+     
+     <MudItem xs="12" md="8">
+         <MudPaper Class="pa-4">
+             <MudText Typo="Typo.h6">Vendas dos Últimos 6 Meses</MudText>
+                          <MudChart ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px"></MudChart>
+         </MudPaper>
+     </MudItem>
+
+     <MudItem xs="12" md="4">
+         <MudPaper Class="pa-4">
+             <MudText Typo="Typo.h6">Categorias Mais Vendidas</MudText>
+                          <MudChart ChartType="ChartType.Donut" InputData="@DonutData" InputLabels="@DonutLabels" Width="100%" Height="300px" />
+         </MudPaper>
+     </MudItem>
+
+ </MudGrid>
+
+ @code {
+     // --- Dados Fictícios para o Gráfico de Barras ---
+     public List<ChartSeries> Series = new List<ChartSeries>()
+     {
+         new ChartSeries() { Name = "Vendas (R$)", Data = new double[] { 4000, 2000, 8000, 15000, 6000, 9000 } }
+     };
+
+     public string[] XAxisLabels = { "Jan", "Fev", "Mar", "Abr", "Mai", "Jun" };
+
+     // --- Dados Fictícios para o Gráfico de Pizza ---
+     public double[] DonutData = { 25, 45, 10, 20 };
+     public string[] DonutLabels = { "Ficção", "Técnico", "Romance", "HQs" };
+ }
+ ```
+
+ ### 2. Testando o Dashboard
+
+ Salve o arquivo. Se o projeto estiver rodando (`dotnet run`), a página deve atualizar sozinha (Hot Reload) ou você pode dar F5 no navegador.
+
+ **O que você deve ver:**
+ 1.  4 Cards no topo com números e ícones coloridos.
+ 2.  Um gráfico de barras grande na esquerda.
+ 3.  Um gráfico de rosca (Donut) na direita.
+
+  ## 🚀 Sessão 7: Conectando com a API (Listagem Real)
+
+ Nesta etapa, vamos permitir que o Frontend converse com o Backend (CORS) e criar a tabela de livros.
+
+ ### 1. Configurando CORS na API (Backend)
+
+ Por segurança, os navegadores bloqueiam quando um site (Porta A) tenta acessar uma API (Porta B). Precisamos liberar isso.
+
+ **Arquivo: `src/LivrariaCentral.API/Program.cs`**
+ Adicione as linhas marcadas com `// <---` no seu arquivo `Program.cs` da API.
+
+ ```csharp
+ // ... (códigos anteriores)
+ builder.Services.AddEndpointsApiExplorer();
+ builder.Services.AddSwaggerGen();
+
+ // [ADICIONAR ISSO] Liberar o CORS (Permitir acesso do Frontend)
+ builder.Services.AddCors(options =>
+ {
+     options.AddPolicy("AllowAll",
+         policy =>
+         {
+             policy.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+         });
+ });
+
+ var app = builder.Build();
+
+ // ... (códigos anteriores do Swagger)
+
+ app.UseHttpsRedirection();
+
+ // [ADICIONAR ISSO] Ativar a política de CORS (Antes do Authorization)
+ app.UseCors("AllowAll"); 
+
+ app.UseAuthorization();
+ // ... (resto do código)
+ ```
+
+ ### 2. Modelagem no Frontend
+
+ O Frontend precisa saber o que é um "Livro". Vamos criar uma classe para representar os dados que vêm da API.
+
+ **Crie a pasta:** `src/LivrariaCentral.Web/Models`
+ **Crie o arquivo:** `src/LivrariaCentral.Web/Models/Livro.cs`
+
+ ```csharp
+ namespace LivrariaCentral.Web.Models;
+
+ public class Livro
+ {
+     public int Id { get; set; }
+     public string Titulo { get; set; } = string.Empty;
+     public string Autor { get; set; } = string.Empty;
+     public decimal Preco { get; set; }
+     public int Estoque { get; set; }
+     public DateTime DataCadastro { get; set; }
+ }
+ ```
+
+ ### 3. Criando a Página de Listagem
+
+ Vamos usar o componente `MudDataGrid` que já traz busca, filtro e paginação prontos.
+
+ **Arquivo: `src/LivrariaCentral.Web/Pages/Livros.razor`**
+ (Crie este arquivo dentro da pasta Pages)
+
+ ```razor
+ @page "/livros"
+ @using LivrariaCentral.Web.Models
+ @inject HttpClient Http
+
+ <MudText Typo="Typo.h4" Class="mb-4">Gerenciar Livros</MudText>
+
+ @if (livros == null)
+ {
+     <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+ }
+ else
+ {
+     <MudDataGrid Items="@livros" Filterable="true" SortMode="SortMode.Multiple" QuickFilter="@_quickFilter">
+         <ToolBarContent>
+             <MudText Typo="Typo.h6">Lista de Livros</MudText>
+             <MudSpacer />
+             <MudTextField @bind-Value="_searchString" Placeholder="Buscar..." Adornment="Adornment.Start" Immediate="true"
+                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+         </ToolBarContent>
+         
+         <Columns>
+             <PropertyColumn Property="x => x.Id" Title="#" Sortable="true" Filterable="false" />
+             <PropertyColumn Property="x => x.Titulo" Sortable="true" />
+             <PropertyColumn Property="x => x.Autor" Sortable="true" />
+             <PropertyColumn Property="x => x.Estoque" Title="Qtd." />
+             <PropertyColumn Property="x => x.Preco" Title="Preço" Format="C" />
+             
+                          <TemplateColumn CellClass="d-flex justify-end">
+                 <CellTemplate>
+                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Edit" Color="@Color.Primary" />
+                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Delete" Color="@Color.Error" />
+                 </CellTemplate>
+             </TemplateColumn>
+         </Columns>
+         
+         <PagerContent>
+             <MudDataGridPager T="Livro" />
+         </PagerContent>
+     </MudDataGrid>
+ }
+
+ @code {
+     private List<Livro>? livros;
+     private string _searchString;
+
+     // Função executada quando a página carrega
+     protected override async Task OnInitializedAsync()
+     {
+         try 
+         {
+             // Chama a API para pegar os dados
+             livros = await Http.GetFromJsonAsync<List<Livro>>("api/livros");
+         }
+         catch (Exception ex)
+         {
+             Console.WriteLine($"Erro ao buscar livros: {ex.Message}");
+         }
+     }
+
+     // Lógica da Barra de Busca
+     private Func<Livro, bool> _quickFilter => x =>
+     {
+         if (string.IsNullOrWhiteSpace(_searchString))
+             return true;
+
+         if (x.Titulo.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+             return true;
+
+         if (x.Autor.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+             return true;
+
+         return false;
+     };
+ }
+ ```
+
+ ### 4. Ajuste da URL da API (Importante!)
+
+ Precisamos garantir que o Frontend sabe em qual porta o Backend está rodando.
+
+ 1. Rode a API: entre na pasta `src/LivrariaCentral.API` e digite `dotnet run`.
+ 2. Olhe no terminal qual endereço aparece (ex: `http://localhost:5123`).
+ 3. Vá no `src/LivrariaCentral.Web/Program.cs` e atualize a linha do BaseAddress:
+
+ ```csharp
+ // Substitua a porta 5000 pela porta que apareceu no seu terminal da API
+ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5123") });
+ ```
