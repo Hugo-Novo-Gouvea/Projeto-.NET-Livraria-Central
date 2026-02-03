@@ -1088,3 +1088,377 @@
      public string[] DonutLabels = { "Ficção", "Técnico", "Romance", "HQs" };
  }
  ```
+
+  ## 🚀 Sessão 10: Registrando Vendas (Regra de Negócio Real)
+
+ Vamos criar a tabela de vendas e a lógica para baixar o estoque automaticamente.
+
+ ### 1. O Modelo de Venda (Backend)
+
+ Precisamos criar uma tabela para guardar o histórico de vendas.
+
+ **Arquivo: `src/LivrariaCentral.API/Models/Venda.cs`** (Crie este arquivo/pasta se não existir)
+
+ ```csharp
+ namespace LivrariaCentral.API.Models;
+
+ public class Venda
+ {
+     public int Id { get; set; }
+     public int LivroId { get; set; } // Qual livro foi vendido
+     public int Quantidade { get; set; }
+     public decimal ValorTotal { get; set; }
+     public DateTime DataVenda { get; set; } = DateTime.UtcNow;
+ }
+ ```
+
+ ### 2. Atualizando o Banco de Dados (AppDbContext)
+
+ Avise o Entity Framework que existe uma nova tabela.
+
+ **Arquivo: `src/LivrariaCentral.API/Data/AppDbContext.cs`**
+ Adicione a linha `public DbSet<Venda> Vendas { get; set; }`
+
+ ```csharp
+ // ... imports
+ public class AppDbContext : DbContext
+ {
+     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+     public DbSet<Livro> Livros { get; set; }
+     public DbSet<Venda> Vendas { get; set; } // <--- ADICIONE ESTA LINHA
+ }
+ ```
+
+ ### 3. Rodando a Migration (Criar tabela no PostgreSQL)
+
+ Pare a API (`Ctrl+C`). No terminal da pasta `src/LivrariaCentral.API`, rode:
+
+ ```bash
+ dotnet ef migrations add CriandoVendas
+ dotnet ef database update
+ ```
+
+ ### 4. A Lógica da Venda (Controller)
+
+ Aqui está a mágica. O Endpoint não vai só salvar, ele vai checar o estoque e diminuir a quantidade.
+
+ **Arquivo: `src/LivrariaCentral.API/Controllers/VendasController.cs`**
+
+ ```csharp
+ using LivrariaCentral.API.Data;
+ using LivrariaCentral.API.Models;
+ using Microsoft.AspNetCore.Mvc;
+ using Microsoft.EntityFrameworkCore;
+
+ namespace LivrariaCentral.API.Controllers;
+
+ [ApiController]
+ [Route("api/vendas")]
+ public class VendasController : ControllerBase
+ {
+     private readonly AppDbContext _context;
+
+     public VendasController(AppDbContext context)
+     {
+         _context = context;
+     }
+
+     [HttpPost]
+     public async Task<IActionResult> RealizarVenda([FromBody] Venda novaVenda)
+     {
+         // 1. Busca o livro no banco
+         var livro = await _context.Livros.FindAsync(novaVenda.LivroId);
+         if (livro == null) return NotFound("Livro não encontrado.");
+
+         // 2. Valida se tem estoque suficiente
+         if (livro.Estoque < novaVenda.Quantidade)
+         {
+             return BadRequest($"Estoque insuficiente. Restam apenas {livro.Estoque} unidades.");
+         }
+
+         // 3. Cria o registro da venda
+         novaVenda.ValorTotal = livro.Preco * novaVenda.Quantidade;
+         novaVenda.DataVenda = DateTime.UtcNow;
+         _context.Vendas.Add(novaVenda);
+
+         // 4. ATUALIZA O ESTOQUE DO LIVRO (Baixa automática)
+         livro.Estoque -= novaVenda.Quantidade;
+         
+         // 5. Salva tudo numa única transação
+         await _context.SaveChangesAsync();
+
+         return Ok(new { mensagem = "Venda realizada com sucesso!", novoEstoque = livro.Estoque });
+     }
+ }
+ ```
+
+ ### 5. O Modal de Venda (Frontend)
+
+ Vamos criar uma janelinha simples para digitar a quantidade.
+
+ **Arquivo: `src/LivrariaCentral.Web/Pages/VendaDialog.razor`**
+
+ ```razor
+ @using MudBlazor
+
+ <MudDialog>
+     <DialogContent>
+         <MudText Class="mb-3">Vendendo: <b>@TituloLivro</b></MudText>
+         <MudText Class="mb-3">Preço Unitário: <b>@PrecoUnitario.ToString("C")</b></MudText>
+         
+         <MudNumericField @bind-Value="Quantidade" Label="Quantidade" Variant="Variant.Outlined" Min="1" />
+         
+         <MudText Color="Color.Success" Typo="Typo.h6" Class="mt-4">
+             Total: @((PrecoUnitario * Quantidade).ToString("C"))
+         </MudText>
+     </DialogContent>
+     <DialogActions>
+         <MudButton OnClick="Cancel">Cancelar</MudButton>
+         <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="Submit">Confirmar Venda</MudButton>
+     </DialogActions>
+ </MudDialog>
+
+ @code {
+     [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+
+     [Parameter] public string TituloLivro { get; set; } = "";
+     [Parameter] public decimal PrecoUnitario { get; set; }
+
+     public int Quantidade { get; set; } = 1;
+
+     void Submit() => MudDialog.Close(DialogResult.Ok(Quantidade));
+     void Cancel() => MudDialog.Cancel();
+ }
+ ```
+
+ ### 6. Botão de Venda na Lista (Frontend)
+
+ Vamos adicionar o botão de cifrão ($) na tabela de livros.
+
+ **Arquivo: `src/LivrariaCentral.Web/Pages/Livros.razor`**
+ 1. Adicione essa classe auxiliar simples no final do arquivo (dentro do @code, lá embaixo):
+
+ ```csharp
+ // Classe simples só para enviar os dados para a API de Vendas
+ public class VendaDTO
+ {
+     public int LivroId { get; set; }
+     public int Quantidade { get; set; }
+ }
+ ```
+
+ 2. Adicione o botão "Vender" na coluna de Ações (dentro do `TemplateColumn`):
+
+ ```razor
+  <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.AttachMoney" Color="@Color.Success" OnClick="@(() => RealizarVenda(context.Item))" />
+ ```
+
+ 3. Adicione a função `RealizarVenda` no bloco `@code`:
+
+ ```csharp
+     // --- Lógica de VENDER ---
+     private async Task RealizarVenda(Livro livro)
+     {
+         var parameters = new DialogParameters 
+         { 
+             ["TituloLivro"] = livro.Titulo,
+             ["PrecoUnitario"] = livro.Preco 
+         };
+         
+         var dialog = await DialogService.ShowAsync<VendaDialog>("Registrar Venda", parameters);
+         var result = await dialog.Result;
+
+         if (result != null && !result.Canceled && result.Data != null)
+         {
+             int qtdVendida = (int)result.Data;
+
+             // Cria o objeto para mandar pra API
+             var venda = new VendaDTO { LivroId = livro.Id, Quantidade = qtdVendida };
+
+             var response = await Http.PostAsJsonAsync("api/vendas", venda);
+
+             if (response.IsSuccessStatusCode)
+             {
+                 Snackbar.Add($"Venda de {qtdVendida} un. realizada!", Severity.Success);
+                 await CarregarLivros(); // Atualiza a tabela para ver o estoque baixando
+             }
+             else
+             {
+                 // Lê a mensagem de erro da API (ex: Estoque insuficiente)
+                 var erro = await response.Content.ReadAsStringAsync();
+                 Snackbar.Add($"Erro: {erro}", Severity.Error);
+             }
+         }
+     }
+ ```
+
+ 4. Ao final o `Livros.razor` deve ficar assim:
+
+ ```csharp
+
+@page "/livros"
+@using LivrariaCentral.Web.Models
+@inject HttpClient Http
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<MudText Typo="Typo.h4" Class="mb-4">Gerenciar Livros</MudText>
+
+<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="mb-4" OnClick="AdicionarLivro">
+    Novo Livro
+</MudButton>
+
+@if (livros == null)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+    <MudDataGrid Items="@livros" Filterable="true" SortMode="SortMode.Multiple" QuickFilter="@_quickFilter">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Lista de Livros</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Buscar..." Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        
+        <Columns>
+            <PropertyColumn Property="x => x.Id" Title="#" Sortable="true" Filterable="false" />
+            <PropertyColumn Property="x => x.Titulo" Sortable="true" />
+            <PropertyColumn Property="x => x.Autor" Sortable="true" />
+            <PropertyColumn Property="x => x.Estoque" Title="Qtd." />
+            <PropertyColumn Property="x => x.Preco" Title="Preço" Format="C" />
+            
+            <TemplateColumn CellClass="d-flex justify-end">
+                <CellTemplate>
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.AttachMoney" Color="@Color.Success" OnClick="@(() => RealizarVenda(context.Item))" Title="Vender" />
+                    
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Edit" Color="@Color.Primary" OnClick="@(() => EditarLivro(context.Item))" />
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Delete" Color="@Color.Error" OnClick="@(() => DeletarLivro(context.Item))" />
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        
+        <PagerContent>
+            <MudDataGridPager T="Livro" />
+        </PagerContent>
+    </MudDataGrid>
+}
+
+@code {
+    private List<Livro>? livros;
+    private string _searchString = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CarregarLivros();
+    }
+
+    private async Task CarregarLivros()
+    {
+        livros = await Http.GetFromJsonAsync<List<Livro>>("api/livros");
+    }
+
+    // --- Lógica de ADICIONAR ---
+    private async Task AdicionarLivro()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = await DialogService.ShowAsync<LivroDialog>("Novo Livro", options);
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled && result.Data != null)
+        {
+            var novoLivro = (Livro)result.Data;
+            await Http.PostAsJsonAsync("api/livros", novoLivro);
+            Snackbar.Add("Livro cadastrado!", Severity.Success);
+            await CarregarLivros();
+        }
+    }
+
+    // --- Lógica de EDITAR ---
+    private async Task EditarLivro(Livro livro)
+    {
+        var parameters = new DialogParameters { ["Livro"] = livro };
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        
+        var dialog = await DialogService.ShowAsync<LivroDialog>("Editar Livro", parameters, options);
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled && result.Data != null)
+        {
+            var livroEditado = (Livro)result.Data;
+            await Http.PutAsJsonAsync($"api/livros/{livroEditado.Id}", livroEditado);
+            Snackbar.Add("Livro atualizado!", Severity.Success);
+            await CarregarLivros();
+        }
+    }
+
+    // --- Lógica de DELETAR ---
+    private async Task DeletarLivro(Livro livro)
+    {
+        bool? result = await DialogService.ShowMessageBox(
+            "Atenção", 
+            $"Deseja excluir o livro '{livro.Titulo}'?", 
+            yesText: "Excluir", cancelText: "Cancelar");
+
+        if (result == true)
+        {
+            await Http.DeleteAsync($"api/livros/{livro.Id}");
+            Snackbar.Add("Livro excluído.", Severity.Error);
+            await CarregarLivros();
+        }
+    }
+
+    // --- NOVO: Lógica de VENDER ---
+    private async Task RealizarVenda(Livro livro)
+    {
+        var parameters = new DialogParameters 
+        { 
+            ["TituloLivro"] = livro.Titulo,
+            ["PrecoUnitario"] = livro.Preco 
+        };
+        
+        var dialog = await DialogService.ShowAsync<VendaDialog>("Registrar Venda", parameters);
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled && result.Data != null)
+        {
+            int qtdVendida = (int)result.Data;
+
+            // Cria o objeto para mandar pra API
+            var venda = new VendaDTO { LivroId = livro.Id, Quantidade = qtdVendida };
+
+            var response = await Http.PostAsJsonAsync("api/vendas", venda);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Snackbar.Add($"Venda de {qtdVendida} un. realizada!", Severity.Success);
+                await CarregarLivros(); // Atualiza a tabela para ver o estoque baixando
+            }
+            else
+            {
+                // Lê a mensagem de erro da API (ex: Estoque insuficiente)
+                var erro = await response.Content.ReadAsStringAsync();
+                Snackbar.Add($"Erro: {erro}", Severity.Error);
+            }
+        }
+    }
+
+    private Func<Livro, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString)) return true;
+        if (x.Titulo.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (x.Autor.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        return false;
+    };
+
+    // --- NOVO: Classe auxiliar para enviar os dados ---
+    public class VendaDTO
+    {
+        public int LivroId { get; set; }
+        public int Quantidade { get; set; }
+    }
+}
+
+ ```

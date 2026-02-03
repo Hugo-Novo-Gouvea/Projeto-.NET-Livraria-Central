@@ -1,0 +1,30 @@
+@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <MudText Class="mb-3">Vendendo: <b>@TituloLivro</b></MudText>
+        <MudText Class="mb-3">Preço Unitário: <b>@PrecoUnitario.ToString("C")</b></MudText>
+        
+        <MudNumericField @bind-Value="Quantidade" Label="Quantidade" Variant="Variant.Outlined" Min="1" />
+        
+        <MudText Color="Color.Success" Typo="Typo.h6" Class="mt-4">
+            Total: @((PrecoUnitario * Quantidade).ToString("C"))
+        </MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancelar</MudButton>
+        <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="Submit">Confirmar Venda</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public string TituloLivro { get; set; } = "";
+    [Parameter] public decimal PrecoUnitario { get; set; }
+
+    public int Quantidade { get; set; } = 1;
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(Quantidade));
+    void Cancel() => MudDialog.Cancel();
+}

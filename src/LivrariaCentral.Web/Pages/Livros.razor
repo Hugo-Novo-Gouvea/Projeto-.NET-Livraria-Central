@@ -1,128 +1,163 @@
- @page "/livros"
- @using LivrariaCentral.Web.Models
- @inject HttpClient Http
- @inject IDialogService DialogService
- @inject ISnackbar Snackbar
+@page "/livros"
+@using LivrariaCentral.Web.Models
+@inject HttpClient Http
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
 
- <MudText Typo="Typo.h4" Class="mb-4">Gerenciar Livros</MudText>
+<MudText Typo="Typo.h4" Class="mb-4">Gerenciar Livros</MudText>
 
- <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="mb-4" OnClick="AdicionarLivro">
-     Novo Livro
- </MudButton>
+<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="mb-4" OnClick="AdicionarLivro">
+    Novo Livro
+</MudButton>
 
- @if (livros == null)
- {
-     <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
- }
- else
- {
-     <MudDataGrid Items="@livros" Filterable="true" SortMode="SortMode.Multiple" QuickFilter="@_quickFilter">
-         <ToolBarContent>
-             <MudText Typo="Typo.h6">Lista de Livros</MudText>
-             <MudSpacer />
-             <MudTextField @bind-Value="_searchString" Placeholder="Buscar..." Adornment="Adornment.Start" Immediate="true"
-                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-         </ToolBarContent>
-         
-         <Columns>
-             <PropertyColumn Property="x => x.Id" Title="#" Sortable="true" Filterable="false" />
-             <PropertyColumn Property="x => x.Titulo" Sortable="true" />
-             <PropertyColumn Property="x => x.Autor" Sortable="true" />
-             <PropertyColumn Property="x => x.Estoque" Title="Qtd." />
-             <PropertyColumn Property="x => x.Preco" Title="Preço" Format="C" />
-             
-             <TemplateColumn CellClass="d-flex justify-end">
-                 <CellTemplate>
-                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Edit" Color="@Color.Primary" OnClick="@(() => EditarLivro(context.Item))" />
-                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Delete" Color="@Color.Error" OnClick="@(() => DeletarLivro(context.Item))" />
-                 </CellTemplate>
-             </TemplateColumn>
-         </Columns>
-         
-         <PagerContent>
-             <MudDataGridPager T="Livro" />
-         </PagerContent>
-     </MudDataGrid>
- }
+@if (livros == null)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+    <MudDataGrid Items="@livros" Filterable="true" SortMode="SortMode.Multiple" QuickFilter="@_quickFilter">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Lista de Livros</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Buscar..." Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        
+        <Columns>
+            <PropertyColumn Property="x => x.Id" Title="#" Sortable="true" Filterable="false" />
+            <PropertyColumn Property="x => x.Titulo" Sortable="true" />
+            <PropertyColumn Property="x => x.Autor" Sortable="true" />
+            <PropertyColumn Property="x => x.Estoque" Title="Qtd." />
+            <PropertyColumn Property="x => x.Preco" Title="Preço" Format="C" />
+            
+            <TemplateColumn CellClass="d-flex justify-end">
+                <CellTemplate>
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.AttachMoney" Color="@Color.Success" OnClick="@(() => RealizarVenda(context.Item))" Title="Vender" />
+                    
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Edit" Color="@Color.Primary" OnClick="@(() => EditarLivro(context.Item))" />
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Delete" Color="@Color.Error" OnClick="@(() => DeletarLivro(context.Item))" />
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        
+        <PagerContent>
+            <MudDataGridPager T="Livro" />
+        </PagerContent>
+    </MudDataGrid>
+}
 
- @code {
-     private List<Livro>? livros;
-     private string _searchString = string.Empty; // CORREÇÃO 1: Inicializado vazio
+@code {
+    private List<Livro>? livros;
+    private string _searchString = string.Empty;
 
-     protected override async Task OnInitializedAsync()
-     {
-         await CarregarLivros();
-     }
+    protected override async Task OnInitializedAsync()
+    {
+        await CarregarLivros();
+    }
 
-     private async Task CarregarLivros()
-     {
-         livros = await Http.GetFromJsonAsync<List<Livro>>("api/livros");
-     }
+    private async Task CarregarLivros()
+    {
+        livros = await Http.GetFromJsonAsync<List<Livro>>("api/livros");
+    }
 
-     // --- Lógica de ADICIONAR ---
-     private async Task AdicionarLivro()
-     {
-         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-         
-         // CORREÇÃO 2: ShowAsync (aguardando a criação do dialog)
-         var dialog = await DialogService.ShowAsync<LivroDialog>("Novo Livro", options);
-         
-         // Aguarda o resultado do fechamento
-         var result = await dialog.Result;
+    // --- Lógica de ADICIONAR ---
+    private async Task AdicionarLivro()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = await DialogService.ShowAsync<LivroDialog>("Novo Livro", options);
+        var result = await dialog.Result;
 
-         // CORREÇÃO 3: Verificação de nulos segura
-         if (result != null && !result.Canceled && result.Data != null)
-         {
-             var novoLivro = (Livro)result.Data;
-             await Http.PostAsJsonAsync("api/livros", novoLivro);
-             Snackbar.Add("Livro cadastrado!", Severity.Success);
-             await CarregarLivros();
-         }
-     }
+        if (result != null && !result.Canceled && result.Data != null)
+        {
+            var novoLivro = (Livro)result.Data;
+            await Http.PostAsJsonAsync("api/livros", novoLivro);
+            Snackbar.Add("Livro cadastrado!", Severity.Success);
+            await CarregarLivros();
+        }
+    }
 
-     // --- Lógica de EDITAR ---
-     private async Task EditarLivro(Livro livro)
-     {
-         var parameters = new DialogParameters { ["Livro"] = livro };
-         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-         
-         // CORREÇÃO 2: ShowAsync
-         var dialog = await DialogService.ShowAsync<LivroDialog>("Editar Livro", parameters, options);
-         var result = await dialog.Result;
+    // --- Lógica de EDITAR ---
+    private async Task EditarLivro(Livro livro)
+    {
+        var parameters = new DialogParameters { ["Livro"] = livro };
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        
+        var dialog = await DialogService.ShowAsync<LivroDialog>("Editar Livro", parameters, options);
+        var result = await dialog.Result;
 
-         if (result != null && !result.Canceled && result.Data != null)
-         {
-             var livroEditado = (Livro)result.Data;
-             
-             // CORREÇÃO 4: Interpolação de string segura
-             await Http.PutAsJsonAsync($"api/livros/{livroEditado.Id}", livroEditado);
-             
-             Snackbar.Add("Livro atualizado!", Severity.Success);
-             await CarregarLivros();
-         }
-     }
+        if (result != null && !result.Canceled && result.Data != null)
+        {
+            var livroEditado = (Livro)result.Data;
+            await Http.PutAsJsonAsync($"api/livros/{livroEditado.Id}", livroEditado);
+            Snackbar.Add("Livro atualizado!", Severity.Success);
+            await CarregarLivros();
+        }
+    }
 
-     // --- Lógica de DELETAR ---
-     private async Task DeletarLivro(Livro livro)
-     {
-         bool? result = await DialogService.ShowMessageBox(
-             "Atenção", 
-             $"Deseja excluir o livro '{livro.Titulo}'?", 
-             yesText: "Excluir", cancelText: "Cancelar");
+    // --- Lógica de DELETAR ---
+    private async Task DeletarLivro(Livro livro)
+    {
+        bool? result = await DialogService.ShowMessageBox(
+            "Atenção", 
+            $"Deseja excluir o livro '{livro.Titulo}'?", 
+            yesText: "Excluir", cancelText: "Cancelar");
 
-         if (result == true)
-         {
-             await Http.DeleteAsync($"api/livros/{livro.Id}");
-             Snackbar.Add("Livro excluído.", Severity.Error);
-             await CarregarLivros();
-         }
-     }
+        if (result == true)
+        {
+            await Http.DeleteAsync($"api/livros/{livro.Id}");
+            Snackbar.Add("Livro excluído.", Severity.Error);
+            await CarregarLivros();
+        }
+    }
 
-     private Func<Livro, bool> _quickFilter => x =>
-     {
-         if (string.IsNullOrWhiteSpace(_searchString)) return true;
-         if (x.Titulo.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) return true;
-         if (x.Autor.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) return true;
-         return false;
-     };
- }
+    // --- NOVO: Lógica de VENDER ---
+    private async Task RealizarVenda(Livro livro)
+    {
+        var parameters = new DialogParameters 
+        { 
+            ["TituloLivro"] = livro.Titulo,
+            ["PrecoUnitario"] = livro.Preco 
+        };
+        
+        var dialog = await DialogService.ShowAsync<VendaDialog>("Registrar Venda", parameters);
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled && result.Data != null)
+        {
+            int qtdVendida = (int)result.Data;
+
+            // Cria o objeto para mandar pra API
+            var venda = new VendaDTO { LivroId = livro.Id, Quantidade = qtdVendida };
+
+            var response = await Http.PostAsJsonAsync("api/vendas", venda);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Snackbar.Add($"Venda de {qtdVendida} un. realizada!", Severity.Success);
+                await CarregarLivros(); // Atualiza a tabela para ver o estoque baixando
+            }
+            else
+            {
+                // Lê a mensagem de erro da API (ex: Estoque insuficiente)
+                var erro = await response.Content.ReadAsStringAsync();
+                Snackbar.Add($"Erro: {erro}", Severity.Error);
+            }
+        }
+    }
+
+    private Func<Livro, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString)) return true;
+        if (x.Titulo.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (x.Autor.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        return false;
+    };
+
+    // --- NOVO: Classe auxiliar para enviar os dados ---
+    public class VendaDTO
+    {
+        public int LivroId { get; set; }
+        public int Quantidade { get; set; }
+    }
+}
