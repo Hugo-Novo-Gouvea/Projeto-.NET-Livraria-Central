@@ -1,0 +1,25 @@
+@using LivrariaCentral.Web.Models
+@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <MudTextField @bind-Value="Livro.Titulo" Label="Título" />
+        <MudTextField @bind-Value="Livro.Autor" Label="Autor" />
+        <MudNumericField @bind-Value="Livro.Preco" Label="Preço" />
+        <MudNumericField @bind-Value="Livro.Estoque" Label="Estoque" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancelar</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">Salvar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] 
+    MudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public Livro Livro { get; set; } = new Livro();
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(Livro));
+    void Cancel() => MudDialog.Cancel();
+}

@@ -727,3 +727,364 @@
  // Substitua a porta 5000 pela porta que apareceu no seu terminal da API
  builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5123") });
  ```
+
+  ## 🚀 Sessão 8: Finalizando o CRUD (Dialogs e Ações)
+
+ Vamos implementar as funcionalidades de Adicionar, Editar e Excluir livros usando o serviço de Dialog do MudBlazor.
+
+ ### 1. Criando o Componente de Formulário (Modal)
+
+ Este arquivo será a "janelinha" que abre para preencher os dados do livro.
+
+ **Crie o arquivo:** `src/LivrariaCentral.Web/Pages/LivroDialog.razor`
+
+ ```razor
+ @using LivrariaCentral.Web.Models
+ @using MudBlazor
+
+ <MudDialog>
+     <DialogContent>
+         <MudTextField @bind-Value="Livro.Titulo" Label="Título" />
+         <MudTextField @bind-Value="Livro.Autor" Label="Autor" />
+         <MudNumericField @bind-Value="Livro.Preco" Label="Preço" />
+         <MudNumericField @bind-Value="Livro.Estoque" Label="Estoque" />
+     </DialogContent>
+     <DialogActions>
+         <MudButton OnClick="Cancel">Cancelar</MudButton>
+         <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">Salvar</MudButton>
+     </DialogActions>
+ </MudDialog>
+
+ @code {
+     [CascadingParameter] 
+     MudDialogInstance MudDialog { get; set; } = default!;
+
+     [Parameter] public Livro Livro { get; set; } = new Livro();
+
+     void Submit() => MudDialog.Close(DialogResult.Ok(Livro));
+     void Cancel() => MudDialog.Cancel();
+ }
+ ```
+
+ ### 2. Atualizando a Listagem (Livros.razor)
+
+ Agora vamos voltar na página de listagem e fazer os botões funcionarem.
+ Substitua TODO o código de `src/LivrariaCentral.Web/Pages/Livros.razor` por este abaixo:
+
+ ```razor
+ @page "/livros"
+ @using LivrariaCentral.Web.Models
+ @inject HttpClient Http
+ @inject IDialogService DialogService
+ @inject ISnackbar Snackbar
+
+ <MudText Typo="Typo.h4" Class="mb-4">Gerenciar Livros</MudText>
+
+ <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="mb-4" OnClick="AdicionarLivro">
+     Novo Livro
+ </MudButton>
+
+ @if (livros == null)
+ {
+     <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+ }
+ else
+ {
+     <MudDataGrid Items="@livros" Filterable="true" SortMode="SortMode.Multiple" QuickFilter="@_quickFilter">
+         <ToolBarContent>
+             <MudText Typo="Typo.h6">Lista de Livros</MudText>
+             <MudSpacer />
+             <MudTextField @bind-Value="_searchString" Placeholder="Buscar..." Adornment="Adornment.Start" Immediate="true"
+                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+         </ToolBarContent>
+         
+         <Columns>
+             <PropertyColumn Property="x => x.Id" Title="#" Sortable="true" Filterable="false" />
+             <PropertyColumn Property="x => x.Titulo" Sortable="true" />
+             <PropertyColumn Property="x => x.Autor" Sortable="true" />
+             <PropertyColumn Property="x => x.Estoque" Title="Qtd." />
+             <PropertyColumn Property="x => x.Preco" Title="Preço" Format="C" />
+             
+             <TemplateColumn CellClass="d-flex justify-end">
+                 <CellTemplate>
+                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Edit" Color="@Color.Primary" OnClick="@(() => EditarLivro(context.Item))" />
+                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Delete" Color="@Color.Error" OnClick="@(() => DeletarLivro(context.Item))" />
+                 </CellTemplate>
+             </TemplateColumn>
+         </Columns>
+         
+         <PagerContent>
+             <MudDataGridPager T="Livro" />
+         </PagerContent>
+     </MudDataGrid>
+ }
+
+ @code {
+     private List<Livro>? livros;
+     private string _searchString = string.Empty; // CORREÇÃO 1: Inicializado vazio
+
+     protected override async Task OnInitializedAsync()
+     {
+         await CarregarLivros();
+     }
+
+     private async Task CarregarLivros()
+     {
+         livros = await Http.GetFromJsonAsync<List<Livro>>("api/livros");
+     }
+
+     // --- Lógica de ADICIONAR ---
+     private async Task AdicionarLivro()
+     {
+         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+         
+         // CORREÇÃO 2: ShowAsync (aguardando a criação do dialog)
+         var dialog = await DialogService.ShowAsync<LivroDialog>("Novo Livro", options);
+         
+         // Aguarda o resultado do fechamento
+         var result = await dialog.Result;
+
+         // CORREÇÃO 3: Verificação de nulos segura
+         if (result != null && !result.Canceled && result.Data != null)
+         {
+             var novoLivro = (Livro)result.Data;
+             await Http.PostAsJsonAsync("api/livros", novoLivro);
+             Snackbar.Add("Livro cadastrado!", Severity.Success);
+             await CarregarLivros();
+         }
+     }
+
+     // --- Lógica de EDITAR ---
+     private async Task EditarLivro(Livro livro)
+     {
+         var parameters = new DialogParameters { ["Livro"] = livro };
+         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+         
+         // CORREÇÃO 2: ShowAsync
+         var dialog = await DialogService.ShowAsync<LivroDialog>("Editar Livro", parameters, options);
+         var result = await dialog.Result;
+
+         if (result != null && !result.Canceled && result.Data != null)
+         {
+             var livroEditado = (Livro)result.Data;
+             
+             // CORREÇÃO 4: Interpolação de string segura
+             await Http.PutAsJsonAsync($"api/livros/{livroEditado.Id}", livroEditado);
+             
+             Snackbar.Add("Livro atualizado!", Severity.Success);
+             await CarregarLivros();
+         }
+     }
+
+     // --- Lógica de DELETAR ---
+     private async Task DeletarLivro(Livro livro)
+     {
+         bool? result = await DialogService.ShowMessageBox(
+             "Atenção", 
+             $"Deseja excluir o livro '{livro.Titulo}'?", 
+             yesText: "Excluir", cancelText: "Cancelar");
+
+         if (result == true)
+         {
+             await Http.DeleteAsync($"api/livros/{livro.Id}");
+             Snackbar.Add("Livro excluído.", Severity.Error);
+             await CarregarLivros();
+         }
+     }
+
+     private Func<Livro, bool> _quickFilter => x =>
+     {
+         if (string.IsNullOrWhiteSpace(_searchString)) return true;
+         if (x.Titulo.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) return true;
+         if (x.Autor.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) return true;
+         return false;
+     };
+ }
+ ```
+
+ ### ⚠️ Nota Importante sobre Versões (MudBlazor)
+
+ Caso você encontre erros como `MudDialogInstance not found` ou falha na restauração de pacotes,
+ verifique o arquivo `LivrariaCentral.Web.csproj`.
+
+ Certifique-se de que a versão do MudBlazor é uma versão **Estável (7.x)**.
+ Versões futuras (como 8.x) podem não existir ainda no repositório oficial ou estar em beta.
+
+ **Correção:**
+ Abra o `.csproj` e garanta a linha:
+ `<PackageReference Include="MudBlazor" Version="7.0.0" />`
+
+  ## 🚀 Sessão 9: Dashboard com Dados Reais (O Grand Finale)
+
+ Vamos substituir os dados "chumbados" do Dashboard por cálculos reais vindos do banco de dados.
+
+ ### 1. Criando a Rota de Dashboard na API
+
+ Vamos criar um Controller novo focado apenas em estatísticas.
+
+ **Crie o arquivo:** `src/LivrariaCentral.API/Controllers/DashboardController.cs`
+
+ ```csharp
+ using LivrariaCentral.API.Data;
+ using Microsoft.AspNetCore.Mvc;
+ using Microsoft.EntityFrameworkCore;
+
+ namespace LivrariaCentral.API.Controllers;
+
+ [ApiController]
+ [Route("api/dashboard")]
+ public class DashboardController : ControllerBase
+ {
+     private readonly AppDbContext _context;
+
+     public DashboardController(AppDbContext context)
+     {
+         _context = context;
+     }
+
+     [HttpGet("resumo")]
+     public async Task<IActionResult> GetResumo()
+     {
+         // O Banco de Dados faz as contas (muito mais rápido que o C#)
+         var totalLivros = await _context.Livros.CountAsync();
+         var valorEstoque = await _context.Livros.SumAsync(l => l.Preco * l.Estoque);
+         var estoqueBaixo = await _context.Livros.CountAsync(l => l.Estoque < 5);
+         
+         // Retorna um objeto anônimo (JSON)
+         return Ok(new 
+         {
+             TotalLivros = totalLivros,
+             ValorEstoque = valorEstoque,
+             EstoqueBaixo = estoqueBaixo,
+             // Simula dados de vendas (pois ainda não temos tabela de vendas)
+             VendasHoje = 0 
+         });
+     }
+ }
+ ```
+
+ ### 2. Criando o Modelo no Frontend
+
+ O site precisa de uma classe para entender o JSON que a API vai mandar.
+
+ **Crie o arquivo:** `src/LivrariaCentral.Web/Models/DashboardDados.cs`
+
+ ```csharp
+ namespace LivrariaCentral.Web.Models;
+
+ public class DashboardDados
+ {
+     public int TotalLivros { get; set; }
+     public decimal ValorEstoque { get; set; }
+     public int EstoqueBaixo { get; set; }
+     public int VendasHoje { get; set; } // Futuro
+ }
+ ```
+
+ ### 3. Conectando a Home aos Dados Reais
+
+ Agora vamos editar a página inicial para buscar esses números.
+
+ **Arquivo: `src/LivrariaCentral.Web/Pages/Home.razor`**
+ Substitua tudo pelo código abaixo:
+
+ ```razor
+ @page "/"
+ @using LivrariaCentral.Web.Models
+ @inject HttpClient Http
+
+ <MudText Typo="Typo.h4" Class="mb-4">Dashboard</MudText>
+
+ @if (dados == null)
+ {
+          <div class="d-flex justify-center align-center" style="height: 400px;">
+         <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+     </div>
+ }
+ else
+ {
+     <MudGrid>
+                  <MudItem xs="12" sm="6" md="3">
+             <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                 <MudIcon Icon="@Icons.Material.Filled.LibraryBooks" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;" />
+                 <div>
+                     <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Livros</MudText>
+                     <MudText Typo="Typo.h5">@dados.TotalLivros</MudText>
+                 </div>
+             </MudPaper>
+         </MudItem>
+
+                  <MudItem xs="12" sm="6" md="3">
+             <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                 <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;" />
+                 <div>
+                     <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Valor em Estoque</MudText>
+                     <MudText Typo="Typo.h5">@dados.ValorEstoque.ToString("C")</MudText>
+                 </div>
+             </MudPaper>
+         </MudItem>
+
+                  <MudItem xs="12" sm="6" md="3">
+             <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                 <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Warning" Class="mx-4" Style="width:54px; height:54px;" />
+                 <div>
+                     <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Estoque Baixo</MudText>
+                     <MudText Typo="Typo.h5">@dados.EstoqueBaixo</MudText>
+                 </div>
+             </MudPaper>
+         </MudItem>
+
+                  <MudItem xs="12" sm="6" md="3">
+             <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                 <MudIcon Icon="@Icons.Material.Filled.People" Color="Color.Info" Class="mx-4" Style="width:54px; height:54px;" />
+                 <div>
+                     <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Clientes</MudText>
+                     <MudText Typo="Typo.h5">120</MudText>
+                 </div>
+             </MudPaper>
+         </MudItem>
+
+                  <MudItem xs="12" md="8">
+             <MudPaper Class="pa-4">
+                 <MudText Typo="Typo.h6">Tendência de Vendas (Simulado)</MudText>
+                 <MudChart ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px"></MudChart>
+             </MudPaper>
+         </MudItem>
+
+         <MudItem xs="12" md="4">
+             <MudPaper Class="pa-4">
+                 <MudText Typo="Typo.h6">Categorias (Simulado)</MudText>
+                 <MudChart ChartType="ChartType.Donut" InputData="@DonutData" InputLabels="@DonutLabels" Width="100%" Height="300px" />
+             </MudPaper>
+         </MudItem>
+
+     </MudGrid>
+ }
+
+ @code {
+     private DashboardDados? dados;
+
+     // Carrega os dados reais ao abrir a página
+     protected override async Task OnInitializedAsync()
+     {
+         try 
+         {
+             // Bate na API nova que criamos
+             dados = await Http.GetFromJsonAsync<DashboardDados>("api/dashboard/resumo");
+         }
+         catch(Exception ex)
+         {
+             Console.WriteLine("Erro ao carregar dashboard: " + ex.Message);
+         }
+     }
+
+     // --- Dados dos Gráficos (Ainda Fictícios para visual) ---
+     public List<ChartSeries> Series = new List<ChartSeries>()
+     {
+         new ChartSeries() { Name = "Vendas (R$)", Data = new double[] { 4000, 2000, 8000, 15000, 6000, 9000 } }
+     };
+     public string[] XAxisLabels = { "Jan", "Fev", "Mar", "Abr", "Mai", "Jun" };
+     public double[] DonutData = { 25, 45, 10, 20 };
+     public string[] DonutLabels = { "Ficção", "Técnico", "Romance", "HQs" };
+ }
+ ```
