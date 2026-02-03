@@ -1,0 +1,39 @@
+@page "/historico"
+@using LivrariaCentral.Web.Models
+@inject HttpClient Http
+
+<MudText Typo="Typo.h4" Class="mb-4">Histórico de Vendas</MudText>
+
+@if (vendas == null)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+    <MudDataGrid Items="@vendas" Filterable="true" SortMode="SortMode.Multiple">
+        <Columns>
+            <PropertyColumn Property="x => x.Id" Title="#" />
+            <PropertyColumn Property="x => x.DataVenda" Title="Data">
+                <CellTemplate>
+                    @context.Item.DataVenda.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                </CellTemplate>
+            </PropertyColumn>
+            <PropertyColumn Property="x => x.LivroTitulo" Title="Livro" />
+            <PropertyColumn Property="x => x.Quantidade" Title="Qtd." />
+            <PropertyColumn Property="x => x.ValorTotal" Title="Total" Format="C" />
+        </Columns>
+        
+        <PagerContent>
+            <MudDataGridPager T="VendaHistorico" />
+        </PagerContent>
+    </MudDataGrid>
+}
+
+@code {
+    private List<VendaHistorico>? vendas;
+
+    protected override async Task OnInitializedAsync()
+    {
+        vendas = await Http.GetFromJsonAsync<List<VendaHistorico>>("api/vendas");
+    }
+}

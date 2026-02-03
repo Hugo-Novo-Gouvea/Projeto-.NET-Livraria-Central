@@ -42,4 +42,26 @@ public class VendasController : ControllerBase
 
         return Ok(new { mensagem = "Venda realizada com sucesso!", novoEstoque = livro.Estoque });
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetVendas()
+    {
+        // Faz a junção (Join) entre Venda e Livro para pegar o Título
+        var historico = await _context.Vendas
+            .Join(_context.Livros,
+                venda => venda.LivroId,
+                livro => livro.Id,
+                (venda, livro) => new 
+                {
+                    Id = venda.Id,
+                    DataVenda = venda.DataVenda,
+                    LivroTitulo = livro.Titulo,
+                    Quantidade = venda.Quantidade,
+                    ValorTotal = venda.ValorTotal
+                })
+            .OrderByDescending(v => v.DataVenda) // Mais recentes primeiro
+            .ToListAsync();
+
+        return Ok(historico);
+    }
 }

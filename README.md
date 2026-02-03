@@ -1462,3 +1462,289 @@ else
 }
 
  ```
+
+  ## 🚀 Sessão 11: Histórico de Vendas (Consulta e Join)
+
+ Vamos criar uma tela para listar todas as vendas, mostrando o nome do livro, a data e o valor total.
+
+ ### 1. Backend: Preparando a Consulta
+
+ Precisamos de um endpoint que devolva a lista de vendas, mas que já inclua o nome do livro.
+
+ **Abra o arquivo:** `src/LivrariaCentral.API/Controllers/VendasController.cs`
+ Adicione o método `GetVendas` dentro da classe, logo após o método de realizar venda.
+
+ ```csharp
+     // ... (Método RealizarVenda fica em cima)
+
+     [HttpGet]
+     public async Task<IActionResult> GetVendas()
+     {
+         // Faz a junção (Join) entre Venda e Livro para pegar o Título
+         var historico = await _context.Vendas
+             .Join(_context.Livros,
+                 venda => venda.LivroId,
+                 livro => livro.Id,
+                 (venda, livro) => new 
+                 {
+                     Id = venda.Id,
+                     DataVenda = venda.DataVenda,
+                     LivroTitulo = livro.Titulo,
+                     Quantidade = venda.Quantidade,
+                     ValorTotal = venda.ValorTotal
+                 })
+             .OrderByDescending(v => v.DataVenda) // Mais recentes primeiro
+             .ToListAsync();
+
+         return Ok(historico);
+     }
+ ```
+
+ *Nota: Usamos o `Join` do LINQ para cruzar as tabelas. É como se fosse o PROCV do Excel ou o JOIN do SQL.*
+
+ ### 2. Frontend: Modelo de Dados
+
+ O Frontend precisa de uma classe para receber esses dados combinados.
+
+ **Crie o arquivo:** `src/LivrariaCentral.Web/Models/VendaHistorico.cs`
+
+ ```csharp
+ namespace LivrariaCentral.Web.Models;
+
+ public class VendaHistorico
+ {
+     public int Id { get; set; }
+     public DateTime DataVenda { get; set; }
+     public string LivroTitulo { get; set; } = string.Empty;
+     public int Quantidade { get; set; }
+     public decimal ValorTotal { get; set; }
+ }
+ ```
+
+ ### 3. Frontend: A Tela de Histórico
+
+ Vamos criar a página que exibe a tabela. Como é só leitura (não dá pra editar uma venda passada), o código é bem simples.
+
+ **Crie o arquivo:** `src/LivrariaCentral.Web/Pages/HistoricoVendas.razor`
+
+ ```razor
+ @page "/historico"
+ @using LivrariaCentral.Web.Models
+ @inject HttpClient Http
+
+ <MudText Typo="Typo.h4" Class="mb-4">Histórico de Vendas</MudText>
+
+ @if (vendas == null)
+ {
+     <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+ }
+ else
+ {
+     <MudDataGrid Items="@vendas" Filterable="true" SortMode="SortMode.Multiple">
+         <Columns>
+             <PropertyColumn Property="x => x.Id" Title="#" />
+             <PropertyColumn Property="x => x.DataVenda" Title="Data">
+                 <CellTemplate>
+                     @context.Item.DataVenda.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                 </CellTemplate>
+             </PropertyColumn>
+             <PropertyColumn Property="x => x.LivroTitulo" Title="Livro" />
+             <PropertyColumn Property="x => x.Quantidade" Title="Qtd." />
+             <PropertyColumn Property="x => x.ValorTotal" Title="Total" Format="C" />
+         </Columns>
+         
+         <PagerContent>
+             <MudDataGridPager T="VendaHistorico" />
+         </PagerContent>
+     </MudDataGrid>
+ }
+
+ @code {
+     private List<VendaHistorico>? vendas;
+
+     protected override async Task OnInitializedAsync()
+     {
+         vendas = await Http.GetFromJsonAsync<List<VendaHistorico>>("api/vendas");
+     }
+ }
+ ```
+
+ ### 4. Frontend: Atualizando o Menu
+
+ Por fim, precisamos colocar um link no menu lateral para acessar essa nova tela.
+
+ **Edite o arquivo:** `src/LivrariaCentral.Web/Layout/MainLayout.razor`
+ Adicione o novo `MudNavLink` logo abaixo do link de Livros.
+
+ ```razor
+ 
+  <MudNavLink Href="/historico" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.History">Histórico</MudNavLink>
+
+ ```
+
+ /-/ ## 🚀 Sessão 12: Gerando Relatórios em PDF
+/-/
+/-/ Vamos criar um botão que baixa um PDF bonitão com a lista de produtos e o valor total do estoque.
+/-/ Usaremos a biblioteca **QuestPDF**, que é a mais moderna do .NET hoje.
+/-/
+/-/ ### 1. Instalando o QuestPDF na API
+/-/
+/-/ Pare a API. No terminal da pasta `src/LivrariaCentral.API`, rode:
+/-/
+/-/ ```bash
+/-/ dotnet add package QuestPDF
+/-/ ```
+/-/
+/-/ ### 2. Configurando a Licença (Gratuita)
+/-/
+/-/ O QuestPDF exige que a gente avise que está usando a versão comunitária.
+/-/
+/-/ **Arquivo: `src/LivrariaCentral.API/Program.cs`**
+/-/ Adicione essa linha logo no começo, antes do `builder`:
+/-/
+/-/ ```csharp
+/-/ using QuestPDF.Infrastructure; // <--- Importante
+/-/
+/-/ QuestPDF.Settings.License = LicenseType.Community; // <--- ADICIONE ISSO
+/-/
+/-/ var builder = WebApplication.CreateBuilder(args);
+/-/ // ... resto do código
+/-/ ```
+/-/
+/-/ ### 3. Criando o Endpoint do Relatório
+/-/
+/-/ Vamos criar um Controller que desenha o PDF e devolve o arquivo.
+/-/
+/-/ **Crie o arquivo:** `src/LivrariaCentral.API/Controllers/RelatoriosController.cs`
+/-/
+/-/ ```csharp
+/-/ using LivrariaCentral.API.Data;
+/-/ using Microsoft.AspNetCore.Mvc;
+/-/ using Microsoft.EntityFrameworkCore;
+/-/ using QuestPDF.Fluent;
+/-/ using QuestPDF.Helpers;
+/-/ using QuestPDF.Infrastructure;
+/-/
+/-/ namespace LivrariaCentral.API.Controllers;
+/-/
+/-/ [ApiController]
+/-/ [Route("api/relatorios")]
+/-/ public class RelatoriosController : ControllerBase
+/-/ {
+/-/     private readonly AppDbContext _context;
+/-/
+/-/     public RelatoriosController(AppDbContext context)
+/-/     {
+/-/         _context = context;
+/-/     }
+/-/
+/-/     [HttpGet("estoque")]
+/-/     public async Task<IActionResult> GerarRelatorioEstoque()
+/-/     {
+/-/         var livros = await _context.Livros.ToListAsync();
+/-/
+/-/         // Aqui começa a mágica do QuestPDF (Desenhando o documento)
+/-/         var pdf = Document.Create(container =>
+/-/         {
+/-/             container.Page(page =>
+/-/             {
+/-/                 page.Size(PageSizes.A4);
+/-/                 page.Margin(2, Unit.Centimetre);
+/-/                 page.PageColor(Colors.White);
+/-/                 page.DefaultTextStyle(x => x.FontSize(12));
+/-/
+/-/                 // --- CABEÇALHO ---
+/-/                 page.Header()
+/-/                     .Text("Relatório de Estoque - Livraria Central")
+/-/                     .SemiBold().FontSize(20).FontColor(Colors.Blue.Medium);
+/-/
+/-/                 // --- CONTEÚDO (Tabela) ---
+/-/                 page.Content().PaddingVertical(1, Unit.Centimetre).Table(table =>
+/-/                 {
+/-/                     // Definição das colunas
+/-/                     table.ColumnsDefinition(columns =>
+/-/                     {
+/-/                         columns.ConstantColumn(50); // ID
+/-/                         columns.RelativeColumn();   // Título (ocupa o resto)
+/-/                         columns.ConstantColumn(80); // Estoque
+/-/                         columns.ConstantColumn(100); // Preço
+/-/                     });
+/-/
+/-/                     // Cabeçalho da Tabela
+/-/                     table.Header(header =>
+/-/                     {
+/-/                         header.Cell().Text("#").Bold();
+/-/                         header.Cell().Text("Título").Bold();
+/-/                         header.Cell().Text("Estoque").Bold();
+/-/                         header.Cell().Text("Preço").Bold();
+/-/                     });
+/-/
+/-/                     // Linhas da Tabela
+/-/                     foreach (var livro in livros)
+/-/                     {
+/-/                         table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(livro.Id.ToString());
+/-/                         table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(livro.Titulo);
+/-/                         table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(livro.Estoque.ToString());
+/-/                         table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(5).Text($"R$ {livro.Preco:F2}");
+/-/                     }
+/-/                 });
+/-/
+/-/                 // --- RODAPÉ ---
+/-/                 page.Footer()
+/-/                     .AlignCenter()
+/-/                     .Text(x =>
+/-/                     {
+/-/                         x.Span("Página ");
+/-/                         x.CurrentPageNumber();
+/-/                     });
+/-/             });
+/-/         });
+/-/
+/-/         // Gera o arquivo em memória
+/-/         var stream = new MemoryStream();
+/-/         pdf.GeneratePdf(stream);
+/-/         stream.Position = 0;
+/-/
+/-/         // Devolve o arquivo para o navegador baixar
+/-/         return File(stream, "application/pdf", "RelatorioEstoque.pdf");
+/-/     }
+/-/ }
+/-/ ```
+/-/
+/-/ ### 4. Botão de Download no Frontend
+/-/
+/-/ Vamos colocar um botão de impressora na tela de Livros.
+/-/
+/-/ **Abra o arquivo:** `src/LivrariaCentral.Web/Pages/Livros.razor`
+/-/
+/-/ 1. Adicione o `inject IJSRuntime` lá no topo:
+/-/ ```razor
+/-/ @inject IJSRuntime JS
+/-/ ```
+/-/
+/-/ 2. Adicione o botão ao lado do "Novo Livro":
+/-/ ```razor
+/-/ <div class="d-flex gap-4 mb-4">
+/-/     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="AdicionarLivro">
+/-/         Novo Livro
+/-/     </MudButton>
+/-/
+/-/     /-/     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Print" Color="Color.Secondary" OnClick="BaixarRelatorio">
+/-/         Imprimir Estoque
+/-/     </MudButton>
+/-/ </div>
+/-/ ```
+/-/
+/-/ 3. Adicione a função `BaixarRelatorio` no `@code`:
+/-/ ```csharp
+/-/     private async Task BaixarRelatorio()
+/-/     {
+/-/         // Como o download de arquivos via AJAX é chato, vamos usar um truque:
+/-/         // Abrir a URL da API numa nova aba. O navegador entende que é PDF e baixa/abre.
+/-/         
+/-/         // NOTA: Ajuste a porta (5123) se a sua for diferente!
+/-/         var urlApi = "http://localhost:5123/api/relatorios/estoque";
+/-/         
+/-/         await JS.InvokeVoidAsync("open", urlApi, "_blank");
+/-/     }
+/-/ ```
