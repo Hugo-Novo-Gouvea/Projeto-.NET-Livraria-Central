@@ -3,12 +3,19 @@
 @inject HttpClient Http
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject IJSRuntime JS
 
 <MudText Typo="Typo.h4" Class="mb-4">Gerenciar Livros</MudText>
 
-<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="mb-4" OnClick="AdicionarLivro">
-    Novo Livro
-</MudButton>
+<div class="d-flex gap-4 mb-4">
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="AdicionarLivro">
+        Novo Livro
+    </MudButton>
+
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Print" Color="Color.Secondary" OnClick="BaixarRelatorio">
+        Imprimir Estoque
+    </MudButton>
+</div>
 
 @if (livros == null)
 {
@@ -159,5 +166,15 @@ else
     {
         public int LivroId { get; set; }
         public int Quantidade { get; set; }
+    }
+
+    private async Task BaixarRelatorio()
+    {
+        // Como o download de arquivos via AJAX é chato, vamos usar um truque:
+        // Abrir a URL da API numa nova aba. O navegador entende que é PDF e baixa/abre.
+        
+        var urlApi = "http://localhost:5239/api/relatorios/estoque";
+        
+        await JS.InvokeVoidAsync("open", urlApi, "_blank");
     }
 }

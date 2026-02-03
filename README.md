@@ -1582,169 +1582,632 @@ else
 
  ```
 
- /-/ ## 🚀 Sessão 12: Gerando Relatórios em PDF
-/-/
-/-/ Vamos criar um botão que baixa um PDF bonitão com a lista de produtos e o valor total do estoque.
-/-/ Usaremos a biblioteca **QuestPDF**, que é a mais moderna do .NET hoje.
-/-/
-/-/ ### 1. Instalando o QuestPDF na API
-/-/
-/-/ Pare a API. No terminal da pasta `src/LivrariaCentral.API`, rode:
-/-/
-/-/ ```bash
-/-/ dotnet add package QuestPDF
-/-/ ```
-/-/
-/-/ ### 2. Configurando a Licença (Gratuita)
-/-/
-/-/ O QuestPDF exige que a gente avise que está usando a versão comunitária.
-/-/
-/-/ **Arquivo: `src/LivrariaCentral.API/Program.cs`**
-/-/ Adicione essa linha logo no começo, antes do `builder`:
-/-/
-/-/ ```csharp
-/-/ using QuestPDF.Infrastructure; // <--- Importante
-/-/
-/-/ QuestPDF.Settings.License = LicenseType.Community; // <--- ADICIONE ISSO
-/-/
-/-/ var builder = WebApplication.CreateBuilder(args);
-/-/ // ... resto do código
-/-/ ```
-/-/
-/-/ ### 3. Criando o Endpoint do Relatório
-/-/
-/-/ Vamos criar um Controller que desenha o PDF e devolve o arquivo.
-/-/
-/-/ **Crie o arquivo:** `src/LivrariaCentral.API/Controllers/RelatoriosController.cs`
-/-/
-/-/ ```csharp
-/-/ using LivrariaCentral.API.Data;
-/-/ using Microsoft.AspNetCore.Mvc;
-/-/ using Microsoft.EntityFrameworkCore;
-/-/ using QuestPDF.Fluent;
-/-/ using QuestPDF.Helpers;
-/-/ using QuestPDF.Infrastructure;
-/-/
-/-/ namespace LivrariaCentral.API.Controllers;
-/-/
-/-/ [ApiController]
-/-/ [Route("api/relatorios")]
-/-/ public class RelatoriosController : ControllerBase
-/-/ {
-/-/     private readonly AppDbContext _context;
-/-/
-/-/     public RelatoriosController(AppDbContext context)
-/-/     {
-/-/         _context = context;
-/-/     }
-/-/
-/-/     [HttpGet("estoque")]
-/-/     public async Task<IActionResult> GerarRelatorioEstoque()
-/-/     {
-/-/         var livros = await _context.Livros.ToListAsync();
-/-/
-/-/         // Aqui começa a mágica do QuestPDF (Desenhando o documento)
-/-/         var pdf = Document.Create(container =>
-/-/         {
-/-/             container.Page(page =>
-/-/             {
-/-/                 page.Size(PageSizes.A4);
-/-/                 page.Margin(2, Unit.Centimetre);
-/-/                 page.PageColor(Colors.White);
-/-/                 page.DefaultTextStyle(x => x.FontSize(12));
-/-/
-/-/                 // --- CABEÇALHO ---
-/-/                 page.Header()
-/-/                     .Text("Relatório de Estoque - Livraria Central")
-/-/                     .SemiBold().FontSize(20).FontColor(Colors.Blue.Medium);
-/-/
-/-/                 // --- CONTEÚDO (Tabela) ---
-/-/                 page.Content().PaddingVertical(1, Unit.Centimetre).Table(table =>
-/-/                 {
-/-/                     // Definição das colunas
-/-/                     table.ColumnsDefinition(columns =>
-/-/                     {
-/-/                         columns.ConstantColumn(50); // ID
-/-/                         columns.RelativeColumn();   // Título (ocupa o resto)
-/-/                         columns.ConstantColumn(80); // Estoque
-/-/                         columns.ConstantColumn(100); // Preço
-/-/                     });
-/-/
-/-/                     // Cabeçalho da Tabela
-/-/                     table.Header(header =>
-/-/                     {
-/-/                         header.Cell().Text("#").Bold();
-/-/                         header.Cell().Text("Título").Bold();
-/-/                         header.Cell().Text("Estoque").Bold();
-/-/                         header.Cell().Text("Preço").Bold();
-/-/                     });
-/-/
-/-/                     // Linhas da Tabela
-/-/                     foreach (var livro in livros)
-/-/                     {
-/-/                         table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(livro.Id.ToString());
-/-/                         table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(livro.Titulo);
-/-/                         table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(livro.Estoque.ToString());
-/-/                         table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(5).Text($"R$ {livro.Preco:F2}");
-/-/                     }
-/-/                 });
-/-/
-/-/                 // --- RODAPÉ ---
-/-/                 page.Footer()
-/-/                     .AlignCenter()
-/-/                     .Text(x =>
-/-/                     {
-/-/                         x.Span("Página ");
-/-/                         x.CurrentPageNumber();
-/-/                     });
-/-/             });
-/-/         });
-/-/
-/-/         // Gera o arquivo em memória
-/-/         var stream = new MemoryStream();
-/-/         pdf.GeneratePdf(stream);
-/-/         stream.Position = 0;
-/-/
-/-/         // Devolve o arquivo para o navegador baixar
-/-/         return File(stream, "application/pdf", "RelatorioEstoque.pdf");
-/-/     }
-/-/ }
-/-/ ```
-/-/
-/-/ ### 4. Botão de Download no Frontend
-/-/
-/-/ Vamos colocar um botão de impressora na tela de Livros.
-/-/
-/-/ **Abra o arquivo:** `src/LivrariaCentral.Web/Pages/Livros.razor`
-/-/
-/-/ 1. Adicione o `inject IJSRuntime` lá no topo:
-/-/ ```razor
-/-/ @inject IJSRuntime JS
-/-/ ```
-/-/
-/-/ 2. Adicione o botão ao lado do "Novo Livro":
-/-/ ```razor
-/-/ <div class="d-flex gap-4 mb-4">
-/-/     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="AdicionarLivro">
-/-/         Novo Livro
-/-/     </MudButton>
-/-/
-/-/     /-/     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Print" Color="Color.Secondary" OnClick="BaixarRelatorio">
-/-/         Imprimir Estoque
-/-/     </MudButton>
-/-/ </div>
-/-/ ```
-/-/
-/-/ 3. Adicione a função `BaixarRelatorio` no `@code`:
-/-/ ```csharp
-/-/     private async Task BaixarRelatorio()
-/-/     {
-/-/         // Como o download de arquivos via AJAX é chato, vamos usar um truque:
-/-/         // Abrir a URL da API numa nova aba. O navegador entende que é PDF e baixa/abre.
-/-/         
-/-/         // NOTA: Ajuste a porta (5123) se a sua for diferente!
-/-/         var urlApi = "http://localhost:5123/api/relatorios/estoque";
-/-/         
-/-/         await JS.InvokeVoidAsync("open", urlApi, "_blank");
-/-/     }
-/-/ ```
+  ## 🚀 Sessão 12: Gerando Relatórios em PDF
+
+ Vamos criar um botão que baixa um PDF bonitão com a lista de produtos e o valor total do estoque.
+ Usaremos a biblioteca **QuestPDF**, que é a mais moderna do .NET hoje.
+
+ ### 1. Instalando o QuestPDF na API
+
+ Pare a API. No terminal da pasta `src/LivrariaCentral.API`, rode:
+
+ ```bash
+ dotnet add package QuestPDF
+ ```
+
+ ### 2. Configurando a Licença (Gratuita)
+
+ O QuestPDF exige que a gente avise que está usando a versão comunitária.
+
+ **Arquivo: `src/LivrariaCentral.API/Program.cs`**
+ Adicione essa linha logo no começo, antes do `builder`:
+
+ ```csharp
+ using QuestPDF.Infrastructure; // <--- Importante
+
+ QuestPDF.Settings.License = LicenseType.Community; // <--- ADICIONE ISSO
+
+ var builder = WebApplication.CreateBuilder(args);
+ // ... resto do código
+ ```
+
+ ### 3. Criando o Endpoint do Relatório
+
+ Vamos criar um Controller que desenha o PDF e devolve o arquivo.
+
+ **Crie o arquivo:** `src/LivrariaCentral.API/Controllers/RelatoriosController.cs`
+
+ ```csharp
+ using LivrariaCentral.API.Data;
+ using Microsoft.AspNetCore.Mvc;
+ using Microsoft.EntityFrameworkCore;
+ using QuestPDF.Fluent;
+ using QuestPDF.Helpers;
+ using QuestPDF.Infrastructure;
+
+ namespace LivrariaCentral.API.Controllers;
+
+ [ApiController]
+ [Route("api/relatorios")]
+ public class RelatoriosController : ControllerBase
+ {
+     private readonly AppDbContext _context;
+
+     public RelatoriosController(AppDbContext context)
+     {
+         _context = context;
+     }
+
+     [HttpGet("estoque")]
+     public async Task<IActionResult> GerarRelatorioEstoque()
+     {
+         var livros = await _context.Livros.ToListAsync();
+
+         // Aqui começa a mágica do QuestPDF (Desenhando o documento)
+         var pdf = Document.Create(container =>
+         {
+             container.Page(page =>
+             {
+                 page.Size(PageSizes.A4);
+                 page.Margin(2, Unit.Centimetre);
+                 page.PageColor(Colors.White);
+                 page.DefaultTextStyle(x => x.FontSize(12));
+
+                 // --- CABEÇALHO ---
+                 page.Header()
+                     .Text("Relatório de Estoque - Livraria Central")
+                     .SemiBold().FontSize(20).FontColor(Colors.Blue.Medium);
+
+                 // --- CONTEÚDO (Tabela) ---
+                 page.Content().PaddingVertical(1, Unit.Centimetre).Table(table =>
+                 {
+                     // Definição das colunas
+                     table.ColumnsDefinition(columns =>
+                     {
+                         columns.ConstantColumn(50); // ID
+                         columns.RelativeColumn();   // Título (ocupa o resto)
+                         columns.ConstantColumn(80); // Estoque
+                         columns.ConstantColumn(100); // Preço
+                     });
+
+                     // Cabeçalho da Tabela
+                     table.Header(header =>
+                     {
+                         header.Cell().Text("#").Bold();
+                         header.Cell().Text("Título").Bold();
+                         header.Cell().Text("Estoque").Bold();
+                         header.Cell().Text("Preço").Bold();
+                     });
+
+                     // Linhas da Tabela
+                     foreach (var livro in livros)
+                     {
+                         table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(livro.Id.ToString());
+                         table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(livro.Titulo);
+                         table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(livro.Estoque.ToString());
+                         table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(5).Text($"R$ {livro.Preco:F2}");
+                     }
+                 });
+
+                 // --- RODAPÉ ---
+                 page.Footer()
+                     .AlignCenter()
+                     .Text(x =>
+                     {
+                         x.Span("Página ");
+                         x.CurrentPageNumber();
+                     });
+             });
+         });
+
+         // Gera o arquivo em memória
+         var stream = new MemoryStream();
+         pdf.GeneratePdf(stream);
+         stream.Position = 0;
+
+         // Devolve o arquivo para o navegador baixar
+         return File(stream, "application/pdf", "RelatorioEstoque.pdf");
+     }
+ }
+ ```
+
+ ### 4. Botão de Download no Frontend
+
+ Vamos colocar um botão de impressora na tela de Livros.
+
+ **Abra o arquivo:** `src/LivrariaCentral.Web/Pages/Livros.razor`
+
+ 1. Adicione o `inject IJSRuntime` lá no topo:
+ ```razor
+ @inject IJSRuntime JS
+ ```
+
+ 2. Adicione o botão ao lado do "Novo Livro":
+ ```razor
+ <div class="d-flex gap-4 mb-4">
+     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="AdicionarLivro">
+         Novo Livro
+     </MudButton>
+
+          <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Print" Color="Color.Secondary" OnClick="BaixarRelatorio">
+         Imprimir Estoque
+     </MudButton>
+ </div>
+ ```
+
+ 3. Adicione a função `BaixarRelatorio` no `@code`:
+ ```csharp
+     private async Task BaixarRelatorio()
+     {
+         // Como o download de arquivos via AJAX é chato, vamos usar um truque:
+         // Abrir a URL da API numa nova aba. O navegador entende que é PDF e baixa/abre.
+         
+         // NOTA: Ajuste a porta (5123) se a sua for diferente!
+         var urlApi = "http://localhost:5123/api/relatorios/estoque";
+         
+         await JS.InvokeVoidAsync("open", urlApi, "_blank");
+     }
+ ```
+
+  Com certeza. Aqui está a documentação da Sessão 13 corrigida, com todas as validações de nulos resolvidas (= string.Empty e o operador !) e no formato solicitado ().
+
+ ## 🚀 Sessão 13: Segurança e Autenticação (Backend)
+
+ Vamos implementar JWT (JSON Web Tokens). Funciona assim: o usuário manda senha, a API confere e devolve um "crachá digital" (Token).
+
+ ### 1. Instalando Pacotes de Segurança
+
+ Pare a API. No terminal da pasta `src/LivrariaCentral.API`, rode:
+
+ ```bash
+ dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer
+ dotnet add package BCrypt.Net-Next
+ ```
+ *Nota: O BCrypt serve para criptografar a senha no banco. Nunca salve senhas em texto puro!*
+
+ ### 2. Criando a Tabela de Usuários
+
+ **Arquivo: `src/LivrariaCentral.API/Models/Usuario.cs`**
+
+ ```csharp
+ namespace LivrariaCentral.API.Models;
+
+ public class Usuario
+ {
+     public int Id { get; set; }
+     public string Email { get; set; } = string.Empty; // Inicializado para evitar null
+     public string SenhaHash { get; set; } = string.Empty; 
+     public string Nome { get; set; } = string.Empty;
+ }
+
+ // Classe auxiliar para receber os dados do Login/Registro
+ public class UsuarioDTO
+ {
+     public string Email { get; set; } = string.Empty;
+     public string Senha { get; set; } = string.Empty;
+ }
+ ```
+
+ ### 3. Atualizando o Banco de Dados
+
+ Precisamos avisar o Entity Framework sobre a nova tabela.
+
+ **Arquivo: `src/LivrariaCentral.API/Data/AppDbContext.cs`**
+
+ ```csharp
+ using LivrariaCentral.API.Models; // <--- Importante: Adicione este using
+ using Microsoft.EntityFrameworkCore;
+
+ namespace LivrariaCentral.API.Data;
+
+ public class AppDbContext : DbContext
+ {
+     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+     public DbSet<Livro> Livros { get; set; }
+     public DbSet<Venda> Vendas { get; set; }
+     public DbSet<Usuario> Usuarios { get; set; } // <--- ADICIONE ESTA LINHA
+ }
+ ```
+
+ Agora rode as migrations no terminal:
+ ```bash
+ dotnet ef migrations add CriandoUsuarios
+ dotnet ef database update
+ ```
+
+ ### 4. Configurando o Segredo (Chave do Token)
+
+ Precisamos de uma frase secreta para assinar os tokens.
+ **Arquivo: `src/LivrariaCentral.API/appsettings.json`**
+ Adicione a seção "Jwt" (cuidado com as vírgulas JSON):
+
+ ```json
+ {
+   "ConnectionStrings": { ... },
+   "Logging": { ... },
+   "Jwt": {
+     "Key": "MinhaChaveSuperSecretaDeLivraria123!" 
+   },
+   "AllowedHosts": "*"
+ }
+ ```
+
+ ### 5. Criando o Controlador de Autenticação
+
+ Aqui vamos criar as rotas `/api/auth/registrar` e `/api/auth/login`.
+
+ **Arquivo: `src/LivrariaCentral.API/Controllers/AuthController.cs`**
+
+ ```csharp
+ using System.IdentityModel.Tokens.Jwt;
+ using System.Security.Claims;
+ using System.Text;
+ using LivrariaCentral.API.Data;
+ using LivrariaCentral.API.Models;
+ using Microsoft.AspNetCore.Mvc;
+ using Microsoft.EntityFrameworkCore;
+ using Microsoft.IdentityModel.Tokens;
+
+ namespace LivrariaCentral.API.Controllers;
+
+ [Route("api/auth")]
+ [ApiController]
+ public class AuthController : ControllerBase
+ {
+     private readonly AppDbContext _context;
+     private readonly IConfiguration _configuration;
+
+     public AuthController(AppDbContext context, IConfiguration configuration)
+     {
+         _context = context;
+         _configuration = configuration;
+     }
+
+     [HttpPost("registrar")]
+     public async Task<IActionResult> Registrar(UsuarioDTO request)
+     {
+         // Criptografa a senha antes de salvar
+         string senhaHash = BCrypt.Net.BCrypt.HashPassword(request.Senha);
+
+         var novoUsuario = new Usuario
+         {
+             Email = request.Email,
+             SenhaHash = senhaHash,
+             Nome = "Administrador"
+         };
+
+         _context.Usuarios.Add(novoUsuario);
+         await _context.SaveChangesAsync();
+
+         return Ok("Usuário criado com sucesso!");
+     }
+
+     [HttpPost("login")]
+     public async Task<IActionResult> Login(UsuarioDTO request)
+     {
+         var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == request.Email);
+         
+         // Verifica se usuário existe e se a senha bate com o hash
+         if (usuario == null || !BCrypt.Net.BCrypt.Verify(request.Senha, usuario.SenhaHash))
+         {
+             return BadRequest("Email ou senha inválidos.");
+         }
+
+         // Se passou, gera o Token JWT
+         string token = GerarToken(usuario);
+         return Ok(new { token = token });
+     }
+
+     private string GerarToken(Usuario usuario)
+     {
+         // Adicionado o ! no final para evitar aviso de nulo
+         var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!);
+         var claims = new List<Claim>
+         {
+             new Claim(ClaimTypes.Name, usuario.Email),
+             new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString())
+         };
+
+         var tokenDescriptor = new SecurityTokenDescriptor
+         {
+             Subject = new ClaimsIdentity(claims),
+             Expires = DateTime.UtcNow.AddHours(8), // Token vale por 8 horas
+             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+         };
+
+         var tokenHandler = new JwtSecurityTokenHandler();
+         var token = tokenHandler.CreateToken(tokenDescriptor);
+         return tokenHandler.WriteToken(token);
+     }
+ }
+ ```
+
+ ### 6. Blindando a API (Program.cs)
+
+ Agora vamos avisar o .NET que ele deve usar JWT e proteger as rotas.
+
+ **Arquivo: `src/LivrariaCentral.API/Program.cs`**
+
+ ```csharp
+ // ... imports (Adicione estes dois)
+ using Microsoft.AspNetCore.Authentication.JwtBearer;
+ using Microsoft.IdentityModel.Tokens;
+ using System.Text;
+
+ // ... (Logo após builder.Services.AddSwaggerGen();)
+
+ // 1. Configura o JWT
+ // Adicionado o ! no final para evitar aviso de nulo
+ var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]!);
+
+ builder.Services.AddAuthentication(x =>
+ {
+     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+ })
+ .AddJwtBearer(x =>
+ {
+     x.RequireHttpsMetadata = false;
+     x.SaveToken = true;
+     x.TokenValidationParameters = new TokenValidationParameters
+     {
+         ValidateIssuerSigningKey = true,
+         IssuerSigningKey = new SymmetricSecurityKey(key),
+         ValidateIssuer = false,
+         ValidateAudience = false
+     };
+ });
+
+ var app = builder.Build();
+
+ // ... (Swagger e HttpsRedirection)
+
+ app.UseCors("AllowAll");
+
+ // 2. ATENÇÃO: A ordem aqui importa muito!
+ app.UseAuthentication(); // <--- Quem é você?
+ app.UseAuthorization();  // <--- Você pode entrar aqui?
+
+ app.MapControllers();
+ app.Run();
+ ```
+
+  ## 🚀 Sessão 14: Login no Frontend (O Porteiro do Site)
+
+ Vamos criar a tela de login e ensinar o Blazor a lembrar quem está logado.
+
+ ### 1. Instalando o LocalStorage
+
+ Precisamos guardar o Token no navegador para o usuário não precisar logar a cada clique.
+
+ No terminal da pasta `src/LivrariaCentral.Web`, rode:
+ ```bash
+ dotnet add package Blazored.LocalStorage
+ dotnet add package Microsoft.AspNetCore.Components.Authorization
+ ```
+
+ ### 2. O Provedor de Autenticação (O Cérebro)
+
+ Vamos criar uma classe que verifica se o Token existe e avisa o site "Ei, esse cara tá logado!".
+
+ **Crie a pasta:** `src/LivrariaCentral.Web/Auth`
+ **Crie o arquivo:** `src/LivrariaCentral.Web/Auth/CustomAuthStateProvider.cs`
+
+ ```csharp
+ using System.Net.Http.Headers;
+ using System.Security.Claims;
+ using System.Text.Json;
+ using Blazored.LocalStorage;
+ using Microsoft.AspNetCore.Components.Authorization;
+
+ namespace LivrariaCentral.Web.Auth;
+
+ public class CustomAuthStateProvider : AuthenticationStateProvider
+ {
+     private readonly ILocalStorageService _localStorage;
+     private readonly HttpClient _http;
+
+     public CustomAuthStateProvider(ILocalStorageService localStorage, HttpClient http)
+     {
+         _localStorage = localStorage;
+         _http = http;
+     }
+
+     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+     {
+         // Busca o token no navegador
+         string token = await _localStorage.GetItemAsStringAsync("authToken");
+
+         var identity = new ClaimsIdentity();
+         _http.DefaultRequestHeaders.Authorization = null;
+
+         if (!string.IsNullOrEmpty(token))
+         {
+             try
+             {
+                 // Lê as informações de dentro do Token
+                 identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+                 _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+             }
+             catch
+             {
+                 await _localStorage.RemoveItemAsync("authToken");
+             }
+         }
+
+         var user = new ClaimsPrincipal(identity);
+         var state = new AuthenticationState(user);
+
+         NotifyAuthenticationStateChanged(Task.FromResult(state));
+         return state;
+     }
+
+     // Método auxiliar para ler o Token sem bibliotecas pesadas
+     public static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
+     {
+         var payload = jwt.Split('.')[1];
+         var jsonBytes = ParseBase64WithoutPadding(payload);
+         var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
+         return keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()));
+     }
+
+     private static byte[] ParseBase64WithoutPadding(string base64)
+     {
+         switch (base64.Length % 4)
+         {
+             case 2: base64 += "=="; break;
+             case 3: base64 += "="; break;
+         }
+         return Convert.FromBase64String(base64);
+     }
+ }
+ ```
+
+ ### 3. Configurando o Program.cs (Web)
+
+ Vamos injetar essa lógica no sistema.
+
+ **Arquivo: `src/LivrariaCentral.Web/Program.cs`**
+
+ ```csharp
+ // ... imports
+ using Blazored.LocalStorage;
+ using LivrariaCentral.Web.Auth;
+ using Microsoft.AspNetCore.Components.Authorization;
+
+ // ... (Logo após builder.Services.AddMudServices();)
+
+ // 1. Adiciona o LocalStorage
+ builder.Services.AddBlazoredLocalStorage();
+
+ // 2. Configura a Autenticação do Blazor
+ builder.Services.AddAuthorizationCore();
+ builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+
+ await builder.Build().RunAsync();
+ ```
+
+ ### 4. A Tela de Login
+
+ **Crie o arquivo:** `src/LivrariaCentral.Web/Pages/Login.razor`
+
+ ```razor
+ @page "/login"
+ @using LivrariaCentral.Web.Models
+ @using Blazored.LocalStorage
+ @inject HttpClient Http
+ @inject ILocalStorageService LocalStorage
+ @inject AuthenticationStateProvider AuthStateProvider
+ @inject NavigationManager Nav
+ @inject ISnackbar Snackbar
+
+ <MudContainer MaxWidth="MaxWidth.Small" Class="mt-16">
+     <MudPaper Class="pa-8" Elevation="3">
+         <MudText Typo="Typo.h4" Align="Align.Center" Class="mb-4">🔐 Login</MudText>
+         
+         <MudTextField @bind-Value="email" Label="Email" Variant="Variant.Outlined" Class="mb-3" />
+         <MudTextField @bind-Value="senha" Label="Senha" Variant="Variant.Outlined" InputType="InputType.Password" Class="mb-4" />
+         
+         <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="FazerLogin">Entrar</MudButton>
+     </MudPaper>
+ </MudContainer>
+
+ @code {
+     string email = "";
+     string senha = "";
+
+     async Task FazerLogin()
+     {
+         var loginModel = new { Email = email, Senha = senha };
+         var response = await Http.PostAsJsonAsync("api/auth/login", loginModel);
+
+         if (response.IsSuccessStatusCode)
+         {
+             var resultado = await response.Content.ReadFromJsonAsync<JsonElement>();
+             string token = resultado.GetProperty("token").GetString()!;
+
+             // 1. Salva o token no navegador
+             await LocalStorage.SetItemAsStringAsync("authToken", token);
+             
+             // 2. Força o sistema a reler o token para atualizar o menu
+             await AuthStateProvider.GetAuthenticationStateAsync();
+             
+             Nav.NavigateTo("/");
+         }
+         else
+         {
+             Snackbar.Add("Email ou senha inválidos!", Severity.Error);
+         }
+     }
+ }
+ ```
+
+ ### 5. Protegendo o App (O Cadeado)
+
+ Agora vamos dizer pro Blazor: "Se não tiver logado, manda pro Login".
+
+ **Arquivo: `src/LivrariaCentral.Web/App.razor`**
+ Substitua TODO o conteúdo por este:
+
+ ```razor
+ <CascadingAuthenticationState>
+     <Router AppAssembly="@typeof(App).Assembly">
+         <Found Context="routeData">
+                          <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                 <NotAuthorized>
+                                          <div class="pa-4">
+                         <MudAlert Severity="Severity.Warning">Você precisa fazer login.</MudAlert>
+                         <a href="login">Clique aqui para entrar</a>
+                     </div>
+                 </NotAuthorized>
+             </AuthorizeRouteView>
+         </Found>
+         <NotFound>
+             <PageTitle>Not found</PageTitle>
+             <LayoutView Layout="@typeof(MainLayout)">
+                 <p role="alert">Sorry, there's nothing at this address.</p>
+             </LayoutView>
+         </NotFound>
+     </Router>
+ </CascadingAuthenticationState>
+ ```
+
+ ### 6. Botão de Sair (Logout)
+
+ Vamos adicionar o botão de sair no menu superior.
+
+ **Arquivo: `src/LivrariaCentral.Web/Layout/MainLayout.razor`**
+
+ Adicione o `<AuthorizeView>` dentro do `MudAppBar`.
+
+ ```razor
+  <MudText Typo="Typo.h5" Class="ml-3">Livraria Central</MudText>
+ <MudSpacer />
+ 
+ <AuthorizeView>
+     <Authorized>
+         <MudText Class="mr-4">Olá, @context.User.Identity?.Name</MudText>
+         <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="Logout">Sair</MudButton>
+     </Authorized>
+     <NotAuthorized>
+         <MudButton Variant="Variant.Filled" Color="Color.Success" Href="/login">Entrar</MudButton>
+     </NotAuthorized>
+ </AuthorizeView>
+ ```
+
+ E no `@code`, adicione a lógica de Logout:
+
+ ```csharp
+ @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+ @inject AuthenticationStateProvider AuthStateProvider
+ @inject NavigationManager Nav
+ 
+ // ...
+ async Task Logout()
+ {
+     await LocalStorage.RemoveItemAsync("authToken");
+     await AuthStateProvider.GetAuthenticationStateAsync();
+     Nav.NavigateTo("/login");
+ }
+ ```

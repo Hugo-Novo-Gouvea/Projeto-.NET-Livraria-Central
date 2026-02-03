@@ -1,0 +1,48 @@
+@page "/login"
+@using LivrariaCentral.Web.Models
+@using Blazored.LocalStorage
+@inject HttpClient Http
+@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Nav
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-16">
+    <MudPaper Class="pa-8" Elevation="3">
+        <MudText Typo="Typo.h4" Align="Align.Center" Class="mb-4">🔐 Login</MudText>
+        
+        <MudTextField @bind-Value="email" Label="Email" Variant="Variant.Outlined" Class="mb-3" />
+        <MudTextField @bind-Value="senha" Label="Senha" Variant="Variant.Outlined" InputType="InputType.Password" Class="mb-4" />
+        
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="FazerLogin">Entrar</MudButton>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    string email = "";
+    string senha = "";
+
+    async Task FazerLogin()
+    {
+        var loginModel = new { Email = email, Senha = senha };
+        var response = await Http.PostAsJsonAsync("api/auth/login", loginModel);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var resultado = await response.Content.ReadFromJsonAsync<JsonElement>();
+            string token = resultado.GetProperty("token").GetString()!;
+
+            // 1. Salva o token no navegador
+            await LocalStorage.SetItemAsStringAsync("authToken", token);
+            
+            // 2. Força o sistema a reler o token para atualizar o menu
+            await AuthStateProvider.GetAuthenticationStateAsync();
+            
+            Nav.NavigateTo("/");
+        }
+        else
+        {
+            Snackbar.Add("Email ou senha inválidos!", Severity.Error);
+        }
+    }
+}
