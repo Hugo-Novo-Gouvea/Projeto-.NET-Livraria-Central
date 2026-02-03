@@ -1,76 +1,98 @@
 ﻿@page "/"
+@using LivrariaCentral.Web.Models
+@inject HttpClient Http
 
 <MudText Typo="Typo.h4" Class="mb-4">Dashboard</MudText>
 
-<MudGrid>
-         
-         <MudItem xs="12" sm="6" md="3">
-        <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
-            <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;" />
-            <div>
-                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Vendas Hoje</MudText>
-                <MudText Typo="Typo.h5">R$ 1.250,00</MudText>
-            </div>
-        </MudPaper>
-    </MudItem>
+@if (dados == null)
+{
+         <div class="d-flex justify-center align-center" style="height: 400px;">
+        <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+    </div>
+}
+else
+{
+    <MudGrid>
+                 <MudItem xs="12" sm="6" md="3">
+            <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                <MudIcon Icon="@Icons.Material.Filled.LibraryBooks" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;" />
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Livros</MudText>
+                    <MudText Typo="Typo.h5">@dados.TotalLivros</MudText>
+                </div>
+            </MudPaper>
+        </MudItem>
 
-         <MudItem xs="12" sm="6" md="3">
-        <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
-            <MudIcon Icon="@Icons.Material.Filled.LibraryBooks" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;" />
-            <div>
-                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Livros Vendidos</MudText>
-                <MudText Typo="Typo.h5">45</MudText>
-            </div>
-        </MudPaper>
-    </MudItem>
+                 <MudItem xs="12" sm="6" md="3">
+            <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;" />
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Valor em Estoque</MudText>
+                    <MudText Typo="Typo.h5">@dados.ValorEstoque.ToString("C")</MudText>
+                </div>
+            </MudPaper>
+        </MudItem>
 
-         <MudItem xs="12" sm="6" md="3">
-        <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
-            <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Warning" Class="mx-4" Style="width:54px; height:54px;" />
-            <div>
-                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Estoque Baixo</MudText>
-                <MudText Typo="Typo.h5">3 Títulos</MudText>
-            </div>
-        </MudPaper>
-    </MudItem>
+                 <MudItem xs="12" sm="6" md="3">
+            <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Warning" Class="mx-4" Style="width:54px; height:54px;" />
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Estoque Baixo</MudText>
+                    <MudText Typo="Typo.h5">@dados.EstoqueBaixo</MudText>
+                </div>
+            </MudPaper>
+        </MudItem>
 
-         <MudItem xs="12" sm="6" md="3">
-        <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
-            <MudIcon Icon="@Icons.Material.Filled.People" Color="Color.Info" Class="mx-4" Style="width:54px; height:54px;" />
-            <div>
-                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Clientes</MudText>
-                <MudText Typo="Typo.h5">120</MudText>
-            </div>
-        </MudPaper>
-    </MudItem>
+                 <MudItem xs="12" sm="6" md="3">
+            <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                <MudIcon Icon="@Icons.Material.Filled.People" Color="Color.Info" Class="mx-4" Style="width:54px; height:54px;" />
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Clientes</MudText>
+                    <MudText Typo="Typo.h5">120</MudText>
+                </div>
+            </MudPaper>
+        </MudItem>
 
-    
-    <MudItem xs="12" md="8">
-        <MudPaper Class="pa-4">
-            <MudText Typo="Typo.h6">Vendas dos Últimos 6 Meses</MudText>
-                         <MudChart ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px"></MudChart>
-        </MudPaper>
-    </MudItem>
+                 <MudItem xs="12" md="8">
+            <MudPaper Class="pa-4">
+                <MudText Typo="Typo.h6">Tendência de Vendas (Simulado)</MudText>
+                <MudChart ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px"></MudChart>
+            </MudPaper>
+        </MudItem>
 
-    <MudItem xs="12" md="4">
-        <MudPaper Class="pa-4">
-            <MudText Typo="Typo.h6">Categorias Mais Vendidas</MudText>
-                         <MudChart ChartType="ChartType.Donut" InputData="@DonutData" InputLabels="@DonutLabels" Width="100%" Height="300px" />
-        </MudPaper>
-    </MudItem>
+        <MudItem xs="12" md="4">
+            <MudPaper Class="pa-4">
+                <MudText Typo="Typo.h6">Categorias (Simulado)</MudText>
+                <MudChart ChartType="ChartType.Donut" InputData="@DonutData" InputLabels="@DonutLabels" Width="100%" Height="300px" />
+            </MudPaper>
+        </MudItem>
 
-</MudGrid>
+    </MudGrid>
+}
 
 @code {
-    // --- Dados Fictícios para o Gráfico de Barras ---
+    private DashboardDados? dados;
+
+    // Carrega os dados reais ao abrir a página
+    protected override async Task OnInitializedAsync()
+    {
+        try 
+        {
+            // Bate na API nova que criamos
+            dados = await Http.GetFromJsonAsync<DashboardDados>("api/dashboard/resumo");
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine("Erro ao carregar dashboard: " + ex.Message);
+        }
+    }
+
+    // --- Dados dos Gráficos (Ainda Fictícios para visual) ---
     public List<ChartSeries> Series = new List<ChartSeries>()
     {
         new ChartSeries() { Name = "Vendas (R$)", Data = new double[] { 4000, 2000, 8000, 15000, 6000, 9000 } }
     };
-
     public string[] XAxisLabels = { "Jan", "Fev", "Mar", "Abr", "Mai", "Jun" };
-
-    // --- Dados Fictícios para o Gráfico de Pizza ---
     public double[] DonutData = { 25, 45, 10, 20 };
     public string[] DonutLabels = { "Ficção", "Técnico", "Romance", "HQs" };
 }
