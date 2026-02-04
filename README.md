@@ -2291,3 +2291,130 @@ Markdown
 
   @using ...
  ```
+
+  ## 🚀 Sessão 15: Logs e Monitoramento (A Caixa Preta)
+
+ Vamos configurar a API para criar um arquivo diário (ex: `log-20231027.txt`) registrando tudo o que acontece. Assim, se o sistema der erro na máquina do cliente, saberemos o motivo.
+
+ ### 1. Instalando o Serilog
+
+ Pare a API. No terminal da pasta `src/LivrariaCentral.API`, rode:
+
+ ```bash
+ dotnet add package Serilog.AspNetCore
+ dotnet add package Serilog.Sinks.File
+ ```
+
+ ### 2. Configurando a "Caixa Preta" (Program.cs)
+
+ Vamos configurar o Serilog logo no início do arquivo, para ele pegar erros até mesmo na inicialização.
+
+ **Arquivo: `src/LivrariaCentral.API/Program.cs`**
+
+ Adicione o using no topo:
+ ```csharp
+ using Serilog;
+ ```
+
+ E altere o início e o fim do arquivo conforme abaixo:
+
+ ```csharp
+ // ... (outros usings)
+ using Serilog; 
+
+ // 1. Configura o Serilog (Antes de tudo!)
+ Log.Logger = new LoggerConfiguration()
+     .WriteTo.Console()
+     .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day) // Cria um arquivo por dia
+     .CreateLogger();
+
+ try 
+ {
+     Log.Information("Iniciando a API Livraria Central...");
+
+     var builder = WebApplication.CreateBuilder(args);
+
+     // 2. Conecta o Serilog no Host
+     builder.Host.UseSerilog(); 
+
+     // ... (Mantenha todo o código de Banco, JWT, Swagger, Services aqui...)
+     // ... (Não apague nada do meio!) ...
+
+     var app = builder.Build();
+
+     // ... (Mantenha os Middlewares: Swagger, Https, Auth...) ...
+
+     app.MapControllers();
+
+     // 3. Roda a aplicação protegida contra falhas
+     app.Run();
+ }
+ catch (Exception ex)
+ {
+     Log.Fatal(ex, "A aplicação falhou ao iniciar!");
+ }
+ finally
+ {
+     Log.CloseAndFlush();
+ }
+ ```
+
+ ### 3. Usando os Logs nos Controllers
+
+ Agora vamos registrar quando uma venda acontece ou quando dá erro.
+
+ **Arquivo: `src/LivrariaCentral.API/Controllers/VendasController.cs`**
+
+ 1. Injete o `ILogger` no construtor:
+
+ ```csharp
+ public class VendasController : ControllerBase
+ {
+     private readonly AppDbContext _context;
+     private readonly ILogger<VendasController> _logger; // <--- Adicione
+
+     public VendasController(AppDbContext context, ILogger<VendasController> logger)
+     {
+         _context = context;
+         _logger = logger; // <--- Injete
+     }
+ // ...
+ ```
+
+ 2. Use o log dentro do método `RealizarVenda`:
+
+ ```csharp
+     [HttpPost]
+     public async Task<IActionResult> RealizarVenda(VendaDTO request)
+     {
+         try
+         {
+             // ... (Lógica de verificar livro, estoque, etc...)
+             // ... (Mantenha o código existente) ...
+
+             await _context.SaveChangesAsync();
+
+             // LOG DE SUCESSO
+             _logger.LogInformation("Venda realizada: Livro ID {Id}, Qtd {Qtd}", request.LivroId, request.Quantidade);
+
+             return Ok("Venda registrada com sucesso!");
+         }
+         catch (Exception ex)
+         {
+             // LOG DE ERRO (Grava o motivo exato da falha)
+             _logger.LogError(ex, "Erro crítico ao vender livro {Id}", request.LivroId);
+             return StatusCode(500, "Erro interno ao processar venda.");
+         }
+     }
+ ```
+
+ ### 4. Testando a Caixa Preta
+
+ 1. Rode a API: `dotnet run`.
+ 2. Faça uma venda pelo Site ou Swagger.
+ 3. Vá na pasta `src/LivrariaCentral.API`.
+ 4. Procure a pasta nova **`logs`**.
+ 5. Abra o arquivo de texto lá dentro.
+
+ Você verá algo como:
+ `2023-10-27 20:30:01 [INF] Venda realizada: Livro ID 1, Qtd 2`
