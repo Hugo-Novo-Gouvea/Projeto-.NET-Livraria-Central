@@ -1973,9 +1973,23 @@ else
  app.Run();
  ```
 
+Com certeza! Aqui está a Sessão 14 completa e revisada, já incluindo todas as correções que fizemos ao longo da conversa:
+
+Cultura (Vírgula/Ponto): Já incluída no passo do Program.cs.
+
+Visual do App.razor: Com o botão bonito no lugar do link feio.
+
+Visual do MainLayout: Com a barra de navegação correta.
+
+Correção de Nulos: Código do AuthStateProvider blindado.
+
+Pode substituir o antigo por este novinho em folha:
+
+Markdown
+
   ## 🚀 Sessão 14: Login no Frontend (O Porteiro do Site)
 
- Vamos criar a tela de login e ensinar o Blazor a lembrar quem está logado.
+ Vamos criar a tela de login, ensinar o Blazor a lembrar quem está logado e proteger as rotas com estilo.
 
  ### 1. Instalando o LocalStorage
 
@@ -1987,9 +2001,24 @@ else
  dotnet add package Microsoft.AspNetCore.Components.Authorization
  ```
 
- ### 2. O Provedor de Autenticação (O Cérebro)
+ ### 2. Configurando as Importações Globais
 
- Vamos criar uma classe que verifica se o Token existe e avisa o site "Ei, esse cara tá logado!".
+ Para evitar erros de "Namespace not found" e facilitar sua vida, vamos adicionar os usings globais.
+
+ **Abra o arquivo:** `src/LivrariaCentral.Web/_Imports.razor`
+ Adicione estas linhas no final:
+
+ ```razor
+ @using Microsoft.AspNetCore.Components.Authorization
+ @using Microsoft.AspNetCore.Authorization
+ @using Blazored.LocalStorage
+ @using System.Text.Json
+ @using System.Globalization
+ ```
+
+ ### 3. O Provedor de Autenticação (O Cérebro)
+
+ Vamos criar a classe que gerencia o crachá do usuário. Ela também vai ensinar o Blazor a ler o Nome corretamente dentro do Token.
 
  **Crie a pasta:** `src/LivrariaCentral.Web/Auth`
  **Crie o arquivo:** `src/LivrariaCentral.Web/Auth/CustomAuthStateProvider.cs`
@@ -2016,7 +2045,6 @@ else
 
      public override async Task<AuthenticationState> GetAuthenticationStateAsync()
      {
-         // Busca o token no navegador
          string token = await _localStorage.GetItemAsStringAsync("authToken");
 
          var identity = new ClaimsIdentity();
@@ -2026,8 +2054,8 @@ else
          {
              try
              {
-                 // Lê as informações de dentro do Token
-                 identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+                 // O "unique_name" diz pro Blazor onde achar o Nome do usuário no Token
+                 identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt", "unique_name", "role");
                  _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
              }
              catch
@@ -2043,13 +2071,14 @@ else
          return state;
      }
 
-     // Método auxiliar para ler o Token sem bibliotecas pesadas
      public static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
      {
          var payload = jwt.Split('.')[1];
          var jsonBytes = ParseBase64WithoutPadding(payload);
          var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
-         return keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()));
+         
+         // O "!" e "??" garantem que não teremos erro de Nulo
+         return keyValuePairs!.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString() ?? string.Empty));
      }
 
      private static byte[] ParseBase64WithoutPadding(string base64)
@@ -2064,38 +2093,50 @@ else
  }
  ```
 
- ### 3. Configurando o Program.cs (Web)
+ ### 4. Configurando o Program.cs (Web)
 
- Vamos injetar essa lógica no sistema.
+ Vamos injetar a autenticação e, muito importante, **corrigir o problema da vírgula** que quebrava o MudBlazor.
 
  **Arquivo: `src/LivrariaCentral.Web/Program.cs`**
 
  ```csharp
- // ... imports
+ using Microsoft.AspNetCore.Components.Web;
+ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+ using LivrariaCentral.Web;
+ using MudBlazor.Services;
  using Blazored.LocalStorage;
  using LivrariaCentral.Web.Auth;
  using Microsoft.AspNetCore.Components.Authorization;
+ using System.Globalization;
 
- // ... (Logo após builder.Services.AddMudServices();)
+ // --- CORREÇÃO DE CULTURA (Crucial para o MudBlazor não travar) ---
+ var culture = new CultureInfo("pt-BR");
+ culture.NumberFormat.NumberDecimalSeparator = ".";
+ CultureInfo.DefaultThreadCurrentCulture = culture;
+ CultureInfo.DefaultThreadCurrentUICulture = culture;
+ // ----------------------------------------------------------------
 
- // 1. Adiciona o LocalStorage
+ var builder = WebAssemblyHostBuilder.CreateDefault(args);
+ builder.RootComponents.Add<App>("#app");
+ builder.RootComponents.Add<HeadOutlet>("head::after");
+
+ // ATENÇÃO: Confirme se a porta da sua API é 5239 mesmo!
+ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5239") });
+
+ builder.Services.AddMudServices();
  builder.Services.AddBlazoredLocalStorage();
-
- // 2. Configura a Autenticação do Blazor
  builder.Services.AddAuthorizationCore();
  builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 
  await builder.Build().RunAsync();
  ```
 
- ### 4. A Tela de Login
+ ### 5. A Tela de Login
 
  **Crie o arquivo:** `src/LivrariaCentral.Web/Pages/Login.razor`
 
  ```razor
  @page "/login"
- @using LivrariaCentral.Web.Models
- @using Blazored.LocalStorage
  @inject HttpClient Http
  @inject ILocalStorageService LocalStorage
  @inject AuthenticationStateProvider AuthStateProvider
@@ -2127,12 +2168,8 @@ else
              var resultado = await response.Content.ReadFromJsonAsync<JsonElement>();
              string token = resultado.GetProperty("token").GetString()!;
 
-             // 1. Salva o token no navegador
              await LocalStorage.SetItemAsStringAsync("authToken", token);
-             
-             // 2. Força o sistema a reler o token para atualizar o menu
              await AuthStateProvider.GetAuthenticationStateAsync();
-             
              Nav.NavigateTo("/");
          }
          else
@@ -2143,71 +2180,114 @@ else
  }
  ```
 
- ### 5. Protegendo o App (O Cadeado)
+ ### 6. Protegendo o App (O Cadeado)
 
- Agora vamos dizer pro Blazor: "Se não tiver logado, manda pro Login".
+ Vamos configurar o porteiro (`AuthorizeRouteView`) e criar uma tela de bloqueio bonita para quem tentar burlar.
 
  **Arquivo: `src/LivrariaCentral.Web/App.razor`**
- Substitua TODO o conteúdo por este:
 
  ```razor
  <CascadingAuthenticationState>
      <Router AppAssembly="@typeof(App).Assembly">
          <Found Context="routeData">
-                          <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
                  <NotAuthorized>
-                                          <div class="pa-4">
-                         <MudAlert Severity="Severity.Warning">Você precisa fazer login.</MudAlert>
-                         <a href="login">Clique aqui para entrar</a>
+                                          <div class="d-flex flex-column align-center justify-center pa-8" style="height: 80vh">
+                         <MudIcon Icon="@Icons.Material.Filled.Lock" Size="Size.Large" Color="Color.Warning" Class="mb-4" />
+                         <MudText Typo="Typo.h4" Class="mb-2">Acesso Restrito</MudText>
+                         <MudText Class="mb-6">Você precisa estar logado para acessar esta página.</MudText>
+                         
+                         <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/login" Size="Size.Large" StartIcon="@Icons.Material.Filled.Login">
+                             Ir para o Login
+                         </MudButton>
                      </div>
                  </NotAuthorized>
              </AuthorizeRouteView>
          </Found>
          <NotFound>
-             <PageTitle>Not found</PageTitle>
+             <PageTitle>Não Encontrado</PageTitle>
              <LayoutView Layout="@typeof(MainLayout)">
-                 <p role="alert">Sorry, there's nothing at this address.</p>
+                 <p role="alert">Ops, essa página não existe.</p>
              </LayoutView>
          </NotFound>
      </Router>
  </CascadingAuthenticationState>
  ```
 
- ### 6. Botão de Sair (Logout)
+ ### 7. Atualizando o Menu Principal
 
- Vamos adicionar o botão de sair no menu superior.
+ Vamos mostrar "Olá, Administrador" (sem a vírgula errada) e o botão de Sair.
 
  **Arquivo: `src/LivrariaCentral.Web/Layout/MainLayout.razor`**
 
- Adicione o `<AuthorizeView>` dentro do `MudAppBar`.
-
  ```razor
-  <MudText Typo="Typo.h5" Class="ml-3">Livraria Central</MudText>
- <MudSpacer />
- 
- <AuthorizeView>
-     <Authorized>
-         <MudText Class="mr-4">Olá, @context.User.Identity?.Name</MudText>
-         <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="Logout">Sair</MudButton>
-     </Authorized>
-     <NotAuthorized>
-         <MudButton Variant="Variant.Filled" Color="Color.Success" Href="/login">Entrar</MudButton>
-     </NotAuthorized>
- </AuthorizeView>
- ```
-
- E no `@code`, adicione a lógica de Logout:
-
- ```csharp
+ @inherits LayoutComponentBase
  @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
  @inject AuthenticationStateProvider AuthStateProvider
  @inject NavigationManager Nav
- 
- // ...
- async Task Logout()
- {
-     await LocalStorage.RemoveItemAsync("authToken");
-     await AuthStateProvider.GetAuthenticationStateAsync();
-     Nav.NavigateTo("/login");
+
+ <MudThemeProvider />
+ <MudPopoverProvider />
+ <MudDialogProvider />
+ <MudSnackbarProvider />
+
+ <MudLayout>
+     <MudAppBar Elevation="1">
+         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+         <MudText Typo="Typo.h6" Class="ml-3">Livraria Central</MudText>
+         <MudSpacer />
+         
+         <AuthorizeView>
+             <Authorized>
+                                  <MudText Class="mr-4">Olá @context.User.Identity?.Name</MudText>
+                 <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="Logout">Sair</MudButton>
+             </Authorized>
+             <NotAuthorized>
+                 <MudButton Variant="Variant.Filled" Color="Color.Success" Href="/login">Entrar</MudButton>
+             </NotAuthorized>
+         </AuthorizeView>
+     </MudAppBar>
+
+     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+         <MudNavMenu>
+             <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+             <MudNavLink Href="/livros" Icon="@Icons.Material.Filled.LibraryBooks">Livros</MudNavLink>
+             <MudNavLink Href="/historico" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.History">Histórico</MudNavLink>
+         </MudNavMenu>
+     </MudDrawer>
+
+     <MudMainContent>
+         <MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+             @Body
+         </MudContainer>
+     </MudMainContent>
+ </MudLayout>
+
+ @code {
+     bool _drawerOpen = true;
+
+     void DrawerToggle()
+     {
+         _drawerOpen = !_drawerOpen;
+     }
+
+     async Task Logout()
+     {
+         await LocalStorage.RemoveItemAsync("authToken");
+         await AuthStateProvider.GetAuthenticationStateAsync();
+         Nav.NavigateTo("/login");
+     }
  }
+ ```
+
+ ### 8. Trancando as Portas (A Regra do Enter)
+
+ Adicione o cadeado nas páginas que você quer proteger (`Home`, `Livros`, `Historico`).
+ **Cuidado:** O `@attribute` precisa estar em uma linha separada para não dar erro de compilação!
+
+ ```razor
+ @page "/livros"
+ @attribute [Authorize]
+
+  @using ...
  ```

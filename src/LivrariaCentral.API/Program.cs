@@ -69,7 +69,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // Redireciona HTTP para HTTPS
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCors("AllowAll"); 
 

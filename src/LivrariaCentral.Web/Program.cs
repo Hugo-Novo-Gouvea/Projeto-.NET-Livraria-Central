@@ -5,6 +5,13 @@ using MudBlazor.Services; // Importante
 using Blazored.LocalStorage;
 using LivrariaCentral.Web.Auth;
 using Microsoft.AspNetCore.Components.Authorization;
+using System.Globalization;
+
+
+var culture = new CultureInfo("pt-BR");
+culture.NumberFormat.NumberDecimalSeparator = "."; // Força o uso de Ponto em números
+CultureInfo.DefaultThreadCurrentCulture = culture;
+CultureInfo.DefaultThreadCurrentUICulture = culture;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");

@@ -30,7 +30,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
             try
             {
                 // Lê as informações de dentro do Token
-                identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+                identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt", "unique_name", "role");
                 _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
             catch

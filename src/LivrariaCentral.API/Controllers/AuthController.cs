@@ -62,7 +62,7 @@ public class AuthController : ControllerBase
         var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!); // <--- Exclamação aqui
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, usuario.Email),
+            new Claim(ClaimTypes.Name, usuario.Nome),
             new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString())
         };
 
