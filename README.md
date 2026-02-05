@@ -48,7 +48,7 @@
 
   | Dashboard | Gestão de Livros |
  |:---:|:---:|
- | ![Dashboard](https://placehold.co/600x400/png?text=Print+do+Dashboard) | ![Livros](https://placehold.co/600x400/png?text=Print+da+Tabela) |
+ | ![Dashboard](img/dashboard.png) | ![Livros](img/tabela.png) |
 
  ---
 
