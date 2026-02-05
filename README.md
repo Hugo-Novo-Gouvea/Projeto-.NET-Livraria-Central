@@ -1,8 +1,83 @@
- # 📚 Livraria Central API - Documentação Técnica
+ # 📚 Livraria Central - Sistema de Gestão Full Stack
+ ![Status](https://img.shields.io/badge/Status-Concluído-success?style=for-the-badge)
 
- ### Projeto de estudo utilizando .NET 10, Entity Framework Core e PostgreSQL.
 
- **Objetivo:** Criar uma aplicação web onde o usuário faça a gestão de uma livraria.
+ ![.NET](https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white)
+ ![Blazor](https://img.shields.io/badge/Blazor-512BD4?style=for-the-badge&logo=blazor&logoColor=white)
+ ![MudBlazor](https://img.shields.io/badge/MudBlazor-7E6EEF?style=for-the-badge&logo=mui&logoColor=white)
+ ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+
+ > **Uma solução completa para gerenciamento de livrarias, desenvolvida com as tecnologias mais modernas do ecossistema .NET.**
+
+ ---
+
+ ## 💡 Sobre o Projeto
+
+ Este projeto é uma aplicação **Full Stack** robusta desenvolvida para simular o ambiente real de uma livraria. O objetivo foi criar não apenas um CRUD, mas um sistema funcional com regras de negócio, autenticação segura, relatórios e auditoria.
+
+ Ele serve como:
+ 1.  **Portfólio Técnico:** Demonstrando domínio em arquitetura de software, Clean Code e padrões de mercado.
+ 2.  **Material Didático:** Um guia passo a passo (abaixo) para desenvolvedores que desejam aprender a construir aplicações reais com .NET.
+
+ ---
+
+ ## 🛠️ Tecnologias Utilizadas
+
+ * **Backend:** .NET 10 (Web API), Entity Framework Core.
+ * **Frontend:** Blazor WebAssembly, MudBlazor (Material Design).
+ * **Banco de Dados:** PostgreSQL 18.
+ * **Segurança:** JWT (JSON Web Tokens), BCrypt (Hash de Senhas).
+ * **Relatórios:** QuestPDF (Geração de PDFs profissionais).
+ * **Observabilidade:** Serilog (Logs estruturados e auditoria).
+ * **Deploy:** Configuração para Windows Service (IIS) e Linux (Nginx + Systemd).
+
+ ---
+
+ ## ✨ Funcionalidades Principais
+
+ ✅ **Dashboard Interativo:** Gráficos de vendas e indicadores de estoque em tempo real.
+ ✅ **Gestão de Livros:** Cadastro, edição e exclusão com validações.
+ ✅ **Ponto de Venda (PDV):** Registro de vendas com baixa automática de estoque.
+ ✅ **Segurança:** Login, proteção de rotas e criptografia de senhas.
+ ✅ **Auditoria:** Logs detalhados de quem fez o quê (ex: "Usuário X excluiu o livro Y").
+ ✅ **Relatórios:** Exportação de listagem de estoque em PDF pronto para impressão.
+
+ ---
+
+ ## 📸 Pré-visualização
+
+  | Dashboard | Gestão de Livros |
+ |:---:|:---:|
+ | ![Dashboard](https://placehold.co/600x400/png?text=Print+do+Dashboard) | ![Livros](https://placehold.co/600x400/png?text=Print+da+Tabela) |
+
+ ---
+
+ ## 🚀 Quick Start (Como Rodar)
+
+ Se você quer apenas testar o projeto rapidamente:
+
+ 1.  **Clone o repositório:**
+     ```bash
+     git clone [https://github.com/seu-usuario/LivrariaCentral.git](https://github.com/seu-usuario/LivrariaCentral.git)
+     ```
+ 2.  **Configure o Banco:** Garanta que o PostgreSQL esteja rodando e ajuste a ConnectionString no `appsettings.json`.
+ 3.  **Rode a API:**
+     ```bash
+     cd src/LivrariaCentral.API
+     dotnet run
+     ```
+ 4.  **Rode o Frontend:**
+     ```bash
+     cd src/LivrariaCentral.Web
+     dotnet run
+     ```
+ 5.  **Acesse:** `http://localhost:5000` (Front) e `http://localhost:5123/swagger` (API).
+
+ ---
+
+ # 📖 Guia de Desenvolvimento Passo a Passo
+
+ *Abaixo encontra-se a documentação técnica utilizada durante o desenvolvimento, ideal para fins de estudo.*
 
  ---
 
@@ -20,7 +95,7 @@
 
  ### 1. Criação da pasta Source
 
-(Todos os comandos a seguir são utilizados )
+ (Todos os comandos a seguir são utilizados )
 
  Criação da pasta "src" na raiz para organizar o código fonte.
 
@@ -97,7 +172,7 @@
  {
      public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-      Define que a classe Livro será uma tabela chamada "Livros"
+     // Define que a classe Livro será uma tabela chamada "Livros"
      public DbSet<Livro> Livros { get; set; }
  }
  ```
@@ -214,7 +289,7 @@
 
  namespace LivrariaCentral.API.Controllers;
 
- [Route("api/[controller]")]  A rota será: api/livros
+ [Route("api/[controller]")]  // A rota será: api/livros
  [ApiController]
  public class LivrosController : ControllerBase
  {
@@ -226,7 +301,7 @@
          _context = context;
      }
 
-      GET: api/livros (Listar todos)
+     // GET: api/livros (Listar todos)
      [HttpGet]
      public async Task<ActionResult<IEnumerable<Livro>>> GetLivros()
      {
@@ -254,7 +329,7 @@
          _context.Livros.Add(livro);
          await _context.SaveChangesAsync();
 
-          Retorna código 201 (Created) e o link para acessar o item criado
+         // Retorna código 201 (Created) e o link para acessar o item criado
          return CreatedAtAction(nameof(GetLivro), new { id = livro.Id }, livro);
      }
 
@@ -375,13 +450,13 @@
  ```html
  <head>
      ...
-          <link href="[https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap](https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap)" rel="stylesheet" />
+     <link href="[https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap](https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap)" rel="stylesheet" />
      <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
  </head>
 
  <body>
      ...
-          <script src="_framework/blazor.webassembly.js"></script>
+     <script src="_framework/blazor.webassembly.js"></script>
      <script src="_content/MudBlazor/MudBlazor.min.js"></script>
  </body>
  ```
@@ -428,42 +503,42 @@
  ```razor
  @inherits LayoutComponentBase
 
-<MudThemeProvider /> 
-<MudPopoverProvider />
-<MudDialogProvider />
-<MudSnackbarProvider />
+ <MudThemeProvider /> 
+ <MudPopoverProvider />
+ <MudDialogProvider />
+ <MudSnackbarProvider />
 
-<MudLayout>
-    <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudText Typo="Typo.h6" Class="ml-3">Livraria Central</MudText>
-        <MudSpacer />
-        <MudIconButton Icon="@Icons.Material.Filled.Person" Color="Color.Inherit" />
-    </MudAppBar>
+ <MudLayout>
+     <MudAppBar Elevation="1">
+         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+         <MudText Typo="Typo.h6" Class="ml-3">Livraria Central</MudText>
+         <MudSpacer />
+         <MudIconButton Icon="@Icons.Material.Filled.Person" Color="Color.Inherit" />
+     </MudAppBar>
 
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-        <MudNavMenu>
-            <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
-            <MudNavLink Href="/livros" Icon="@Icons.Material.Filled.LibraryBooks">Livros</MudNavLink>
-            <MudNavLink Href="/configuracoes" Icon="@Icons.Material.Filled.Settings">Configurações</MudNavLink>
-        </MudNavMenu>
-    </MudDrawer>
+     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+         <MudNavMenu>
+             <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+             <MudNavLink Href="/livros" Icon="@Icons.Material.Filled.LibraryBooks">Livros</MudNavLink>
+             <MudNavLink Href="/configuracoes" Icon="@Icons.Material.Filled.Settings">Configurações</MudNavLink>
+         </MudNavMenu>
+     </MudDrawer>
 
-    <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
-            @Body
-        </MudContainer>
-    </MudMainContent>
-</MudLayout>
+     <MudMainContent>
+         <MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+             @Body
+         </MudContainer>
+     </MudMainContent>
+ </MudLayout>
 
-@code {
-    bool _drawerOpen = true;
+ @code {
+     bool _drawerOpen = true;
 
-    void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-    }
-}
+     void DrawerToggle()
+     {
+         _drawerOpen = !_drawerOpen;
+     }
+ }
  ```
 
  ### 6. Testando o Novo Visual
@@ -487,8 +562,8 @@
  <MudText Typo="Typo.h4" Class="mb-4">Dashboard</MudText>
 
  <MudGrid>
-          
-          <MudItem xs="12" sm="6" md="3">
+         
+         <MudItem xs="12" sm="6" md="3">
          <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
              <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;" />
              <div>
@@ -498,7 +573,7 @@
          </MudPaper>
      </MudItem>
 
-          <MudItem xs="12" sm="6" md="3">
+         <MudItem xs="12" sm="6" md="3">
          <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
              <MudIcon Icon="@Icons.Material.Filled.LibraryBooks" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;" />
              <div>
@@ -508,7 +583,7 @@
          </MudPaper>
      </MudItem>
 
-          <MudItem xs="12" sm="6" md="3">
+         <MudItem xs="12" sm="6" md="3">
          <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
              <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Warning" Class="mx-4" Style="width:54px; height:54px;" />
              <div>
@@ -518,7 +593,7 @@
          </MudPaper>
      </MudItem>
 
-          <MudItem xs="12" sm="6" md="3">
+         <MudItem xs="12" sm="6" md="3">
          <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
              <MudIcon Icon="@Icons.Material.Filled.People" Color="Color.Info" Class="mx-4" Style="width:54px; height:54px;" />
              <div>
@@ -532,14 +607,14 @@
      <MudItem xs="12" md="8">
          <MudPaper Class="pa-4">
              <MudText Typo="Typo.h6">Vendas dos Últimos 6 Meses</MudText>
-                          <MudChart ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px"></MudChart>
+             <MudChart ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px"></MudChart>
          </MudPaper>
      </MudItem>
 
      <MudItem xs="12" md="4">
          <MudPaper Class="pa-4">
              <MudText Typo="Typo.h6">Categorias Mais Vendidas</MudText>
-                          <MudChart ChartType="ChartType.Donut" InputData="@DonutData" InputLabels="@DonutLabels" Width="100%" Height="300px" />
+             <MudChart ChartType="ChartType.Donut" InputData="@DonutData" InputLabels="@DonutLabels" Width="100%" Height="300px" />
          </MudPaper>
      </MudItem>
 
@@ -666,7 +741,7 @@
              <PropertyColumn Property="x => x.Estoque" Title="Qtd." />
              <PropertyColumn Property="x => x.Preco" Title="Preço" Format="C" />
              
-                          <TemplateColumn CellClass="d-flex justify-end">
+             <TemplateColumn CellClass="d-flex justify-end">
                  <CellTemplate>
                      <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Edit" Color="@Color.Primary" />
                      <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Delete" Color="@Color.Error" />
@@ -997,14 +1072,14 @@
 
  @if (dados == null)
  {
-          <div class="d-flex justify-center align-center" style="height: 400px;">
+         <div class="d-flex justify-center align-center" style="height: 400px;">
          <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
      </div>
  }
  else
  {
      <MudGrid>
-                  <MudItem xs="12" sm="6" md="3">
+                 <MudItem xs="12" sm="6" md="3">
              <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
                  <MudIcon Icon="@Icons.Material.Filled.LibraryBooks" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;" />
                  <div>
@@ -1014,7 +1089,7 @@
              </MudPaper>
          </MudItem>
 
-                  <MudItem xs="12" sm="6" md="3">
+                 <MudItem xs="12" sm="6" md="3">
              <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
                  <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;" />
                  <div>
@@ -1024,7 +1099,7 @@
              </MudPaper>
          </MudItem>
 
-                  <MudItem xs="12" sm="6" md="3">
+                 <MudItem xs="12" sm="6" md="3">
              <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
                  <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Warning" Class="mx-4" Style="width:54px; height:54px;" />
                  <div>
@@ -1034,7 +1109,7 @@
              </MudPaper>
          </MudItem>
 
-                  <MudItem xs="12" sm="6" md="3">
+                 <MudItem xs="12" sm="6" md="3">
              <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
                  <MudIcon Icon="@Icons.Material.Filled.People" Color="Color.Info" Class="mx-4" Style="width:54px; height:54px;" />
                  <div>
@@ -1044,7 +1119,7 @@
              </MudPaper>
          </MudItem>
 
-                  <MudItem xs="12" md="8">
+                 <MudItem xs="12" md="8">
              <MudPaper Class="pa-4">
                  <MudText Typo="Typo.h6">Tendência de Vendas (Simulado)</MudText>
                  <MudChart ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px"></MudChart>
@@ -1297,169 +1372,169 @@
 
  ```csharp
 
-@page "/livros"
-@using LivrariaCentral.Web.Models
-@inject HttpClient Http
-@inject IDialogService DialogService
-@inject ISnackbar Snackbar
+ @page "/livros"
+ @using LivrariaCentral.Web.Models
+ @inject HttpClient Http
+ @inject IDialogService DialogService
+ @inject ISnackbar Snackbar
 
-<MudText Typo="Typo.h4" Class="mb-4">Gerenciar Livros</MudText>
+ <MudText Typo="Typo.h4" Class="mb-4">Gerenciar Livros</MudText>
 
-<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="mb-4" OnClick="AdicionarLivro">
-    Novo Livro
-</MudButton>
+ <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="mb-4" OnClick="AdicionarLivro">
+     Novo Livro
+ </MudButton>
 
-@if (livros == null)
-{
-    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
-}
-else
-{
-    <MudDataGrid Items="@livros" Filterable="true" SortMode="SortMode.Multiple" QuickFilter="@_quickFilter">
-        <ToolBarContent>
-            <MudText Typo="Typo.h6">Lista de Livros</MudText>
-            <MudSpacer />
-            <MudTextField @bind-Value="_searchString" Placeholder="Buscar..." Adornment="Adornment.Start" Immediate="true"
-                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-        </ToolBarContent>
-        
-        <Columns>
-            <PropertyColumn Property="x => x.Id" Title="#" Sortable="true" Filterable="false" />
-            <PropertyColumn Property="x => x.Titulo" Sortable="true" />
-            <PropertyColumn Property="x => x.Autor" Sortable="true" />
-            <PropertyColumn Property="x => x.Estoque" Title="Qtd." />
-            <PropertyColumn Property="x => x.Preco" Title="Preço" Format="C" />
-            
-            <TemplateColumn CellClass="d-flex justify-end">
-                <CellTemplate>
-                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.AttachMoney" Color="@Color.Success" OnClick="@(() => RealizarVenda(context.Item))" Title="Vender" />
-                    
-                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Edit" Color="@Color.Primary" OnClick="@(() => EditarLivro(context.Item))" />
-                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Delete" Color="@Color.Error" OnClick="@(() => DeletarLivro(context.Item))" />
-                </CellTemplate>
-            </TemplateColumn>
-        </Columns>
-        
-        <PagerContent>
-            <MudDataGridPager T="Livro" />
-        </PagerContent>
-    </MudDataGrid>
-}
+ @if (livros == null)
+ {
+     <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+ }
+ else
+ {
+     <MudDataGrid Items="@livros" Filterable="true" SortMode="SortMode.Multiple" QuickFilter="@_quickFilter">
+         <ToolBarContent>
+             <MudText Typo="Typo.h6">Lista de Livros</MudText>
+             <MudSpacer />
+             <MudTextField @bind-Value="_searchString" Placeholder="Buscar..." Adornment="Adornment.Start" Immediate="true"
+                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+         </ToolBarContent>
+         
+         <Columns>
+             <PropertyColumn Property="x => x.Id" Title="#" Sortable="true" Filterable="false" />
+             <PropertyColumn Property="x => x.Titulo" Sortable="true" />
+             <PropertyColumn Property="x => x.Autor" Sortable="true" />
+             <PropertyColumn Property="x => x.Estoque" Title="Qtd." />
+             <PropertyColumn Property="x => x.Preco" Title="Preço" Format="C" />
+             
+             <TemplateColumn CellClass="d-flex justify-end">
+                 <CellTemplate>
+                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.AttachMoney" Color="@Color.Success" OnClick="@(() => RealizarVenda(context.Item))" Title="Vender" />
+                     
+                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Edit" Color="@Color.Primary" OnClick="@(() => EditarLivro(context.Item))" />
+                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Delete" Color="@Color.Error" OnClick="@(() => DeletarLivro(context.Item))" />
+                 </CellTemplate>
+             </TemplateColumn>
+         </Columns>
+         
+         <PagerContent>
+             <MudDataGridPager T="Livro" />
+         </PagerContent>
+     </MudDataGrid>
+ }
 
-@code {
-    private List<Livro>? livros;
-    private string _searchString = string.Empty;
+ @code {
+     private List<Livro>? livros;
+     private string _searchString = string.Empty;
 
-    protected override async Task OnInitializedAsync()
-    {
-        await CarregarLivros();
-    }
+     protected override async Task OnInitializedAsync()
+     {
+         await CarregarLivros();
+     }
 
-    private async Task CarregarLivros()
-    {
-        livros = await Http.GetFromJsonAsync<List<Livro>>("api/livros");
-    }
+     private async Task CarregarLivros()
+     {
+         livros = await Http.GetFromJsonAsync<List<Livro>>("api/livros");
+     }
 
-    // --- Lógica de ADICIONAR ---
-    private async Task AdicionarLivro()
-    {
-        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = await DialogService.ShowAsync<LivroDialog>("Novo Livro", options);
-        var result = await dialog.Result;
+     // --- Lógica de ADICIONAR ---
+     private async Task AdicionarLivro()
+     {
+         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+         var dialog = await DialogService.ShowAsync<LivroDialog>("Novo Livro", options);
+         var result = await dialog.Result;
 
-        if (result != null && !result.Canceled && result.Data != null)
-        {
-            var novoLivro = (Livro)result.Data;
-            await Http.PostAsJsonAsync("api/livros", novoLivro);
-            Snackbar.Add("Livro cadastrado!", Severity.Success);
-            await CarregarLivros();
-        }
-    }
+         if (result != null && !result.Canceled && result.Data != null)
+         {
+             var novoLivro = (Livro)result.Data;
+             await Http.PostAsJsonAsync("api/livros", novoLivro);
+             Snackbar.Add("Livro cadastrado!", Severity.Success);
+             await CarregarLivros();
+         }
+     }
 
-    // --- Lógica de EDITAR ---
-    private async Task EditarLivro(Livro livro)
-    {
-        var parameters = new DialogParameters { ["Livro"] = livro };
-        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        
-        var dialog = await DialogService.ShowAsync<LivroDialog>("Editar Livro", parameters, options);
-        var result = await dialog.Result;
+     // --- Lógica de EDITAR ---
+     private async Task EditarLivro(Livro livro)
+     {
+         var parameters = new DialogParameters { ["Livro"] = livro };
+         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+         
+         var dialog = await DialogService.ShowAsync<LivroDialog>("Editar Livro", parameters, options);
+         var result = await dialog.Result;
 
-        if (result != null && !result.Canceled && result.Data != null)
-        {
-            var livroEditado = (Livro)result.Data;
-            await Http.PutAsJsonAsync($"api/livros/{livroEditado.Id}", livroEditado);
-            Snackbar.Add("Livro atualizado!", Severity.Success);
-            await CarregarLivros();
-        }
-    }
+         if (result != null && !result.Canceled && result.Data != null)
+         {
+             var livroEditado = (Livro)result.Data;
+             await Http.PutAsJsonAsync($"api/livros/{livroEditado.Id}", livroEditado);
+             Snackbar.Add("Livro atualizado!", Severity.Success);
+             await CarregarLivros();
+         }
+     }
 
-    // --- Lógica de DELETAR ---
-    private async Task DeletarLivro(Livro livro)
-    {
-        bool? result = await DialogService.ShowMessageBox(
-            "Atenção", 
-            $"Deseja excluir o livro '{livro.Titulo}'?", 
-            yesText: "Excluir", cancelText: "Cancelar");
+     // --- Lógica de DELETAR ---
+     private async Task DeletarLivro(Livro livro)
+     {
+         bool? result = await DialogService.ShowMessageBox(
+             "Atenção", 
+             $"Deseja excluir o livro '{livro.Titulo}'?", 
+             yesText: "Excluir", cancelText: "Cancelar");
 
-        if (result == true)
-        {
-            await Http.DeleteAsync($"api/livros/{livro.Id}");
-            Snackbar.Add("Livro excluído.", Severity.Error);
-            await CarregarLivros();
-        }
-    }
+         if (result == true)
+         {
+             await Http.DeleteAsync($"api/livros/{livro.Id}");
+             Snackbar.Add("Livro excluído.", Severity.Error);
+             await CarregarLivros();
+         }
+     }
 
-    // --- NOVO: Lógica de VENDER ---
-    private async Task RealizarVenda(Livro livro)
-    {
-        var parameters = new DialogParameters 
-        { 
-            ["TituloLivro"] = livro.Titulo,
-            ["PrecoUnitario"] = livro.Preco 
-        };
-        
-        var dialog = await DialogService.ShowAsync<VendaDialog>("Registrar Venda", parameters);
-        var result = await dialog.Result;
+     // --- NOVO: Lógica de VENDER ---
+     private async Task RealizarVenda(Livro livro)
+     {
+         var parameters = new DialogParameters 
+         { 
+             ["TituloLivro"] = livro.Titulo,
+             ["PrecoUnitario"] = livro.Preco 
+         };
+         
+         var dialog = await DialogService.ShowAsync<VendaDialog>("Registrar Venda", parameters);
+         var result = await dialog.Result;
 
-        if (result != null && !result.Canceled && result.Data != null)
-        {
-            int qtdVendida = (int)result.Data;
+         if (result != null && !result.Canceled && result.Data != null)
+         {
+             int qtdVendida = (int)result.Data;
 
-            // Cria o objeto para mandar pra API
-            var venda = new VendaDTO { LivroId = livro.Id, Quantidade = qtdVendida };
+             // Cria o objeto para mandar pra API
+             var venda = new VendaDTO { LivroId = livro.Id, Quantidade = qtdVendida };
 
-            var response = await Http.PostAsJsonAsync("api/vendas", venda);
+             var response = await Http.PostAsJsonAsync("api/vendas", venda);
 
-            if (response.IsSuccessStatusCode)
-            {
-                Snackbar.Add($"Venda de {qtdVendida} un. realizada!", Severity.Success);
-                await CarregarLivros(); // Atualiza a tabela para ver o estoque baixando
-            }
-            else
-            {
-                // Lê a mensagem de erro da API (ex: Estoque insuficiente)
-                var erro = await response.Content.ReadAsStringAsync();
-                Snackbar.Add($"Erro: {erro}", Severity.Error);
-            }
-        }
-    }
+             if (response.IsSuccessStatusCode)
+             {
+                 Snackbar.Add($"Venda de {qtdVendida} un. realizada!", Severity.Success);
+                 await CarregarLivros(); // Atualiza a tabela para ver o estoque baixando
+             }
+             else
+             {
+                 // Lê a mensagem de erro da API (ex: Estoque insuficiente)
+                 var erro = await response.Content.ReadAsStringAsync();
+                 Snackbar.Add($"Erro: {erro}", Severity.Error);
+             }
+         }
+     }
 
-    private Func<Livro, bool> _quickFilter => x =>
-    {
-        if (string.IsNullOrWhiteSpace(_searchString)) return true;
-        if (x.Titulo.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        if (x.Autor.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        return false;
-    };
+     private Func<Livro, bool> _quickFilter => x =>
+     {
+         if (string.IsNullOrWhiteSpace(_searchString)) return true;
+         if (x.Titulo.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) return true;
+         if (x.Autor.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) return true;
+         return false;
+     };
 
-    // --- NOVO: Classe auxiliar para enviar os dados ---
-    public class VendaDTO
-    {
-        public int LivroId { get; set; }
-        public int Quantidade { get; set; }
-    }
-}
+     // --- NOVO: Classe auxiliar para enviar os dados ---
+     public class VendaDTO
+     {
+         public int LivroId { get; set; }
+         public int Quantidade { get; set; }
+     }
+ }
 
  ```
 
@@ -1577,7 +1652,7 @@ else
  Adicione o novo `MudNavLink` logo abaixo do link de Livros.
 
  ```razor
- 
+
   <MudNavLink Href="/historico" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.History">Histórico</MudNavLink>
 
  ```
@@ -1729,7 +1804,7 @@ else
          Novo Livro
      </MudButton>
 
-          <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Print" Color="Color.Secondary" OnClick="BaixarRelatorio">
+         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Print" Color="Color.Secondary" OnClick="BaixarRelatorio">
          Imprimir Estoque
      </MudButton>
  </div>
@@ -1749,672 +1824,917 @@ else
      }
  ```
 
-  Com certeza. Aqui está a documentação da Sessão 13 corrigida, com todas as validações de nulos resolvidas (= string.Empty e o operador !) e no formato solicitado ().
+  ## 🚀 Sessão 13: Segurança e Autenticação (Backend)
 
- ## 🚀 Sessão 13: Segurança e Autenticação (Backend)
+  Vamos implementar JWT (JSON Web Tokens). Funciona assim: o usuário manda senha, a API confere e devolve um "crachá digital" (Token).
 
- Vamos implementar JWT (JSON Web Tokens). Funciona assim: o usuário manda senha, a API confere e devolve um "crachá digital" (Token).
+  ### 1. Instalando Pacotes de Segurança
 
- ### 1. Instalando Pacotes de Segurança
+  Pare a API. No terminal da pasta `src/LivrariaCentral.API`, rode:
 
- Pare a API. No terminal da pasta `src/LivrariaCentral.API`, rode:
+  ```bash
+  dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer
+  dotnet add package BCrypt.Net-Next
+  ```
+  *Nota: O BCrypt serve para criptografar a senha no banco. Nunca salve senhas em texto puro!*
 
- ```bash
- dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer
- dotnet add package BCrypt.Net-Next
- ```
- *Nota: O BCrypt serve para criptografar a senha no banco. Nunca salve senhas em texto puro!*
+  ### 2. Criando a Tabela de Usuários
 
- ### 2. Criando a Tabela de Usuários
+  **Arquivo: `src/LivrariaCentral.API/Models/Usuario.cs`**
 
- **Arquivo: `src/LivrariaCentral.API/Models/Usuario.cs`**
+  ```csharp
+  namespace LivrariaCentral.API.Models;
 
- ```csharp
- namespace LivrariaCentral.API.Models;
+  public class Usuario
+  {
+      public int Id { get; set; }
+      public string Email { get; set; } = string.Empty; // Inicializado para evitar null
+      public string SenhaHash { get; set; } = string.Empty; 
+      public string Nome { get; set; } = string.Empty;
+  }
 
- public class Usuario
- {
-     public int Id { get; set; }
-     public string Email { get; set; } = string.Empty; // Inicializado para evitar null
-     public string SenhaHash { get; set; } = string.Empty; 
-     public string Nome { get; set; } = string.Empty;
- }
+  // Classe auxiliar para receber os dados do Login/Registro
+  public class UsuarioDTO
+  {
+      public string Email { get; set; } = string.Empty;
+      public string Senha { get; set; } = string.Empty;
+  }
+  ```
 
- // Classe auxiliar para receber os dados do Login/Registro
- public class UsuarioDTO
- {
-     public string Email { get; set; } = string.Empty;
-     public string Senha { get; set; } = string.Empty;
- }
- ```
+  ### 3. Atualizando o Banco de Dados
 
- ### 3. Atualizando o Banco de Dados
+  Precisamos avisar o Entity Framework sobre a nova tabela.
 
- Precisamos avisar o Entity Framework sobre a nova tabela.
+  **Arquivo: `src/LivrariaCentral.API/Data/AppDbContext.cs`**
 
- **Arquivo: `src/LivrariaCentral.API/Data/AppDbContext.cs`**
+  ```csharp
+  using LivrariaCentral.API.Models; // <--- Importante: Adicione este using
+  using Microsoft.EntityFrameworkCore;
 
- ```csharp
- using LivrariaCentral.API.Models; // <--- Importante: Adicione este using
- using Microsoft.EntityFrameworkCore;
+  namespace LivrariaCentral.API.Data;
 
- namespace LivrariaCentral.API.Data;
+  public class AppDbContext : DbContext
+  {
+      public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
- public class AppDbContext : DbContext
- {
-     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+      public DbSet<Livro> Livros { get; set; }
+      public DbSet<Venda> Vendas { get; set; }
+      public DbSet<Usuario> Usuarios { get; set; } // <--- ADICIONE ESTA LINHA
+  }
+  ```
 
-     public DbSet<Livro> Livros { get; set; }
-     public DbSet<Venda> Vendas { get; set; }
-     public DbSet<Usuario> Usuarios { get; set; } // <--- ADICIONE ESTA LINHA
- }
- ```
+  Agora rode as migrations no terminal:
+  ```bash
+  dotnet ef migrations add CriandoUsuarios
+  dotnet ef database update
+  ```
 
- Agora rode as migrations no terminal:
- ```bash
- dotnet ef migrations add CriandoUsuarios
- dotnet ef database update
- ```
+  ### 4. Configurando o Segredo (Chave do Token)
 
- ### 4. Configurando o Segredo (Chave do Token)
+  Precisamos de uma frase secreta para assinar os tokens.
+  **Arquivo: `src/LivrariaCentral.API/appsettings.json`**
+  Adicione a seção "Jwt" (cuidado com as vírgulas JSON):
 
- Precisamos de uma frase secreta para assinar os tokens.
- **Arquivo: `src/LivrariaCentral.API/appsettings.json`**
- Adicione a seção "Jwt" (cuidado com as vírgulas JSON):
+  ```json
+  {
+    "ConnectionStrings": { ... },
+    "Logging": { ... },
+    "Jwt": {
+      "Key": "MinhaChaveSuperSecretaDeLivraria123!" 
+    },
+    "AllowedHosts": "*"
+  }
+  ```
 
- ```json
- {
-   "ConnectionStrings": { ... },
-   "Logging": { ... },
-   "Jwt": {
-     "Key": "MinhaChaveSuperSecretaDeLivraria123!" 
-   },
-   "AllowedHosts": "*"
- }
- ```
+  ### 5. Criando o Controlador de Autenticação
 
- ### 5. Criando o Controlador de Autenticação
+  Aqui vamos criar as rotas `/api/auth/registrar` e `/api/auth/login`.
 
- Aqui vamos criar as rotas `/api/auth/registrar` e `/api/auth/login`.
+  **Arquivo: `src/LivrariaCentral.API/Controllers/AuthController.cs`**
 
- **Arquivo: `src/LivrariaCentral.API/Controllers/AuthController.cs`**
+  ```csharp
+  using System.IdentityModel.Tokens.Jwt;
+  using System.Security.Claims;
+  using System.Text;
+  using LivrariaCentral.API.Data;
+  using LivrariaCentral.API.Models;
+  using Microsoft.AspNetCore.Mvc;
+  using Microsoft.EntityFrameworkCore;
+  using Microsoft.IdentityModel.Tokens;
 
- ```csharp
- using System.IdentityModel.Tokens.Jwt;
- using System.Security.Claims;
- using System.Text;
- using LivrariaCentral.API.Data;
- using LivrariaCentral.API.Models;
- using Microsoft.AspNetCore.Mvc;
- using Microsoft.EntityFrameworkCore;
- using Microsoft.IdentityModel.Tokens;
+  namespace LivrariaCentral.API.Controllers;
 
- namespace LivrariaCentral.API.Controllers;
+  [Route("api/auth")]
+  [ApiController]
+  public class AuthController : ControllerBase
+  {
+      private readonly AppDbContext _context;
+      private readonly IConfiguration _configuration;
 
- [Route("api/auth")]
- [ApiController]
- public class AuthController : ControllerBase
- {
-     private readonly AppDbContext _context;
-     private readonly IConfiguration _configuration;
+      public AuthController(AppDbContext context, IConfiguration configuration)
+      {
+          _context = context;
+          _configuration = configuration;
+      }
 
-     public AuthController(AppDbContext context, IConfiguration configuration)
-     {
-         _context = context;
-         _configuration = configuration;
-     }
+      [HttpPost("registrar")]
+      public async Task<IActionResult> Registrar(UsuarioDTO request)
+      {
+          // Criptografa a senha antes de salvar
+          string senhaHash = BCrypt.Net.BCrypt.HashPassword(request.Senha);
 
-     [HttpPost("registrar")]
-     public async Task<IActionResult> Registrar(UsuarioDTO request)
-     {
-         // Criptografa a senha antes de salvar
-         string senhaHash = BCrypt.Net.BCrypt.HashPassword(request.Senha);
+          var novoUsuario = new Usuario
+          {
+              Email = request.Email,
+              SenhaHash = senhaHash,
+              Nome = "Administrador"
+          };
 
-         var novoUsuario = new Usuario
-         {
-             Email = request.Email,
-             SenhaHash = senhaHash,
-             Nome = "Administrador"
-         };
+          _context.Usuarios.Add(novoUsuario);
+          await _context.SaveChangesAsync();
 
-         _context.Usuarios.Add(novoUsuario);
-         await _context.SaveChangesAsync();
+          return Ok("Usuário criado com sucesso!");
+      }
 
-         return Ok("Usuário criado com sucesso!");
-     }
+      [HttpPost("login")]
+      public async Task<IActionResult> Login(UsuarioDTO request)
+      {
+          var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == request.Email);
+          
+          // Verifica se usuário existe e se a senha bate com o hash
+          if (usuario == null || !BCrypt.Net.BCrypt.Verify(request.Senha, usuario.SenhaHash))
+          {
+              return BadRequest("Email ou senha inválidos.");
+          }
 
-     [HttpPost("login")]
-     public async Task<IActionResult> Login(UsuarioDTO request)
-     {
-         var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == request.Email);
-         
-         // Verifica se usuário existe e se a senha bate com o hash
-         if (usuario == null || !BCrypt.Net.BCrypt.Verify(request.Senha, usuario.SenhaHash))
-         {
-             return BadRequest("Email ou senha inválidos.");
-         }
+          // Se passou, gera o Token JWT
+          string token = GerarToken(usuario);
+          return Ok(new { token = token });
+      }
 
-         // Se passou, gera o Token JWT
-         string token = GerarToken(usuario);
-         return Ok(new { token = token });
-     }
+      private string GerarToken(Usuario usuario)
+      {
+          // Adicionado o ! no final para evitar aviso de nulo
+          var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!);
+          var claims = new List<Claim>
+          {
+              new Claim(ClaimTypes.Name, usuario.Email),
+              new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString())
+          };
 
-     private string GerarToken(Usuario usuario)
-     {
-         // Adicionado o ! no final para evitar aviso de nulo
-         var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!);
-         var claims = new List<Claim>
-         {
-             new Claim(ClaimTypes.Name, usuario.Email),
-             new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString())
-         };
+          var tokenDescriptor = new SecurityTokenDescriptor
+          {
+              Subject = new ClaimsIdentity(claims),
+              Expires = DateTime.UtcNow.AddHours(8), // Token vale por 8 horas
+              SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+          };
 
-         var tokenDescriptor = new SecurityTokenDescriptor
-         {
-             Subject = new ClaimsIdentity(claims),
-             Expires = DateTime.UtcNow.AddHours(8), // Token vale por 8 horas
-             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-         };
+          var tokenHandler = new JwtSecurityTokenHandler();
+          var token = tokenHandler.CreateToken(tokenDescriptor);
+          return tokenHandler.WriteToken(token);
+      }
+  }
+  ```
 
-         var tokenHandler = new JwtSecurityTokenHandler();
-         var token = tokenHandler.CreateToken(tokenDescriptor);
-         return tokenHandler.WriteToken(token);
-     }
- }
- ```
+  ### 6. Blindando a API (Program.cs)
 
- ### 6. Blindando a API (Program.cs)
+  Agora vamos avisar o .NET que ele deve usar JWT e proteger as rotas.
 
- Agora vamos avisar o .NET que ele deve usar JWT e proteger as rotas.
+  **Arquivo: `src/LivrariaCentral.API/Program.cs`**
 
- **Arquivo: `src/LivrariaCentral.API/Program.cs`**
+  ```csharp
+  // ... imports (Adicione estes dois)
+  using Microsoft.AspNetCore.Authentication.JwtBearer;
+  using Microsoft.IdentityModel.Tokens;
+  using System.Text;
 
- ```csharp
- // ... imports (Adicione estes dois)
- using Microsoft.AspNetCore.Authentication.JwtBearer;
- using Microsoft.IdentityModel.Tokens;
- using System.Text;
+  // ... (Logo após builder.Services.AddSwaggerGen();)
 
- // ... (Logo após builder.Services.AddSwaggerGen();)
+  // 1. Configura o JWT
+  // Adicionado o ! no final para evitar aviso de nulo
+  var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]!);
 
- // 1. Configura o JWT
- // Adicionado o ! no final para evitar aviso de nulo
- var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]!);
+  builder.Services.AddAuthentication(x =>
+  {
+      x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+      x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+  })
+  .AddJwtBearer(x =>
+  {
+      x.RequireHttpsMetadata = false;
+      x.SaveToken = true;
+      x.TokenValidationParameters = new TokenValidationParameters
+      {
+          ValidateIssuerSigningKey = true,
+          IssuerSigningKey = new SymmetricSecurityKey(key),
+          ValidateIssuer = false,
+          ValidateAudience = false
+      };
+  });
 
- builder.Services.AddAuthentication(x =>
- {
-     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
- })
- .AddJwtBearer(x =>
- {
-     x.RequireHttpsMetadata = false;
-     x.SaveToken = true;
-     x.TokenValidationParameters = new TokenValidationParameters
-     {
-         ValidateIssuerSigningKey = true,
-         IssuerSigningKey = new SymmetricSecurityKey(key),
-         ValidateIssuer = false,
-         ValidateAudience = false
-     };
- });
+  var app = builder.Build();
 
- var app = builder.Build();
+  // ... (Swagger e HttpsRedirection)
 
- // ... (Swagger e HttpsRedirection)
+  app.UseCors("AllowAll");
 
- app.UseCors("AllowAll");
+  // 2. ATENÇÃO: A ordem aqui importa muito!
+  app.UseAuthentication(); // <--- Quem é você?
+  app.UseAuthorization();  // <--- Você pode entrar aqui?
 
- // 2. ATENÇÃO: A ordem aqui importa muito!
- app.UseAuthentication(); // <--- Quem é você?
- app.UseAuthorization();  // <--- Você pode entrar aqui?
-
- app.MapControllers();
- app.Run();
- ```
-
-Com certeza! Aqui está a Sessão 14 completa e revisada, já incluindo todas as correções que fizemos ao longo da conversa:
-
-Cultura (Vírgula/Ponto): Já incluída no passo do Program.cs.
-
-Visual do App.razor: Com o botão bonito no lugar do link feio.
-
-Visual do MainLayout: Com a barra de navegação correta.
-
-Correção de Nulos: Código do AuthStateProvider blindado.
-
-Pode substituir o antigo por este novinho em folha:
-
-Markdown
+  app.MapControllers();
+  app.Run();
+  ```
 
   ## 🚀 Sessão 14: Login no Frontend (O Porteiro do Site)
 
- Vamos criar a tela de login, ensinar o Blazor a lembrar quem está logado e proteger as rotas com estilo.
-
- ### 1. Instalando o LocalStorage
-
- Precisamos guardar o Token no navegador para o usuário não precisar logar a cada clique.
-
- No terminal da pasta `src/LivrariaCentral.Web`, rode:
- ```bash
- dotnet add package Blazored.LocalStorage
- dotnet add package Microsoft.AspNetCore.Components.Authorization
- ```
-
- ### 2. Configurando as Importações Globais
-
- Para evitar erros de "Namespace not found" e facilitar sua vida, vamos adicionar os usings globais.
-
- **Abra o arquivo:** `src/LivrariaCentral.Web/_Imports.razor`
- Adicione estas linhas no final:
-
- ```razor
- @using Microsoft.AspNetCore.Components.Authorization
- @using Microsoft.AspNetCore.Authorization
- @using Blazored.LocalStorage
- @using System.Text.Json
- @using System.Globalization
- ```
-
- ### 3. O Provedor de Autenticação (O Cérebro)
-
- Vamos criar a classe que gerencia o crachá do usuário. Ela também vai ensinar o Blazor a ler o Nome corretamente dentro do Token.
-
- **Crie a pasta:** `src/LivrariaCentral.Web/Auth`
- **Crie o arquivo:** `src/LivrariaCentral.Web/Auth/CustomAuthStateProvider.cs`
-
- ```csharp
- using System.Net.Http.Headers;
- using System.Security.Claims;
- using System.Text.Json;
- using Blazored.LocalStorage;
- using Microsoft.AspNetCore.Components.Authorization;
-
- namespace LivrariaCentral.Web.Auth;
-
- public class CustomAuthStateProvider : AuthenticationStateProvider
- {
-     private readonly ILocalStorageService _localStorage;
-     private readonly HttpClient _http;
-
-     public CustomAuthStateProvider(ILocalStorageService localStorage, HttpClient http)
-     {
-         _localStorage = localStorage;
-         _http = http;
-     }
-
-     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
-     {
-         string token = await _localStorage.GetItemAsStringAsync("authToken");
-
-         var identity = new ClaimsIdentity();
-         _http.DefaultRequestHeaders.Authorization = null;
-
-         if (!string.IsNullOrEmpty(token))
-         {
-             try
-             {
-                 // O "unique_name" diz pro Blazor onde achar o Nome do usuário no Token
-                 identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt", "unique_name", "role");
-                 _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-             }
-             catch
-             {
-                 await _localStorage.RemoveItemAsync("authToken");
-             }
-         }
-
-         var user = new ClaimsPrincipal(identity);
-         var state = new AuthenticationState(user);
-
-         NotifyAuthenticationStateChanged(Task.FromResult(state));
-         return state;
-     }
-
-     public static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
-     {
-         var payload = jwt.Split('.')[1];
-         var jsonBytes = ParseBase64WithoutPadding(payload);
-         var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
-         
-         // O "!" e "??" garantem que não teremos erro de Nulo
-         return keyValuePairs!.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString() ?? string.Empty));
-     }
-
-     private static byte[] ParseBase64WithoutPadding(string base64)
-     {
-         switch (base64.Length % 4)
-         {
-             case 2: base64 += "=="; break;
-             case 3: base64 += "="; break;
-         }
-         return Convert.FromBase64String(base64);
-     }
- }
- ```
-
- ### 4. Configurando o Program.cs (Web)
-
- Vamos injetar a autenticação e, muito importante, **corrigir o problema da vírgula** que quebrava o MudBlazor.
-
- **Arquivo: `src/LivrariaCentral.Web/Program.cs`**
-
- ```csharp
- using Microsoft.AspNetCore.Components.Web;
- using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
- using LivrariaCentral.Web;
- using MudBlazor.Services;
- using Blazored.LocalStorage;
- using LivrariaCentral.Web.Auth;
- using Microsoft.AspNetCore.Components.Authorization;
- using System.Globalization;
-
- // --- CORREÇÃO DE CULTURA (Crucial para o MudBlazor não travar) ---
- var culture = new CultureInfo("pt-BR");
- culture.NumberFormat.NumberDecimalSeparator = ".";
- CultureInfo.DefaultThreadCurrentCulture = culture;
- CultureInfo.DefaultThreadCurrentUICulture = culture;
- // ----------------------------------------------------------------
-
- var builder = WebAssemblyHostBuilder.CreateDefault(args);
- builder.RootComponents.Add<App>("#app");
- builder.RootComponents.Add<HeadOutlet>("head::after");
-
- // ATENÇÃO: Confirme se a porta da sua API é 5239 mesmo!
- builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5239") });
-
- builder.Services.AddMudServices();
- builder.Services.AddBlazoredLocalStorage();
- builder.Services.AddAuthorizationCore();
- builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
-
- await builder.Build().RunAsync();
- ```
-
- ### 5. A Tela de Login
-
- **Crie o arquivo:** `src/LivrariaCentral.Web/Pages/Login.razor`
-
- ```razor
- @page "/login"
- @inject HttpClient Http
- @inject ILocalStorageService LocalStorage
- @inject AuthenticationStateProvider AuthStateProvider
- @inject NavigationManager Nav
- @inject ISnackbar Snackbar
-
- <MudContainer MaxWidth="MaxWidth.Small" Class="mt-16">
-     <MudPaper Class="pa-8" Elevation="3">
-         <MudText Typo="Typo.h4" Align="Align.Center" Class="mb-4">🔐 Login</MudText>
-         
-         <MudTextField @bind-Value="email" Label="Email" Variant="Variant.Outlined" Class="mb-3" />
-         <MudTextField @bind-Value="senha" Label="Senha" Variant="Variant.Outlined" InputType="InputType.Password" Class="mb-4" />
-         
-         <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="FazerLogin">Entrar</MudButton>
-     </MudPaper>
- </MudContainer>
-
- @code {
-     string email = "";
-     string senha = "";
-
-     async Task FazerLogin()
-     {
-         var loginModel = new { Email = email, Senha = senha };
-         var response = await Http.PostAsJsonAsync("api/auth/login", loginModel);
-
-         if (response.IsSuccessStatusCode)
-         {
-             var resultado = await response.Content.ReadFromJsonAsync<JsonElement>();
-             string token = resultado.GetProperty("token").GetString()!;
-
-             await LocalStorage.SetItemAsStringAsync("authToken", token);
-             await AuthStateProvider.GetAuthenticationStateAsync();
-             Nav.NavigateTo("/");
-         }
-         else
-         {
-             Snackbar.Add("Email ou senha inválidos!", Severity.Error);
-         }
-     }
- }
- ```
-
- ### 6. Protegendo o App (O Cadeado)
-
- Vamos configurar o porteiro (`AuthorizeRouteView`) e criar uma tela de bloqueio bonita para quem tentar burlar.
-
- **Arquivo: `src/LivrariaCentral.Web/App.razor`**
-
- ```razor
- <CascadingAuthenticationState>
-     <Router AppAssembly="@typeof(App).Assembly">
-         <Found Context="routeData">
-             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
-                 <NotAuthorized>
-                                          <div class="d-flex flex-column align-center justify-center pa-8" style="height: 80vh">
-                         <MudIcon Icon="@Icons.Material.Filled.Lock" Size="Size.Large" Color="Color.Warning" Class="mb-4" />
-                         <MudText Typo="Typo.h4" Class="mb-2">Acesso Restrito</MudText>
-                         <MudText Class="mb-6">Você precisa estar logado para acessar esta página.</MudText>
-                         
-                         <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/login" Size="Size.Large" StartIcon="@Icons.Material.Filled.Login">
-                             Ir para o Login
-                         </MudButton>
-                     </div>
-                 </NotAuthorized>
-             </AuthorizeRouteView>
-         </Found>
-         <NotFound>
-             <PageTitle>Não Encontrado</PageTitle>
-             <LayoutView Layout="@typeof(MainLayout)">
-                 <p role="alert">Ops, essa página não existe.</p>
-             </LayoutView>
-         </NotFound>
-     </Router>
- </CascadingAuthenticationState>
- ```
-
- ### 7. Atualizando o Menu Principal
-
- Vamos mostrar "Olá, Administrador" (sem a vírgula errada) e o botão de Sair.
-
- **Arquivo: `src/LivrariaCentral.Web/Layout/MainLayout.razor`**
-
- ```razor
- @inherits LayoutComponentBase
- @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
- @inject AuthenticationStateProvider AuthStateProvider
- @inject NavigationManager Nav
-
- <MudThemeProvider />
- <MudPopoverProvider />
- <MudDialogProvider />
- <MudSnackbarProvider />
-
- <MudLayout>
-     <MudAppBar Elevation="1">
-         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-         <MudText Typo="Typo.h6" Class="ml-3">Livraria Central</MudText>
-         <MudSpacer />
-         
-         <AuthorizeView>
-             <Authorized>
-                                  <MudText Class="mr-4">Olá @context.User.Identity?.Name</MudText>
-                 <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="Logout">Sair</MudButton>
-             </Authorized>
-             <NotAuthorized>
-                 <MudButton Variant="Variant.Filled" Color="Color.Success" Href="/login">Entrar</MudButton>
-             </NotAuthorized>
-         </AuthorizeView>
-     </MudAppBar>
-
-     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-         <MudNavMenu>
-             <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
-             <MudNavLink Href="/livros" Icon="@Icons.Material.Filled.LibraryBooks">Livros</MudNavLink>
-             <MudNavLink Href="/historico" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.History">Histórico</MudNavLink>
-         </MudNavMenu>
-     </MudDrawer>
-
-     <MudMainContent>
-         <MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
-             @Body
-         </MudContainer>
-     </MudMainContent>
- </MudLayout>
-
- @code {
-     bool _drawerOpen = true;
-
-     void DrawerToggle()
-     {
-         _drawerOpen = !_drawerOpen;
-     }
-
-     async Task Logout()
-     {
-         await LocalStorage.RemoveItemAsync("authToken");
-         await AuthStateProvider.GetAuthenticationStateAsync();
-         Nav.NavigateTo("/login");
-     }
- }
- ```
-
- ### 8. Trancando as Portas (A Regra do Enter)
-
- Adicione o cadeado nas páginas que você quer proteger (`Home`, `Livros`, `Historico`).
- **Cuidado:** O `@attribute` precisa estar em uma linha separada para não dar erro de compilação!
-
- ```razor
- @page "/livros"
- @attribute [Authorize]
-
-  @using ...
- ```
-
-  ## 🚀 Sessão 15: Logs e Monitoramento (A Caixa Preta)
-
- Vamos configurar a API para criar um arquivo diário (ex: `log-20231027.txt`) registrando tudo o que acontece. Assim, se o sistema der erro na máquina do cliente, saberemos o motivo.
-
- ### 1. Instalando o Serilog
-
- Pare a API. No terminal da pasta `src/LivrariaCentral.API`, rode:
-
- ```bash
- dotnet add package Serilog.AspNetCore
- dotnet add package Serilog.Sinks.File
- ```
-
- ### 2. Configurando a "Caixa Preta" (Program.cs)
-
- Vamos configurar o Serilog logo no início do arquivo, para ele pegar erros até mesmo na inicialização.
-
- **Arquivo: `src/LivrariaCentral.API/Program.cs`**
-
- Adicione o using no topo:
- ```csharp
- using Serilog;
- ```
-
- E altere o início e o fim do arquivo conforme abaixo:
-
- ```csharp
- // ... (outros usings)
- using Serilog; 
-
- // 1. Configura o Serilog (Antes de tudo!)
- Log.Logger = new LoggerConfiguration()
-     .WriteTo.Console()
-     .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day) // Cria um arquivo por dia
-     .CreateLogger();
-
- try 
- {
-     Log.Information("Iniciando a API Livraria Central...");
-
+  Vamos criar a tela de login, ensinar o Blazor a lembrar quem está logado e proteger as rotas com estilo.
+
+  ### 1. Instalando o LocalStorage
+
+  Precisamos guardar o Token no navegador para o usuário não precisar logar a cada clique.
+
+  No terminal da pasta `src/LivrariaCentral.Web`, rode:
+  ```bash
+  dotnet add package Blazored.LocalStorage
+  dotnet add package Microsoft.AspNetCore.Components.Authorization
+  ```
+
+  ### 2. Configurando as Importações Globais
+
+  Para evitar erros de "Namespace not found" e facilitar sua vida, vamos adicionar os usings globais.
+
+  **Abra o arquivo:** `src/LivrariaCentral.Web/_Imports.razor`
+  Adicione estas linhas no final:
+
+  ```razor
+  @using Microsoft.AspNetCore.Components.Authorization
+  @using Microsoft.AspNetCore.Authorization
+  @using Blazored.LocalStorage
+  @using System.Text.Json
+  @using System.Globalization
+  ```
+
+  ### 3. O Provedor de Autenticação (O Cérebro)
+
+  Vamos criar a classe que gerencia o crachá do usuário. Ela também vai ensinar o Blazor a ler o Nome corretamente dentro do Token.
+
+  **Crie a pasta:** `src/LivrariaCentral.Web/Auth`
+  **Crie o arquivo:** `src/LivrariaCentral.Web/Auth/CustomAuthStateProvider.cs`
+
+  ```csharp
+  using System.Net.Http.Headers;
+  using System.Security.Claims;
+  using System.Text.Json;
+  using Blazored.LocalStorage;
+  using Microsoft.AspNetCore.Components.Authorization;
+
+  namespace LivrariaCentral.Web.Auth;
+
+  public class CustomAuthStateProvider : AuthenticationStateProvider
+  {
+      private readonly ILocalStorageService _localStorage;
+      private readonly HttpClient _http;
+
+      public CustomAuthStateProvider(ILocalStorageService localStorage, HttpClient http)
+      {
+          _localStorage = localStorage;
+          _http = http;
+      }
+
+      public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+      {
+          string token = await _localStorage.GetItemAsStringAsync("authToken");
+
+          var identity = new ClaimsIdentity();
+          _http.DefaultRequestHeaders.Authorization = null;
+
+          if (!string.IsNullOrEmpty(token))
+          {
+              try
+              {
+                  // O "unique_name" diz pro Blazor onde achar o Nome do usuário no Token
+                  identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt", "unique_name", "role");
+                  _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+              }
+              catch
+              {
+                  await _localStorage.RemoveItemAsync("authToken");
+              }
+          }
+
+          var user = new ClaimsPrincipal(identity);
+          var state = new AuthenticationState(user);
+
+          NotifyAuthenticationStateChanged(Task.FromResult(state));
+          return state;
+      }
+
+      public static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
+      {
+          var payload = jwt.Split('.')[1];
+          var jsonBytes = ParseBase64WithoutPadding(payload);
+          var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
+          
+          // O "!" e "??" garantem que não teremos erro de Nulo
+          return keyValuePairs!.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString() ?? string.Empty));
+      }
+
+      private static byte[] ParseBase64WithoutPadding(string base64)
+      {
+          switch (base64.Length % 4)
+          {
+              case 2: base64 += "=="; break;
+              case 3: base64 += "="; break;
+          }
+          return Convert.FromBase64String(base64);
+      }
+  }
+  ```
+
+  ### 4. Configurando o Program.cs (Web)
+
+  Vamos injetar a autenticação e, muito importante, **corrigir o problema da vírgula** que quebrava o MudBlazor.
+
+  **Arquivo: `src/LivrariaCentral.Web/Program.cs`**
+
+  ```csharp
+  using Microsoft.AspNetCore.Components.Web;
+  using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+  using LivrariaCentral.Web;
+  using MudBlazor.Services;
+  using Blazored.LocalStorage;
+  using LivrariaCentral.Web.Auth;
+  using Microsoft.AspNetCore.Components.Authorization;
+  using System.Globalization;
+
+  // --- CORREÇÃO DE CULTURA (Crucial para o MudBlazor não travar) ---
+  var culture = new CultureInfo("pt-BR");
+  culture.NumberFormat.NumberDecimalSeparator = ".";
+  CultureInfo.DefaultThreadCurrentCulture = culture;
+  CultureInfo.DefaultThreadCurrentUICulture = culture;
+  // ----------------------------------------------------------------
+
+  var builder = WebAssemblyHostBuilder.CreateDefault(args);
+  builder.RootComponents.Add<App>("#app");
+  builder.RootComponents.Add<HeadOutlet>("head::after");
+
+  // ATENÇÃO: Confirme se a porta da sua API é 5239 mesmo!
+  builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5239") });
+
+  builder.Services.AddMudServices();
+  builder.Services.AddBlazoredLocalStorage();
+  builder.Services.AddAuthorizationCore();
+  builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+
+  await builder.Build().RunAsync();
+  ```
+
+  ### 5. A Tela de Login
+
+  **Crie o arquivo:** `src/LivrariaCentral.Web/Pages/Login.razor`
+
+  ```razor
+  @page "/login"
+  @inject HttpClient Http
+  @inject ILocalStorageService LocalStorage
+  @inject AuthenticationStateProvider AuthStateProvider
+  @inject NavigationManager Nav
+  @inject ISnackbar Snackbar
+
+  <MudContainer MaxWidth="MaxWidth.Small" Class="mt-16">
+      <MudPaper Class="pa-8" Elevation="3">
+          <MudText Typo="Typo.h4" Align="Align.Center" Class="mb-4">🔐 Login</MudText>
+          
+          <MudTextField @bind-Value="email" Label="Email" Variant="Variant.Outlined" Class="mb-3" />
+          <MudTextField @bind-Value="senha" Label="Senha" Variant="Variant.Outlined" InputType="InputType.Password" Class="mb-4" />
+          
+          <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="FazerLogin">Entrar</MudButton>
+      </MudPaper>
+  </MudContainer>
+
+  @code {
+      string email = "";
+      string senha = "";
+
+      async Task FazerLogin()
+      {
+          var loginModel = new { Email = email, Senha = senha };
+          var response = await Http.PostAsJsonAsync("api/auth/login", loginModel);
+
+          if (response.IsSuccessStatusCode)
+          {
+              var resultado = await response.Content.ReadFromJsonAsync<JsonElement>();
+              string token = resultado.GetProperty("token").GetString()!;
+
+              await LocalStorage.SetItemAsStringAsync("authToken", token);
+              await AuthStateProvider.GetAuthenticationStateAsync();
+              Nav.NavigateTo("/");
+          }
+          else
+          {
+              Snackbar.Add("Email ou senha inválidos!", Severity.Error);
+          }
+      }
+  }
+  ```
+
+  ### 6. Protegendo o App (O Cadeado)
+
+  Vamos configurar o porteiro (`AuthorizeRouteView`) e criar uma tela de bloqueio bonita para quem tentar burlar.
+
+  **Arquivo: `src/LivrariaCentral.Web/App.razor`**
+
+  ```razor
+  <CascadingAuthenticationState>
+      <Router AppAssembly="@typeof(App).Assembly">
+          <Found Context="routeData">
+              <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                  <NotAuthorized>
+                                            <div class="d-flex flex-column align-center justify-center pa-8" style="height: 80vh">
+                          <MudIcon Icon="@Icons.Material.Filled.Lock" Size="Size.Large" Color="Color.Warning" Class="mb-4" />
+                          <MudText Typo="Typo.h4" Class="mb-2">Acesso Restrito</MudText>
+                          <MudText Class="mb-6">Você precisa estar logado para acessar esta página.</MudText>
+                          
+                          <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/login" Size="Size.Large" StartIcon="@Icons.Material.Filled.Login">
+                              Ir para o Login
+                          </MudButton>
+                      </div>
+                  </NotAuthorized>
+              </AuthorizeRouteView>
+          </Found>
+          <NotFound>
+              <PageTitle>Não Encontrado</PageTitle>
+              <LayoutView Layout="@typeof(MainLayout)">
+                  <p role="alert">Ops, essa página não existe.</p>
+              </LayoutView>
+          </NotFound>
+      </Router>
+  </CascadingAuthenticationState>
+  ```
+
+  ### 7. Atualizando o Menu Principal
+
+  Vamos mostrar "Olá, Administrador" (sem a vírgula errada) e o botão de Sair.
+
+  **Arquivo: `src/LivrariaCentral.Web/Layout/MainLayout.razor`**
+
+  ```razor
+  @inherits LayoutComponentBase
+  @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+  @inject AuthenticationStateProvider AuthStateProvider
+  @inject NavigationManager Nav
+
+  <MudThemeProvider />
+  <MudPopoverProvider />
+  <MudDialogProvider />
+  <MudSnackbarProvider />
+
+  <MudLayout>
+      <MudAppBar Elevation="1">
+          <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+          <MudText Typo="Typo.h6" Class="ml-3">Livraria Central</MudText>
+          <MudSpacer />
+          
+          <AuthorizeView>
+              <Authorized>
+                                    <MudText Class="mr-4">Olá @context.User.Identity?.Name</MudText>
+                  <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="Logout">Sair</MudButton>
+              </Authorized>
+              <NotAuthorized>
+                  <MudButton Variant="Variant.Filled" Color="Color.Success" Href="/login">Entrar</MudButton>
+              </NotAuthorized>
+          </AuthorizeView>
+      </MudAppBar>
+
+      <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+          <MudNavMenu>
+              <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+              <MudNavLink Href="/livros" Icon="@Icons.Material.Filled.LibraryBooks">Livros</MudNavLink>
+              <MudNavLink Href="/historico" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.History">Histórico</MudNavLink>
+          </MudNavMenu>
+      </MudDrawer>
+
+      <MudMainContent>
+          <MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+              @Body
+          </MudContainer>
+      </MudMainContent>
+  </MudLayout>
+
+  @code {
+      bool _drawerOpen = true;
+
+      void DrawerToggle()
+      {
+          _drawerOpen = !_drawerOpen;
+      }
+
+      async Task Logout()
+      {
+          await LocalStorage.RemoveItemAsync("authToken");
+          await AuthStateProvider.GetAuthenticationStateAsync();
+          Nav.NavigateTo("/login");
+      }
+  }
+  ```
+
+  ### 8. Trancando as Portas (A Regra do Enter)
+
+  Adicione o cadeado nas páginas que você quer proteger (`Home`, `Livros`, `Historico`).
+  **Cuidado:** O `@attribute` precisa estar em uma linha separada para não dar erro de compilação!
+
+  ```razor
+  @page "/livros"
+  @attribute [Authorize]
+
+    @using ...
+  ```
+
+  ## 📝 Sessão 15: Logs e Monitoramento (A Caixa Preta)
+
+  Vamos configurar a API para criar um arquivo diário (ex: `log-20231027.txt`) registrando tudo o que acontece. Além disso, vamos registrar **QUEM** fez cada ação (Auditoria).
+
+  ### 1. Instalando o Serilog
+
+  Pare a API. No terminal da pasta `src/LivrariaCentral.API`, rode:
+
+  ```bash
+  dotnet add package Serilog.AspNetCore
+  dotnet add package Serilog.Sinks.File
+  ```
+
+  ### 2. Configurando a "Caixa Preta" (Program.cs)
+
+  Vamos configurar o Serilog para gravar em arquivo e conectar ele ao sistema.
+
+  **Arquivo: `src/LivrariaCentral.API/Program.cs`**
+
+  Adicione o using no topo:
+  ```csharp
+  using Serilog;
+  ```
+
+  E altere o início e o fim do arquivo conforme abaixo:
+
+  ```csharp
+  // ... (outros usings)
+  using Serilog; 
+
+  // 1. Configura o Serilog (Antes de tudo!)
+  Log.Logger = new LoggerConfiguration()
+      .WriteTo.Console()
+      .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day) // Cria um arquivo por dia
+      .CreateLogger();
+
+  try 
+  {
+      Log.Information("Iniciando a API Livraria Central...");
+
+      var builder = WebApplication.CreateBuilder(args);
+
+      // 2. Conecta o Serilog no Host (ESSA LINHA É CRUCIAL)
+      builder.Host.UseSerilog(); 
+
+      // ... (Mantenha todo o código de Banco, JWT, Swagger, Services aqui...)
+      // ... (Não apague nada do meio!) ...
+
+      var app = builder.Build();
+
+      // ... (Mantenha os Middlewares: Swagger, Https, Auth...) ...
+
+      app.MapControllers();
+
+      // 3. Roda a aplicação protegida contra falhas
+      app.Run();
+  }
+  catch (Exception ex)
+  {
+      Log.Fatal(ex, "A aplicação falhou ao iniciar!");
+  }
+  finally
+  {
+      Log.CloseAndFlush();
+  }
+  ```
+
+  ### 3. Auditoria de Login (AuthController)
+
+  Vamos registrar quem entrou com sucesso e quem errou a senha.
+
+  **Arquivo: `src/LivrariaCentral.API/Controllers/AuthController.cs`**
+
+  Injete o `ILogger` e adicione os logs no método `Login`:
+
+  ```csharp
+  public class AuthController : ControllerBase
+  {
+      // ... (outros campos)
+      private readonly ILogger<AuthController> _logger; // <--- Adicione
+
+      public AuthController(AppDbContext context, IConfiguration configuration, ILogger<AuthController> logger)
+      {
+          _context = context;
+          _configuration = configuration;
+          _logger = logger; // <--- Injete
+      }
+
+      // ... (Método Registrar mantém igual) ...
+
+      [HttpPost("login")]
+      public async Task<IActionResult> Login(UsuarioDTO request)
+      {
+          var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == request.Email);
+          
+          if (usuario == null || !BCrypt.Net.BCrypt.Verify(request.Senha, usuario.SenhaHash))
+          {
+              _logger.LogWarning("Tentativa de login falhou para o email: {Email}", request.Email); // <--- Log de Falha
+              return BadRequest("Email ou senha inválidos.");
+          }
+
+          string token = GerarToken(usuario);
+          
+          _logger.LogInformation("Usuário [{Nome}] ({Email}) realizou login com sucesso.", usuario.Nome, usuario.Email); // <--- Log de Sucesso
+
+          return Ok(new { token = token });
+      }
+      // ...
+  }
+  ```
+
+  ### 4. Auditoria de Livros (LivrosController)
+
+  Vamos proteger a rota para saber quem está cadastrando ou excluindo livros.
+
+  **Arquivo: `src/LivrariaCentral.API/Controllers/LivrosController.cs`**
+
+  ```csharp
+  using Microsoft.AspNetCore.Authorization; // <--- Importante
+  // ... outros usings
+
+  [Route("api/livros")]
+  [ApiController]
+  [Authorize] // <--- Protege a rota e habilita o User.Identity
+  public class LivrosController : ControllerBase
+  {
+      private readonly AppDbContext _context;
+      private readonly ILogger<LivrosController> _logger; // <--- Logger
+
+      public LivrosController(AppDbContext context, ILogger<LivrosController> logger)
+      {
+          _context = context;
+          _logger = logger;
+      }
+
+      // ... (GetLivros e GetLivro mantém iguais) ...
+
+      [HttpPost]
+      public async Task<ActionResult<Livro>> PostLivro(Livro livro)
+      {
+          _context.Livros.Add(livro);
+          await _context.SaveChangesAsync();
+
+          // Registra QUEM cadastrou o livro
+          _logger.LogInformation("Livro '{Titulo}' cadastrado por: {Usuario}", livro.Titulo, User.Identity?.Name);
+
+          return CreatedAtAction(nameof(GetLivro), new { id = livro.Id }, livro);
+      }
+
+      [HttpDelete("{id}")]
+      public async Task<IActionResult> DeleteLivro(int id)
+      {
+          var livro = await _context.Livros.FindAsync(id);
+          if (livro == null) return NotFound();
+
+          _context.Livros.Remove(livro);
+          await _context.SaveChangesAsync();
+
+          // Registra QUEM excluiu o livro
+          _logger.LogInformation("Livro '{Titulo}' (ID: {Id}) excluído por: {Usuario}", livro.Titulo, id, User.Identity?.Name);
+
+          return NoContent();
+      }
+      // ... (PutLivro segue a mesma lógica) ...
+  }
+  ```
+
+  ### 5. Auditoria de Vendas (VendasController)
+
+  Vamos registrar quem vendeu e garantir a segurança do preço.
+
+  **Arquivo: `src/LivrariaCentral.API/Controllers/VendasController.cs`**
+
+  ```csharp
+  using Microsoft.AspNetCore.Authorization; // <--- Importante
+  // ...
+
+  [ApiController]
+  [Route("api/vendas")]
+  [Authorize] // <--- Garante que sabemos quem é o vendedor
+  public class VendasController : ControllerBase
+  {
+      private readonly AppDbContext _context;
+      private readonly ILogger<VendasController> _logger;
+
+      public VendasController(AppDbContext context, ILogger<VendasController> logger)
+      {
+          _context = context;
+          _logger = logger;
+      }
+
+      [HttpPost]
+      public async Task<IActionResult> RealizarVenda(Venda novaVenda)
+      {
+          try
+          {
+              var livro = await _context.Livros.FindAsync(novaVenda.LivroId);
+              
+              if (livro == null) 
+              {
+                  _logger.LogWarning("Usuário {User} tentou vender livro inexistente (ID {Id}).", User.Identity?.Name, novaVenda.LivroId);
+                  return NotFound("Livro não encontrado.");
+              }
+
+              if (livro.Estoque < novaVenda.Quantidade)
+              {
+                  _logger.LogWarning("Estoque insuficiente. Vendedor: {User}, Livro: {Titulo}", User.Identity?.Name, livro.Titulo);
+                  return BadRequest($"Estoque insuficiente.");
+              }
+
+              // SEGURANÇA: Recalcula valor e data no servidor
+              novaVenda.ValorTotal = livro.Preco * novaVenda.Quantidade;
+              novaVenda.DataVenda = DateTime.UtcNow;
+
+              _context.Vendas.Add(novaVenda);
+              livro.Estoque -= novaVenda.Quantidade;
+              
+              await _context.SaveChangesAsync();
+
+              // LOG DE SUCESSO COM NOME DO VENDEDOR
+              _logger.LogInformation("Venda por [{User}]: Livro '{Titulo}', Qtd {Qtd}, Total {Total}", User.Identity?.Name, livro.Titulo, novaVenda.Quantidade, novaVenda.ValorTotal);
+
+              return Ok(new { mensagem = "Venda realizada com sucesso!", novoEstoque = livro.Estoque });
+          }
+          catch (Exception ex)
+          {
+              _logger.LogError(ex, "Erro crítico na venda de {User}", User.Identity?.Name);
+              return StatusCode(500, "Erro interno.");
+          }
+      }
+
+      [HttpGet]
+      public async Task<IActionResult> GetVendas()
+      {
+          _logger.LogInformation("Usuário [{User}] consultou o Histórico de Vendas.", User.Identity?.Name);
+          
+          // ... (Código do Join e OrderBy mantém igual) ...
+          var historico = await _context.Vendas
+              .Join(_context.Livros, v => v.LivroId, l => l.Id, (v, l) => new { /* ... */ })
+              .ToListAsync();
+
+          return Ok(historico);
+      }
+  }
+  ```
+
+  ### 6. Testando a Caixa Preta
+
+  1. Rode a API: `dotnet run`.
+  2. Faça Login, Cadastre um Livro e Faça uma Venda.
+  3. Abra o arquivo na pasta `logs`.
+
+  Você verá a história completa:
+  ```text
+  [INF] Usuário [Administrador] (admin@teste.com) realizou login com sucesso.
+  [INF] Livro 'Dom Casmurro' cadastrado por: Administrador
+  [INF] Venda por [Administrador]: Livro 'Dom Casmurro', Qtd 1, Total 45.00
+  ```
+
+  ## 📦 Sessão 16: Deploy Profissional (Windows e Linux)
+
+  Vamos preparar o sistema para rodar como um serviço profissional, que inicia junto com o sistema operacional e roda em segundo plano.
+
+  ### 🛠️ Passo 1: Preparando o Código da API
+
+  Para que a API rode como um "Serviço do Windows" ou "Systemd do Linux" sem erros (principalmente de leitura de arquivos de configuração), precisamos instalar extensões nativas.
+
+  1. **Instale os pacotes na API:**
+     No terminal `src/LivrariaCentral.API`:
+     ```bash
+     dotnet add package Microsoft.Extensions.Hosting.WindowsServices
+     dotnet add package Microsoft.Extensions.Hosting.Systemd
+     ```
+
+  2. **Configure o `Program.cs` da API:**
+     Adicione as linhas `UseWindowsService` e `UseSystemd` logo após criar o builder. Isso garante que a API entenda os sinais de "Iniciar" e "Parar" do sistema operacional.
+
+     ```csharp
      var builder = WebApplication.CreateBuilder(args);
 
-     // 2. Conecta o Serilog no Host
-     builder.Host.UseSerilog(); 
+     // --- CONFIGURAÇÃO DE SERVIÇO ---
+     builder.Host.UseWindowsService(); // Para Windows Service
+     builder.Host.UseSystemd();        // Para Linux Systemd
+     // -------------------------------
 
-     // ... (Mantenha todo o código de Banco, JWT, Swagger, Services aqui...)
-     // ... (Não apague nada do meio!) ...
+     builder.Host.UseSerilog();
+     // ... resto do código
+     ```
 
-     var app = builder.Build();
+  ---
 
-     // ... (Mantenha os Middlewares: Swagger, Https, Auth...) ...
+  ### 🏗️ Passo 2: Gerando os Arquivos (Publish)
 
-     app.MapControllers();
+  Vamos usar a estratégia **Desacoplada**:
+  * **Backend:** Será um executável (Self-Contained) rodando na porta 5000.
+  * **Frontend:** Serão arquivos estáticos hospedados num servidor Web (IIS ou Nginx).
 
-     // 3. Roda a aplicação protegida contra falhas
-     app.Run();
- }
- catch (Exception ex)
- {
-     Log.Fatal(ex, "A aplicação falhou ao iniciar!");
- }
- finally
- {
-     Log.CloseAndFlush();
- }
- ```
+  Rode na raiz da solução:
 
- ### 3. Usando os Logs nos Controllers
+  ```bash
+  # 1. Compila o Frontend (Gera HTML/CSS/DLLs na pasta deploy/frontend)
+  dotnet publish src/LivrariaCentral.Web -c Release -o ./deploy/frontend
 
- Agora vamos registrar quando uma venda acontece ou quando dá erro.
+  # 2. Compila o Backend para WINDOWS (Gera .exe na pasta deploy/backend)
+  dotnet publish src/LivrariaCentral.API -c Release -r win-x64 --self-contained true -o ./deploy/backend
 
- **Arquivo: `src/LivrariaCentral.API/Controllers/VendasController.cs`**
+  # (OU) 2. Compila o Backend para LINUX
+  # dotnet publish src/LivrariaCentral.API -c Release -r linux-x64 --self-contained true -o ./deploy/backend
+  ```
 
- 1. Injete o `ILogger` no construtor:
+  ---
 
- ```csharp
- public class VendasController : ControllerBase
- {
-     private readonly AppDbContext _context;
-     private readonly ILogger<VendasController> _logger; // <--- Adicione
+  ### 🪟 Passo 3: Configuração no Windows (IIS + Serviço)
 
-     public VendasController(AppDbContext context, ILogger<VendasController> logger)
-     {
-         _context = context;
-         _logger = logger; // <--- Injete
-     }
- // ...
- ```
+  #### A. Instalando a API (Windows Service)
+  O Backend vai rodar invisível, gerenciado pelo Windows.
 
- 2. Use o log dentro do método `RealizarVenda`:
+  1. Abra o CMD como **Administrador**.
+  2. Crie o serviço apontando para o `.exe` gerado:
+     ```cmd
+     sc create LivrariaAPI binPath= "C:\deploy\backend\LivrariaCentral.API.exe" start= auto
+     ```
+  3. Inicie: `sc start LivrariaAPI`.
+  4. Verifique se funcionou acessando `http://localhost:5000/swagger`.
 
- ```csharp
-     [HttpPost]
-     public async Task<IActionResult> RealizarVenda(VendaDTO request)
-     {
-         try
-         {
-             // ... (Lógica de verificar livro, estoque, etc...)
-             // ... (Mantenha o código existente) ...
+  #### B. Instalando o Frontend (IIS)
+  O IIS vai servir o site e mandar as chamadas de API para o serviço acima.
 
-             await _context.SaveChangesAsync();
+  1. No Windows, ative o recurso **IIS (Internet Information Services)**.
+  2. Instale o módulo **URL Rewrite** (obrigatório para Blazor).
+  3. Abra o Gerenciador do IIS -> Botão direito em "Sites" -> "Adicionar Site".
+     * **Nome:** LivrariaWeb
+     * **Caminho:** `C:\deploy\frontend\wwwroot`
+     * **Porta:** 80 (ou 8080 se preferir)
+  4. Acesse `http://localhost` e o site deve abrir!
 
-             // LOG DE SUCESSO
-             _logger.LogInformation("Venda realizada: Livro ID {Id}, Qtd {Qtd}", request.LivroId, request.Quantidade);
+  ---
 
-             return Ok("Venda registrada com sucesso!");
+  ### 🐧 Passo 4: Configuração no Linux (Nginx + Systemd)
+
+  #### A. Instalando a API (Systemd)
+  1. Mova a pasta `backend` para `/var/www/livraria-api`.
+  2. Crie o arquivo de serviço: `sudo nano /etc/systemd/system/livraria-api.service`.
+
+     ```ini
+     [Unit]
+     Description=API Livraria .NET
+
+     [Service]
+     WorkingDirectory=/var/www/livraria-api
+     ExecStart=/var/www/livraria-api/LivrariaCentral.API
+     Restart=always
+     User=www-data
+     Environment=ASPNETCORE_ENVIRONMENT=Production
+     Environment=ASPNETCORE_URLS=http://localhost:5000
+
+     [Install]
+     WantedBy=multi-user.target
+     ```
+  3. Ative: `sudo systemctl enable --now livraria-api.service`.
+
+  #### B. Instalando o Frontend (Nginx)
+  1. Mova a pasta `frontend/wwwroot` para `/var/www/livraria-web`.
+  2. Configure o Nginx para servir o site e repassar a API: `sudo nano /etc/nginx/sites-available/livraria`.
+
+     ```nginx
+     server {
+         listen 80;
+         server_name seusite.com;
+
+         # FRONTEND (Arquivos estáticos)
+         location / {
+             root /var/www/livraria-web;
+             try_files $uri $uri/ /index.html =404;
          }
-         catch (Exception ex)
-         {
-             // LOG DE ERRO (Grava o motivo exato da falha)
-             _logger.LogError(ex, "Erro crítico ao vender livro {Id}", request.LivroId);
-             return StatusCode(500, "Erro interno ao processar venda.");
+
+         # BACKEND (Proxy para a API rodando na porta 5000)
+         location /api {
+             proxy_pass http://localhost:5000;
+             proxy_http_version 1.1;
+             proxy_set_header Upgrade $http_upgrade;
+             proxy_set_header Connection keep-alive;
+             proxy_cache_bypass $http_upgrade;
          }
      }
- ```
-
- ### 4. Testando a Caixa Preta
-
- 1. Rode a API: `dotnet run`.
- 2. Faça uma venda pelo Site ou Swagger.
- 3. Vá na pasta `src/LivrariaCentral.API`.
- 4. Procure a pasta nova **`logs`**.
- 5. Abra o arquivo de texto lá dentro.
-
- Você verá algo como:
- `2023-10-27 20:30:01 [INF] Venda realizada: Livro ID 1, Qtd 2`
+     ```
+  3. Reinicie o Nginx: `sudo service nginx restart`.
