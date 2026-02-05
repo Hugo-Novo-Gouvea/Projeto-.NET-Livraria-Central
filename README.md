@@ -11,13 +11,25 @@
 
  ---
 
- ## 💡 Sobre o Projeto
+ ## 💡 Sobre o Projeto (Parte 1)
 
  Este projeto é uma aplicação **Full Stack** robusta desenvolvida para simular o ambiente real de uma livraria. O objetivo foi criar não apenas um CRUD, mas um sistema funcional com regras de negócio, autenticação segura, relatórios e auditoria.
 
  Ele serve como:
  1.  **Portfólio Técnico:** Demonstrando domínio em arquitetura de software, Clean Code e padrões de mercado.
  2.  **Material Didático:** Um guia passo a passo (abaixo) para desenvolvedores que desejam aprender a construir aplicações reais com .NET.
+
+ ---
+
+ ## 🗺️ Roadmap do Projeto
+
+ Este repositório representa a **Parte 1** de uma série de estudos avançados. O objetivo é demonstrar a evolução de um software funcional para uma solução Enterprise escalável.
+
+ | Fase | Foco | Status | Descrição |
+ | :--- | :--- | :--- | :--- |
+ | **Parte 1** | **MVP Funcional** | ✅ | Construção da aplicação completa (Back + Front + Banco), focado em entrega de valor e funcionalidades (Vendas, Auth, PDF, Logs). |
+ | **Parte 2** | **Arquitetura & Qualidade** | Em Breve | Refatoração para **Clean Architecture**, implementação de **Testes Unitários** (xUnit), Padrão Repository, DTOs com AutoMapper e validações avançadas. Transformando o código para nível Pleno/Sênior. |
+ | **Parte 3** | **Cloud & DevOps** | Em Breve | Migração para **Microsoft Azure**, configuração de Pipeline de **CI/CD** (GitHub Actions), Dockerização e gestão de segredos em nuvem. |
 
  ---
 
