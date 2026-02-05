@@ -35,12 +35,12 @@
 
  ## ✨ Funcionalidades Principais
 
- ✅ **Dashboard Interativo:** Gráficos de vendas e indicadores de estoque em tempo real.
- ✅ **Gestão de Livros:** Cadastro, edição e exclusão com validações.
- ✅ **Ponto de Venda (PDV):** Registro de vendas com baixa automática de estoque.
- ✅ **Segurança:** Login, proteção de rotas e criptografia de senhas.
- ✅ **Auditoria:** Logs detalhados de quem fez o quê (ex: "Usuário X excluiu o livro Y").
- ✅ **Relatórios:** Exportação de listagem de estoque em PDF pronto para impressão.
+ ✅ **Dashboard Interativo:** Gráficos de vendas e indicadores de estoque em tempo real.  
+ ✅ **Gestão de Livros:** Cadastro, edição e exclusão com validações.  
+ ✅ **Ponto de Venda (PDV):** Registro de vendas com baixa automática de estoque.  
+ ✅ **Segurança:** Login, proteção de rotas e criptografia de senhas.  
+ ✅ **Auditoria:** Logs detalhados de quem fez o quê (ex: "Usuário X excluiu o livro Y").  
+ ✅ **Relatórios:** Exportação de listagem de estoque em PDF pronto para impressão.  
 
  ---
 
