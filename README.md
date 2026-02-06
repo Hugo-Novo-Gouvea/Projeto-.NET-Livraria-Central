@@ -910,6 +910,17 @@ Precisamos avisar o .NET para carregar o MudBlazor na memória.
  builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:xxxx") });
  ```
 
+ em seguida, sem para de rodar o `dotnet run` em `src/LivrariaCentral.API`:
+
+ 1. Abra um novo terminal e não feche o atual
+ 2. Rode a WEB: entre na pasta `src/LivrariaCentral.Web` e digite `dotnet run`.
+ 3. Temos o Back-end e o Front-end rodando junto, basta trocar a porta do localhost na barra de pesquisa do seu navegador para acewssar as diferentes interfaces (Não se esqueça de colocar o **/swagger** na frente da porta caso queria acessar o back-end `localhost:xxxx/swagger`)
+
+> **💡 Conceito Importante:**
+ > A partir deste ponto, entenda que nossa aplicação funciona como um ecossistema conectado: o Frontend (Site) precisa do Backend (API) online para buscar os dados.
+ >
+ > Portanto, daqui em diante, sempre que este guia disser **"Rode a Aplicação"**, assuma implicitamente que você deve manter **dois terminais abertos** rodando os projetos simultaneamente (API e WEB), conforme feito acima
+
   ## 🚀 Sessão 8: Finalizando o CRUD (Dialogs e Ações)
 
  Vamos implementar as funcionalidades de Adicionar, Editar e Excluir livros usando o serviço de Dialog do MudBlazor.
@@ -1092,6 +1103,21 @@ Precisamos avisar o .NET para carregar o MudBlazor na memória.
  }
  ```
 
+ Rode a aplicação 
+
+ ```Bash
+ dotnet run #(API e WEB)
+ ```
+
+ Faça os seguintes testes
+
+ 1. Crie um livro novo
+ 2. Altere o valor informado anteriormente para um novo
+ 3. Exclua o livro
+ 4. Crie novamente o livre
+
+ Nesse ponto o programa consegue manipular registros do banco de dados sem que seja necessario acessar o swagger, permitindo que um usuario possa realizar essas operações
+
   ## 🚀 Sessão 9: Dashboard com Dados Reais
 
  Vamos substituir os dados "chumbados" do Dashboard por cálculos reais vindos do banco de dados.
@@ -1264,6 +1290,12 @@ Precisamos avisar o .NET para carregar o MudBlazor na memória.
      public double[] DonutData = { 25, 45, 10, 20 };
      public string[] DonutLabels = { "Ficção", "Técnico", "Romance", "HQs" };
  }
+ ```
+
+ Rode a aplicação 
+ 
+ ```Bash
+ dotnet run #(API e WEB)
  ```
 
   ## 🚀 Sessão 10: Registrando Vendas (Regra de Negócio Real)
