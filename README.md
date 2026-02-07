@@ -523,7 +523,8 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
  Primeiro, vamos adicionar o projeto Web à solução geral (para o Visual Studio reconhecer os dois projetos).
 
  ```bash
- cd .. 
+ cd ..
+ cd ..
  # Volta para a raiz onde está o arquivo .sln
 
  dotnet sln add src/LivrariaCentral.Web/LivrariaCentral.Web.csproj
@@ -811,6 +812,9 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
      * **Topo:** 4 Cards com ícones coloridos alinhados.
      * **Esquerda:** Um gráfico de barras interativo (passe o mouse para ver os valores).
      * **Direita:** Um gráfico de rosca (Donut) dividindo as categorias.
+
+ Em alguns casos o App.razor pode indicar erro e ficar com uma linha vermelha em baixo de `builder.RootComponents.Add<App>("#app");`, apenas feche o Visual Studio Code e abra denovo
+
 
  ## 🚀 Sessão 7: Conectando com a API (Listagem Real)
 
@@ -1805,22 +1809,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
  }
  ```
 
- ### 4. Frontend: Atualizando o Menu
-
- Por fim, precisamos colocar um link no menu lateral para acessar essa nova tela.
-
- **Abra o arquivo `src/LivrariaCentral.Web/Layout/MainLayout.razor` e adicione a linha do Histórico:**
-
- ```razor
-         <MudNavMenu>
-             <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
-             <MudNavLink Href="/livros" Icon="@Icons.Material.Filled.LibraryBooks">Livros</MudNavLink>
-             
-                          <MudNavLink Href="/historico" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.History">Histórico</MudNavLink>
-         </MudNavMenu>
- ```
-
- ### 5. Testando
+ ### 4. Testando
 
  1.  Faça algumas vendas na tela de Livros.
  2.  Clique no menu **Histórico**.
@@ -1830,8 +1819,6 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  Vamos criar um botão que baixa um PDF profissional com a lista de produtos e o valor total do estoque.
  Usaremos a biblioteca **QuestPDF**, que é a solução mais moderna e performática para gerar documentos no ecossistema .NET.
-
- 
 
  ### 1. Instalando o QuestPDF na API
 
@@ -1967,20 +1954,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
      @inject IJSRuntime JS
      ```
 
- 2.  Localize onde está o botão "Novo Livro" e substitua por este bloco (adicionando o botão de Imprimir ao lado):
-     ```razor
-     <div class="d-flex gap-4 mb-4">
-         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="AdicionarLivro">
-             Novo Livro
-         </MudButton>
-
-         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Print" Color="Color.Secondary" OnClick="BaixarRelatorio">
-             Imprimir Estoque
-         </MudButton>
-     </div>
-     ```
-
- 3.  Adicione a função `BaixarRelatorio` no bloco `@code` (pode ser no final):
+ 2.  Adicione a função `BaixarRelatorio` no bloco `@code` (pode ser no final):
      ```csharp
      private async Task BaixarRelatorio()
      {
@@ -1991,6 +1965,19 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
          // Abre o PDF em uma nova aba do navegador
          await JS.InvokeVoidAsync("open", urlRelatorio, "_blank");
      }
+     ```
+ 
+ 3.  Localize onde está o botão "Novo Livro" e substitua por este bloco (adicionando o botão de Imprimir ao lado):
+     ```razor
+     <div class="d-flex gap-4 mb-4">
+         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="AdicionarLivro">
+             Novo Livro
+         </MudButton>
+
+         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Print" Color="Color.Secondary" OnClick="BaixarRelatorio">
+             Imprimir Estoque
+         </MudButton>
+     </div>
      ```
 
  ### 5. Testando
@@ -2004,8 +1991,6 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  Vamos implementar **JWT (JSON Web Tokens)**.
  Funciona assim: o usuário manda email/senha, a API confere e, se estiver certo, devolve um "crachá digital" (Token). Para qualquer outra requisição (como cadastrar livro), o usuário mostra esse crachá.
-
- 
 
  ### 1. Instalando Pacotes de Segurança
 
@@ -2176,21 +2161,44 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
  }
  ```
 
- ### 6. Blindando a API (Program.cs)
+  ### 6. Blindando a API (Program.cs)
 
  Agora vamos avisar o .NET que ele deve usar JWT e proteger as rotas.
 
- **Arquivo: `src/LivrariaCentral.API/Program.cs`**
+ **Substitua o arquivo `src/LivrariaCentral.API/Program.cs` pelo código abaixo:**
 
  ```csharp
- // ... imports (Adicione estes dois)
+ using LivrariaCentral.API.Data;
+ using Microsoft.EntityFrameworkCore;
+ using QuestPDF.Infrastructure;
  using Microsoft.AspNetCore.Authentication.JwtBearer;
  using Microsoft.IdentityModel.Tokens;
  using System.Text;
 
- // ... (Logo após builder.Services.AddSwaggerGen();)
+ QuestPDF.Settings.License = LicenseType.Community;
 
- // 1. Configura o JWT
+ var builder = WebApplication.CreateBuilder(args);
+
+ // --- CONFIGURAÇÃO DO BANCO ---
+ var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+ builder.Services.AddDbContext<AppDbContext>(options =>
+     options.UseNpgsql(connectionString));
+
+ builder.Services.AddControllers();
+ builder.Services.AddEndpointsApiExplorer();
+ builder.Services.AddSwaggerGen();
+
+ // --- CONFIGURAÇÃO DO CORS ---
+ builder.Services.AddCors(options =>
+ {
+     options.AddPolicy("AllowAll",
+         policy =>
+         {
+             policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+         });
+ });
+
+ // --- CONFIGURAÇÃO DO JWT ---
  // IMPORTANTE: Deve ser UTF8 para bater com o Controller
  var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!);
 
@@ -2214,18 +2222,25 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  var app = builder.Build();
 
- // ... (Swagger e HttpsRedirection)
+ if (app.Environment.IsDevelopment())
+ {
+     app.UseSwagger();
+     app.UseSwaggerUI();
+ }
 
+ app.UseHttpsRedirection();
  app.UseCors("AllowAll");
 
- // 2. ATENÇÃO: A ordem aqui importa muito!
+ // ATENÇÃO: A ordem aqui importa muito!
  app.UseAuthentication(); // <--- Quem é você? (Verifica o Token)
  app.UseAuthorization();  // <--- Você pode entrar aqui? (Verifica Permissão)
 
  app.MapControllers();
+
  app.Run();
  ```
-### 7. Criando o Primeiro Usuário (Admin)
+
+ ### 7. Criando o Primeiro Usuário (Admin)
 
  Como não criaremos uma tela de "Cadastre-se" no site (pois é um sistema restrito para funcionários), precisamos criar o primeiro usuário via Swagger.
 
@@ -2244,9 +2259,13 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  Se receber um **200 OK**, seu usuário está criado! Guarde esse email e senha, pois usaremos na próxima sessão para entrar no site.
 
+ ---
+
  ## 🚀 Sessão 14: Login no Frontend (O Porteiro do Site)
 
  Vamos criar a tela de login, ensinar o Blazor a lembrar quem está logado e proteger as rotas.
+
+ 
 
  ### 1. Instalando o LocalStorage
 
@@ -2351,7 +2370,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  Aqui mantemos a configuração do `appsettings.json` (que fizemos na Sessão 5) e adicionamos a Autenticação e a correção de Cultura.
 
- **Arquivo: `src/LivrariaCentral.Web/Program.cs`**
+ **Substitua todo o arquivo: `src/LivrariaCentral.Web/Program.cs`**
 
  ```csharp
  using Microsoft.AspNetCore.Components.Web;
@@ -2439,7 +2458,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  Configurar o roteador para verificar se o usuário está logado.
 
- **Arquivo: `src/LivrariaCentral.Web/App.razor`**
+ **Substitua todo o arquivo: `src/LivrariaCentral.Web/App.razor`**
 
  ```razor
  <CascadingAuthenticationState>
@@ -2473,7 +2492,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  Vamos mostrar o nome do usuário logado e o botão de Sair.
 
- **Arquivo: `src/LivrariaCentral.Web/Layout/MainLayout.razor`**
+ **Substitua todo o arquivo: `src/LivrariaCentral.Web/Layout/MainLayout.razor`**
 
  ```razor
  @inherits LayoutComponentBase
@@ -2539,14 +2558,18 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  Agora adicione o atributo `[Authorize]` no topo das páginas que você quer proteger (Home, Livros, Histórico).
 
- **Exemplo em `Livros.razor`:**
+ **Abra o arquivo `src/LivrariaCentral.Web/Pages/Livros.razor` e adicione:**
 
  ```razor
  @page "/livros"
- @attribute [Authorize]
+ @attribute [Authorize] // <--- ADICIONE ISSO AQUI
 
  @using ...
  ```
+
+ *(Faça o mesmo nos arquivos `Home.razor` e `HistoricoVendas.razor`)*
+
+ ---
 
  ## 🚀 Sessão 15: Logs e Monitoramento (A Caixa Preta)
 
@@ -2670,7 +2693,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 3. Limpando a Sujeira (Appsettings.json)
 
- Vamos configurar o log para não encher o console com mensagens inúteis de autorização (aqueles "Authorization failed").
+ Vamos configurar o log para não encher o console com mensagens inúteis de autorização.
 
  **Abra o arquivo `src/LivrariaCentral.API/appsettings.json` e atualize a seção "Logging":**
 
@@ -2683,15 +2706,12 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
      }
    },
  ```
- *(Adicionamos a linha do Authorization como "Error" para silenciar os avisos)*.
 
  ### 4. Auditoria de Login (AuthController)
 
  Vamos registrar quem entrou no sistema.
 
- **Abra `src/LivrariaCentral.API/Controllers/AuthController.cs`:**
- 1. Injete o `ILogger`.
- 2. Adicione os logs no método `Login`.
+ **Abra `src/LivrariaCentral.API/Controllers/AuthController.cs` e altere o conteúdo:**
 
  ```csharp
  public class AuthController : ControllerBase
@@ -2732,9 +2752,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 5. Auditoria de Livros (LivrosController)
 
- Vamos saber quem cadastrou ou excluiu livros.
-
- **Abra `src/LivrariaCentral.API/Controllers/LivrosController.cs`:**
+ **Abra `src/LivrariaCentral.API/Controllers/LivrosController.cs` e altere o conteúdo:**
 
  ```csharp
  using Microsoft.AspNetCore.Authorization;
@@ -2788,7 +2806,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 6. Auditoria de Vendas (VendasController)
 
- **Abra `src/LivrariaCentral.API/Controllers/VendasController.cs`:**
+ **Abra `src/LivrariaCentral.API/Controllers/VendasController.cs` e altere o conteúdo:**
 
  ```csharp
  using Microsoft.AspNetCore.Authorization;
@@ -2872,19 +2890,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
  }
  ```
 
- ### 7. Testando a Caixa Preta
-
- 1.  Rode a API: `dotnet run`.
- 2.  Use o site para: Fazer Login, Cadastrar um Livro e Fazer uma Venda.
- 3.  Vá na pasta `src/LivrariaCentral.API/logs/`.
- 4.  Abra o arquivo de texto mais recente.
-
- **Resultado Esperado no Arquivo:**
- ```text
- [INF] Usuário [Administrador] (admin@livraria.com) realizou login com sucesso.
- [INF] Livro 'Dom Casmurro' cadastrado por: Administrador
- [INF] Venda por [Administrador]: Livro 'Dom Casmurro', Qtd 1, Total 45.00
- ```
+ ---
 
  ## 🚀 Sessão 16: Deploy Profissional (Windows e Linux)
 
@@ -2992,7 +2998,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
     ```bash
     sudo nano /etc/systemd/system/livraria-api.service
     ```
- 4. Cole o conteúdo abaixo (Salvel com CTRL+O, Saia com CTRL+X):
+ 4. Cole o conteúdo abaixo (Salve com CTRL+O, Saia com CTRL+X):
     ```ini
     [Unit]
     Description=API Livraria .NET
@@ -3058,6 +3064,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
     sudo nginx -t # Testa se a config está válida
     sudo service nginx restart
     ```
+
 
  **Parabéns!** 🎉
  Seu sistema Fullstack .NET agora está rodando em produção, seguro e performático. Você completou a jornada de Zero a Hero! 🚀
