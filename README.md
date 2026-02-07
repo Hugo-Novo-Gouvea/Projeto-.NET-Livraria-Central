@@ -154,16 +154,6 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
  * Ela salva no banco.
  * Ela responde para quem pediu (o Site/Frontend).
 
- ### 🔄 Fluxo da Arquitetura (Visual)
-
- ```mermaid
- graph LR
-     A[👤 Usuário / Frontend] -- 1. HTTP Request (JSON) --> B[⚙️ API (.NET)]
-     B -- 2. SQL Query --> C[(🗄️ PostgreSQL)]
-     C -- 3. Dados --> B
-     B -- 4. HTTP Response (JSON) --> A
- ```
-
  ### 3. Instalação de Pacotes
 
  Agora precisamos entrar na pasta do projeto e instalar as ferramentas de banco de dados.
