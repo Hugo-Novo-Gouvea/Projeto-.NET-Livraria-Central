@@ -4,62 +4,49 @@ using QuestPDF.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Serilog;
+using Serilog; // <--- Importante
 
 QuestPDF.Settings.License = LicenseType.Community;
 
+// 1. Configuração Inicial (Bootstrap Logger)
+// Garante que erros na inicialização sejam pegos antes mesmo do app subir
 Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Information() // Nível padrão geral
-    .WriteTo.Console() // Mostra tudo no terminal também
-    
-    // ARQUIVO 1: O "Dedoduro" (Grava TUDO, inclusive queries do banco)
-    .WriteTo.File("logs/completo/log-.txt", rollingInterval: RollingInterval.Day)
-    
-    // ARQUIVO 2: O "Gerencial" (Grava SÓ o que interessa, sem sujeira da Microsoft)
-    .WriteTo.Logger(l => l
-        .Filter.ByExcluding(e => e.Properties.ContainsKey("SourceContext") && 
-                                (e.Properties["SourceContext"].ToString().Contains("Microsoft") || 
-                                 e.Properties["SourceContext"].ToString().Contains("System")))
-        .WriteTo.File("logs/resumo/log-.txt", rollingInterval: RollingInterval.Day))
-    
-    .CreateLogger();
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
 try 
 {
+    Log.Information("Iniciando a API Livraria Central...");
+    
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Host.UseSerilog();
+    // 2. Conecta o Serilog no Host (Configuração Completa)
+    builder.Host.UseSerilog((context, configuration) => configuration
+        .ReadFrom.Configuration(context.Configuration) // Lê configurações do appsettings
+        .WriteTo.Console()                             // Escreve no terminal preto
+        .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)); // Cria arquivo diário
 
-    // --- 1. CONFIGURAÇÃO DO BANCO (POSTGRES) ---
-
-    // Lê a string de conexão do appsettings.json
+    // --- CONFIGURAÇÃO DO BANCO ---
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-    // Registra o AppDbContext na injeção de dependência usando Npgsql
     builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connectionString));
+        options.UseNpgsql(connectionString));
 
-    // --------------------------------------------
-
-    // Adiciona suporte a Controllers (API)
     builder.Services.AddControllers();
-
-    // Adiciona suporte ao Swagger (Documentação da API)
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
+    // --- CONFIGURAÇÃO DO CORS ---
     builder.Services.AddCors(options =>
     {
         options.AddPolicy("AllowAll",
             policy =>
             {
-                policy.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
+                policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
             });
     });
 
-    var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]!); // <--- Exclamação aqui
+    // --- CONFIGURAÇÃO DO JWT ---
+    var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!);
     builder.Services.AddAuthentication(x =>
     {
         x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -80,27 +67,23 @@ try
 
     var app = builder.Build();
 
-    // --- 2. PIPELINE DE REQUISIÇÃO HTTP ---
-
-    // Se estiver em ambiente de desenvolvimento, ativa o Swagger visual
     if (app.Environment.IsDevelopment())
     {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+        app.UseSwagger();
+        app.UseSwaggerUI();
     }
 
-    // Redireciona HTTP para HTTPS
-    //app.UseHttpsRedirection();
+    // 3. LOGS DE REQUISIÇÃO (Mostra cada chamada HTTP no console)
+    app.UseSerilogRequestLogging();
 
-    app.UseCors("AllowAll"); 
+    app.UseHttpsRedirection();
+    app.UseCors("AllowAll");
 
     app.UseAuthentication();
     app.UseAuthorization();
 
-    // Mapeia os Controllers para as rotas da API
     app.MapControllers();
 
-    // Roda a aplicação
     app.Run();
 }
 catch (Exception ex)

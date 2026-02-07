@@ -1,6 +1,6 @@
 ﻿@page "/"
-@attribute [Authorize]  
-<PageTitle>Dashboard</PageTitle>
+@attribute [Authorize]
+
 @using LivrariaCentral.Web.Models
 @inject HttpClient Http
 
@@ -8,7 +8,7 @@
 
 @if (dados == null)
 {
-         <div class="d-flex justify-center align-center" style="height: 400px;">
+    <div class="d-flex justify-center align-center" style="height: 400px;">
         <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
     </div>
 }
@@ -30,7 +30,7 @@ else
                 <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;" />
                 <div>
                     <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Valor em Estoque</MudText>
-                    <MudText Typo="Typo.h5">@dados.ValorEstoque.ToString("C")</MudText>
+                                         <MudText Typo="Typo.h5">@dados.ValorEstoque.ToString("C")</MudText>
                 </div>
             </MudPaper>
         </MudItem>
@@ -68,7 +68,6 @@ else
                 <MudChart ChartType="ChartType.Donut" InputData="@DonutData" InputLabels="@DonutLabels" Width="100%" Height="300px" />
             </MudPaper>
         </MudItem>
-
     </MudGrid>
 }
 

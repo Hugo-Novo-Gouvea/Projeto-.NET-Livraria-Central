@@ -1,23 +1,14 @@
 ﻿<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
-                         <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
                 <NotAuthorized>
-                    <div class="d-flex flex-column align-center justify-center pa-8">
-                        
+                                         <div class="d-flex flex-column align-center justify-center pa-8" style="height: 80vh">
                         <MudIcon Icon="@Icons.Material.Filled.Lock" Size="Size.Large" Color="Color.Warning" Class="mb-4" />
+                        <MudText Typo="Typo.h4" Class="mb-2">Acesso Restrito</MudText>
+                        <MudText Class="mb-6">Você precisa estar logado para acessar esta página.</MudText>
                         
-                        <MudText Typo="Typo.h5" Class="mb-2">Acesso Restrito</MudText>
-                        
-                        <MudAlert Severity="Severity.Warning" Class="mb-6">
-                            Você precisa estar logado para ver esta página.
-                        </MudAlert>
-
-                        <MudButton Variant="Variant.Filled" 
-                                   Color="Color.Primary" 
-                                   Href="/login" 
-                                   Size="Size.Large"
-                                   StartIcon="@Icons.Material.Filled.Login">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/login" Size="Size.Large" StartIcon="@Icons.Material.Filled.Login">
                             Ir para o Login
                         </MudButton>
                     </div>
@@ -25,9 +16,9 @@
             </AuthorizeRouteView>
         </Found>
         <NotFound>
-            <PageTitle>Not found</PageTitle>
+            <PageTitle>Não Encontrado</PageTitle>
             <LayoutView Layout="@typeof(MainLayout)">
-                <p role="alert">Sorry, there's nothing at this address.</p>
+                <p role="alert">Ops, essa página não existe.</p>
             </LayoutView>
         </NotFound>
     </Router>

@@ -23,7 +23,7 @@ public class RelatoriosController : ControllerBase
     {
         var livros = await _context.Livros.ToListAsync();
 
-        // Aqui começa a mágica do QuestPDF (Desenhando o documento)
+        // --- DESENHANDO O PDF COM QUESTPDF ---
         var pdf = Document.Create(container =>
         {
             container.Page(page =>
@@ -33,12 +33,12 @@ public class RelatoriosController : ControllerBase
                 page.PageColor(Colors.White);
                 page.DefaultTextStyle(x => x.FontSize(12));
 
-                // --- CABEÇALHO ---
+                // 1. Cabeçalho
                 page.Header()
                     .Text("Relatório de Estoque - Livraria Central")
                     .SemiBold().FontSize(20).FontColor(Colors.Blue.Medium);
 
-                // --- CONTEÚDO (Tabela) ---
+                // 2. Conteúdo (Tabela)
                 page.Content().PaddingVertical(1, Unit.Centimetre).Table(table =>
                 {
                     // Definição das colunas
@@ -59,7 +59,7 @@ public class RelatoriosController : ControllerBase
                         header.Cell().Text("Preço").Bold();
                     });
 
-                    // Linhas da Tabela
+                    // Linhas da Tabela (Dados)
                     foreach (var livro in livros)
                     {
                         table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(livro.Id.ToString());
@@ -69,7 +69,7 @@ public class RelatoriosController : ControllerBase
                     }
                 });
 
-                // --- RODAPÉ ---
+                // 3. Rodapé (Paginação)
                 page.Footer()
                     .AlignCenter()
                     .Text(x =>
@@ -80,12 +80,12 @@ public class RelatoriosController : ControllerBase
             });
         });
 
-        // Gera o arquivo em memória
+        // --- GERANDO O ARQUIVO ---
         var stream = new MemoryStream();
         pdf.GeneratePdf(stream);
         stream.Position = 0;
 
-        // Devolve o arquivo para o navegador baixar
+        // Devolve o arquivo com o tipo MIME correto (application/pdf)
         return File(stream, "application/pdf", "RelatorioEstoque.pdf");
     }
 }

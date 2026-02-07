@@ -19,7 +19,6 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        // Busca o token no navegador
         string token = await _localStorage.GetItemAsStringAsync("authToken");
 
         var identity = new ClaimsIdentity();
@@ -29,7 +28,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
         {
             try
             {
-                // Lê as informações de dentro do Token
+                // O "unique_name" diz pro Blazor onde achar o Nome do usuário no Token
                 identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt", "unique_name", "role");
                 _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
@@ -46,17 +45,12 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
         return state;
     }
 
-    // Método auxiliar para ler o Token sem bibliotecas pesadas
     public static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
     {
         var payload = jwt.Split('.')[1];
         var jsonBytes = ParseBase64WithoutPadding(payload);
-        
         var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
-
-        // AQUI ESTAVA O ERRO: Adicionamos "!" e "?? string.Empty"
-        // O "!" diz: "Eu garanto que o dicionário não é nulo"
-        // O "?? string.Empty" diz: "Se o valor for nulo, use texto vazio"
+        
         return keyValuePairs!.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString() ?? string.Empty));
     }
 

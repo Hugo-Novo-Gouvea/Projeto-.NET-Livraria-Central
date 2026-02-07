@@ -1,6 +1,6 @@
 @page "/livros"
-@attribute [Authorize]  
-@inject HttpClient Http
+@attribute [Authorize]
+
 @using LivrariaCentral.Web.Models
 @inject HttpClient Http
 @inject IDialogService DialogService
@@ -42,7 +42,7 @@ else
             
             <TemplateColumn CellClass="d-flex justify-end">
                 <CellTemplate>
-                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.AttachMoney" Color="@Color.Success" OnClick="@(() => RealizarVenda(context.Item))" Title="Vender" />
+                                         <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.AttachMoney" Color="@Color.Success" OnClick="@(() => RealizarVenda(context.Item))" Title="Vender" />
                     
                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Edit" Color="@Color.Primary" OnClick="@(() => EditarLivro(context.Item))" />
                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Delete" Color="@Color.Error" OnClick="@(() => DeletarLivro(context.Item))" />
@@ -70,57 +70,7 @@ else
         livros = await Http.GetFromJsonAsync<List<Livro>>("api/livros");
     }
 
-    // --- Lógica de ADICIONAR ---
-    private async Task AdicionarLivro()
-    {
-        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = await DialogService.ShowAsync<LivroDialog>("Novo Livro", options);
-        var result = await dialog.Result;
-
-        if (result != null && !result.Canceled && result.Data != null)
-        {
-            var novoLivro = (Livro)result.Data;
-            await Http.PostAsJsonAsync("api/livros", novoLivro);
-            Snackbar.Add("Livro cadastrado!", Severity.Success);
-            await CarregarLivros();
-        }
-    }
-
-    // --- Lógica de EDITAR ---
-    private async Task EditarLivro(Livro livro)
-    {
-        var parameters = new DialogParameters { ["Livro"] = livro };
-        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        
-        var dialog = await DialogService.ShowAsync<LivroDialog>("Editar Livro", parameters, options);
-        var result = await dialog.Result;
-
-        if (result != null && !result.Canceled && result.Data != null)
-        {
-            var livroEditado = (Livro)result.Data;
-            await Http.PutAsJsonAsync($"api/livros/{livroEditado.Id}", livroEditado);
-            Snackbar.Add("Livro atualizado!", Severity.Success);
-            await CarregarLivros();
-        }
-    }
-
-    // --- Lógica de DELETAR ---
-    private async Task DeletarLivro(Livro livro)
-    {
-        bool? result = await DialogService.ShowMessageBox(
-            "Atenção", 
-            $"Deseja excluir o livro '{livro.Titulo}'?", 
-            yesText: "Excluir", cancelText: "Cancelar");
-
-        if (result == true)
-        {
-            await Http.DeleteAsync($"api/livros/{livro.Id}");
-            Snackbar.Add("Livro excluído.", Severity.Error);
-            await CarregarLivros();
-        }
-    }
-
-    // --- NOVO: Lógica de VENDER ---
+    // --- Lógica de VENDA (Novo) ---
     private async Task RealizarVenda(Livro livro)
     {
         var parameters = new DialogParameters 
@@ -135,23 +85,62 @@ else
         if (result != null && !result.Canceled && result.Data != null)
         {
             int qtdVendida = (int)result.Data;
-
-            // Cria o objeto para mandar pra API
             var venda = new VendaDTO { LivroId = livro.Id, Quantidade = qtdVendida };
 
             var response = await Http.PostAsJsonAsync("api/vendas", venda);
 
             if (response.IsSuccessStatusCode)
             {
-                Snackbar.Add($"Venda de {qtdVendida} un. realizada!", Severity.Success);
+                Snackbar.Add($"Venda realizada!", Severity.Success);
                 await CarregarLivros(); // Atualiza a tabela para ver o estoque baixando
             }
             else
             {
-                // Lê a mensagem de erro da API (ex: Estoque insuficiente)
                 var erro = await response.Content.ReadAsStringAsync();
                 Snackbar.Add($"Erro: {erro}", Severity.Error);
             }
+        }
+    }
+
+    // --- CRUD (Mantido igual) ---
+    private async Task AdicionarLivro()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = await DialogService.ShowAsync<LivroDialog>("Novo Livro", options);
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled && result.Data != null)
+        {
+            await Http.PostAsJsonAsync("api/livros", result.Data);
+            Snackbar.Add("Livro cadastrado!", Severity.Success);
+            await CarregarLivros();
+        }
+    }
+
+    private async Task EditarLivro(Livro livro)
+    {
+        var parameters = new DialogParameters { ["Livro"] = livro };
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = await DialogService.ShowAsync<LivroDialog>("Editar Livro", parameters, options);
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled && result.Data != null)
+        {
+            var livroEditado = (Livro)result.Data;
+            await Http.PutAsJsonAsync($"api/livros/{livroEditado.Id}", livroEditado);
+            Snackbar.Add("Livro atualizado!", Severity.Success);
+            await CarregarLivros();
+        }
+    }
+
+    private async Task DeletarLivro(Livro livro)
+    {
+        bool? result = await DialogService.ShowMessageBox("Atenção", $"Deseja excluir '{livro.Titulo}'?", yesText: "Excluir", cancelText: "Cancelar");
+        if (result == true)
+        {
+            await Http.DeleteAsync($"api/livros/{livro.Id}");
+            Snackbar.Add("Livro excluído.", Severity.Error);
+            await CarregarLivros();
         }
     }
 
@@ -163,20 +152,13 @@ else
         return false;
     };
 
-    // --- NOVO: Classe auxiliar para enviar os dados ---
-    public class VendaDTO
-    {
-        public int LivroId { get; set; }
-        public int Quantidade { get; set; }
-    }
-
     private async Task BaixarRelatorio()
     {
-        // Como o download de arquivos via AJAX é chato, vamos usar um truque:
-        // Abrir a URL da API numa nova aba. O navegador entende que é PDF e baixa/abre.
+        // Truque: Pegamos a URL base configurada no HttpClient para não precisar digitar a porta de novo
+        var urlBase = Http.BaseAddress?.ToString();
+        var urlRelatorio = $"{urlBase}api/relatorios/estoque";
         
-        var urlApi = "http://localhost:5239/api/relatorios/estoque";
-        
-        await JS.InvokeVoidAsync("open", urlApi, "_blank");
+        // Abre o PDF em uma nova aba do navegador
+        await JS.InvokeVoidAsync("open", urlRelatorio, "_blank");
     }
 }

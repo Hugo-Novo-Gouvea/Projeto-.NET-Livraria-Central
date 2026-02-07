@@ -1,6 +1,6 @@
 @page "/historico"
-@attribute [Authorize]  
-@inject HttpClient Http
+@attribute [Authorize]
+
 @using LivrariaCentral.Web.Models
 @inject HttpClient Http
 
@@ -15,11 +15,13 @@ else
     <MudDataGrid Items="@vendas" Filterable="true" SortMode="SortMode.Multiple">
         <Columns>
             <PropertyColumn Property="x => x.Id" Title="#" />
-            <PropertyColumn Property="x => x.DataVenda" Title="Data">
+            
+                         <PropertyColumn Property="x => x.DataVenda" Title="Data">
                 <CellTemplate>
-                    @context.Item.DataVenda.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                                         @context.Item.DataVenda.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
                 </CellTemplate>
             </PropertyColumn>
+            
             <PropertyColumn Property="x => x.LivroTitulo" Title="Livro" />
             <PropertyColumn Property="x => x.Quantidade" Title="Qtd." />
             <PropertyColumn Property="x => x.ValorTotal" Title="Total" Format="C" />
@@ -36,6 +38,13 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        vendas = await Http.GetFromJsonAsync<List<VendaHistorico>>("api/vendas");
+        try
+        {
+            vendas = await Http.GetFromJsonAsync<List<VendaHistorico>>("api/vendas");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Erro ao buscar histórico: " + ex.Message);
+        }
     }
 }

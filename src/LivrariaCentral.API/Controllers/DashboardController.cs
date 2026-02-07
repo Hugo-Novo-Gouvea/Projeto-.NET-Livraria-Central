@@ -18,19 +18,18 @@ public class DashboardController : ControllerBase
     [HttpGet("resumo")]
     public async Task<IActionResult> GetResumo()
     {
-        // O Banco de Dados faz as contas (muito mais rápido que o C#)
+        // O Banco de Dados faz as contas (muito mais rápido que trazer tudo para o C# somar)
         var totalLivros = await _context.Livros.CountAsync();
         var valorEstoque = await _context.Livros.SumAsync(l => l.Preco * l.Estoque);
         var estoqueBaixo = await _context.Livros.CountAsync(l => l.Estoque < 5);
         
-        // Retorna um objeto anônimo (JSON)
+        // Retorna um objeto anônimo (JSON) com os dados calculados
         return Ok(new 
         {
             TotalLivros = totalLivros,
             ValorEstoque = valorEstoque,
             EstoqueBaixo = estoqueBaixo,
-            // Simula dados de vendas (pois ainda não temos tabela de vendas)
-            VendasHoje = 0 
+            // VendasHoje = 0 (Deixaremos zerado até implementarmos a tabela de Vendas)
         });
     }
 }

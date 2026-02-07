@@ -14,16 +14,16 @@
         <MudText Typo="Typo.h6" Class="ml-3">Livraria Central</MudText>
         <MudSpacer />
         
-        <AuthorizeView>
+                 <AuthorizeView>
             <Authorized>
-                <MudText Class="mr-4">Olá, @context.User.Identity?.Name</MudText>
+                <MudText Class="mr-4">Olá @context.User.Identity?.Name</MudText>
                 <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="Logout">Sair</MudButton>
             </Authorized>
             <NotAuthorized>
                 <MudButton Variant="Variant.Filled" Color="Color.Success" Href="/login">Entrar</MudButton>
             </NotAuthorized>
         </AuthorizeView>
-        </MudAppBar>
+    </MudAppBar>
 
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <MudNavMenu>

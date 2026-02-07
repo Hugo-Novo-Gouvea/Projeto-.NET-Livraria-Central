@@ -1,6 +1,4 @@
 @page "/login"
-@using LivrariaCentral.Web.Models
-@using Blazored.LocalStorage
 @inject HttpClient Http
 @inject ILocalStorageService LocalStorage
 @inject AuthenticationStateProvider AuthStateProvider
@@ -32,12 +30,8 @@
             var resultado = await response.Content.ReadFromJsonAsync<JsonElement>();
             string token = resultado.GetProperty("token").GetString()!;
 
-            // 1. Salva o token no navegador
             await LocalStorage.SetItemAsStringAsync("authToken", token);
-            
-            // 2. Força o sistema a reler o token para atualizar o menu
             await AuthStateProvider.GetAuthenticationStateAsync();
-            
             Nav.NavigateTo("/");
         }
         else
