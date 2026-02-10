@@ -27,8 +27,8 @@ Este repositório representa a **Parte 1** de uma série de estudos avançados. 
 | Fase | Foco | Status | Descrição |
 | :--- | :--- | :---: | :--- |
 | **Parte 1** | **MVP Funcional** | ✅ | Construção da aplicação completa (Back + Front + Banco), focado em entrega de valor e funcionalidades (Vendas, Auth, PDF, Logs). |
-| **Parte 2** | **Arquitetura & Qualidade** | 🚧 | Refatoração para **Clean Architecture**, implementação de **Testes Unitários** (xUnit), Padrão Repository e validações avançadas (FluentValidation). |
-| **Parte 3** | **Cloud & DevOps** | 📅 | Migração para **Microsoft Azure**, configuração de Pipeline de **CI/CD** (GitHub Actions), Dockerização e gestão de segredos. |
+| **Parte 2** | **Arquitetura & Qualidade** | ✅ | Refatoração para **Clean Architecture**, implementação de **Testes Unitários** (xUnit), Padrão Repository e validações avançadas (FluentValidation). |
+| **Parte 3** | **Cloud & DevOps** | 🚧 | Migração para **Microsoft Azure**, configuração de Pipeline de **CI/CD** (GitHub Actions), Dockerização e gestão de segredos. |
 
 ## 🛠️ Tecnologias Utilizadas
 
