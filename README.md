@@ -1,222 +1,238 @@
-# 📚 Livraria Central - Sistema de Gestão Full Stack
+ # 📚 Livraria Central - Sistema de Gestão Full Stack
 
-![Status](https://img.shields.io/badge/Status-Concluído-success?style=for-the-badge)
+ ![Status](https://img.shields.io/badge/Status-Concluído-success?style=for-the-badge)
 
-![.NET](https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white)
-![Blazor](https://img.shields.io/badge/Blazor-512BD4?style=for-the-badge&logo=blazor&logoColor=white)
-![MudBlazor](https://img.shields.io/badge/MudBlazor-7E6EEF?style=for-the-badge&logo=mui&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+ ![.NET](https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white)
+ ![Blazor](https://img.shields.io/badge/Blazor-512BD4?style=for-the-badge&logo=blazor&logoColor=white)
+ ![MudBlazor](https://img.shields.io/badge/MudBlazor-7E6EEF?style=for-the-badge&logo=mui&logoColor=white)
+ ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 
-> **Uma solução completa para gerenciamento de livrarias, desenvolvida com as tecnologias mais modernas do ecossistema .NET.**
+ > **Uma solução completa para gerenciamento de livrarias, desenvolvida com as tecnologias mais modernas do ecossistema .NET.**
 
-## 💡 Sobre o Projeto
+ ## 💡 Sobre o Projeto
 
-Este projeto é uma aplicação **Full Stack** robusta desenvolvida para simular o ambiente real de uma livraria. Diferente de projetos acadêmicos simples, o objetivo aqui foi criar um sistema funcional com regras de negócio reais, controle de concorrência, autenticação segura e relatórios.
+ Este projeto é uma aplicação **Full Stack** robusta desenvolvida para simular o ambiente real de uma livraria. Diferente de projetos acadêmicos simples, o objetivo aqui foi criar um sistema funcional com regras de negócio reais, controle de concorrência, autenticação segura e relatórios.
 
+ ### 🎯 Objetivos
+ 1.  **Portfólio Técnico:** Demonstrar domínio em arquitetura de software, Clean Code e padrões de mercado (.NET 10, Blazor WASM).
+ 2.  **Material Didático:** O repositório contém um **Guia Passo a Passo** (logo abaixo) para desenvolvedores que desejam aprender a construir aplicações reais do zero.
 
+ ## 🗺️ Roadmap do Projeto
 
-### 🎯 Objetivos
-1.  **Portfólio Técnico:** Demonstrar domínio em arquitetura de software, Clean Code e padrões de mercado (.NET 10, Blazor WASM).
-2.  **Material Didático:** O repositório contém um **Guia Passo a Passo** (logo abaixo) para desenvolvedores que desejam aprender a construir aplicações reais do zero.
+ Este repositório representa a **Parte 1** de uma série de estudos avançados. O objetivo é demonstrar a evolução de um software funcional ("Make it Work") para uma solução Enterprise escalável ("Make it Right").
 
-## 🗺️ Roadmap do Projeto
+ | Fase | Foco | Status | Descrição | Acesso |
+ | :--- | :--- | :---: | :--- | :--- |
+ | **Parte 1** | **MVP Funcional** | ✅ | Construção da aplicação completa (Back + Front + Banco), focado em entrega de valor e funcionalidades (Vendas, Auth, PDF, Logs). | (Atual)
+ | **Parte 2** | **Arquitetura & Qualidade** | ✅ | Refatoração para **Clean Architecture**, implementação de **Testes Unitários** (xUnit), Padrão Repository e validações avançadas (FluentValidation). | https://github.com/Hugo-Novo-Gouvea/Projeto-.NET-Livraria-Central-Parte-2
+ | **Parte 3** | **Cloud & DevOps** | 🚧 | Migração para **Microsoft Azure**, configuração de Pipeline de **CI/CD** (GitHub Actions), Dockerização e gestão de segredos. | (Em Breve)
 
-Este repositório representa a **Parte 1** de uma série de estudos avançados. O objetivo é demonstrar a evolução de um software funcional ("Make it Work") para uma solução Enterprise escalável ("Make it Right").
+ ## 🛠️ Tecnologias Utilizadas
 
-| Fase | Foco | Status | Descrição |
-| :--- | :--- | :---: | :--- |
-| **Parte 1** | **MVP Funcional** | ✅ | Construção da aplicação completa (Back + Front + Banco), focado em entrega de valor e funcionalidades (Vendas, Auth, PDF, Logs). |
-| **Parte 2** | **Arquitetura & Qualidade** | ✅ | Refatoração para **Clean Architecture**, implementação de **Testes Unitários** (xUnit), Padrão Repository e validações avançadas (FluentValidation). |
-| **Parte 3** | **Cloud & DevOps** | 🚧 | Migração para **Microsoft Azure**, configuração de Pipeline de **CI/CD** (GitHub Actions), Dockerização e gestão de segredos. |
+ * **Backend:** .NET 10 (Web API), Entity Framework Core.
+ * **Frontend:** Blazor WebAssembly (SPA), MudBlazor (Material Design).
+ * **Banco de Dados:** PostgreSQL 18.
+ * **Segurança:** JWT (JSON Web Tokens), BCrypt (Hash de Senhas).
+ * **Relatórios:** QuestPDF (Geração de PDFs profissionais).
+ * **Observabilidade:** Serilog (Logs estruturados e auditoria em arquivo).
+ * **Deploy:** Configuração pronta para Windows Service (IIS) e Linux (Nginx + Systemd).
 
-## 🛠️ Tecnologias Utilizadas
+ ## ✨ Funcionalidades Principais
 
-* **Backend:** .NET 10 (Web API), Entity Framework Core.
-* **Frontend:** Blazor WebAssembly (SPA), MudBlazor (Material Design).
-* **Banco de Dados:** PostgreSQL 18.
-* **Segurança:** JWT (JSON Web Tokens), BCrypt (Hash de Senhas).
-* **Relatórios:** QuestPDF (Geração de PDFs profissionais).
-* **Observabilidade:** Serilog (Logs estruturados e auditoria em arquivo).
-* **Deploy:** Configuração pronta para Windows Service (IIS) e Linux (Nginx + Systemd).
+ ✅ **Dashboard Interativo:** Gráficos de vendas e indicadores de estoque (KPIs) em tempo real.  
+ ✅ **Gestão de Livros:** Cadastro, edição e exclusão com validações de negócio.  
+ ✅ **Ponto de Venda (PDV):** Registro de vendas com cálculo automático e baixa de estoque.  
+ ✅ **Segurança:** Autenticação via Token JWT, proteção de rotas e criptografia.  
+ ✅ **Auditoria:** Logs detalhados de rastreabilidade (ex: "Quem excluiu o livro X?").  
+ ✅ **Relatórios:** Exportação de listagem de estoque em PDF.  
 
-## ✨ Funcionalidades Principais
+ ## 📸 Pré-visualização
 
-✅ **Dashboard Interativo:** Gráficos de vendas e indicadores de estoque (KPIs) em tempo real.  
-✅ **Gestão de Livros:** Cadastro, edição e exclusão com validações de negócio.  
-✅ **Ponto de Venda (PDV):** Registro de vendas com cálculo automático e baixa de estoque.  
-✅ **Segurança:** Autenticação via Token JWT, proteção de rotas e criptografia.  
-✅ **Auditoria:** Logs detalhados de rastreabilidade (ex: "Quem excluiu o livro X?").  
-✅ **Relatórios:** Exportação de listagem de estoque em PDF.  
+ | Dashboard (KPIs) | Gestão de Estoque |
+ |:---:|:---:|
+ | ![Dashboard](img/dashboard.png) | ![Livros](img/tabela.png) |
 
-## 📸 Pré-visualização
+ ## 🚀 Quick Start (Como Rodar)
 
-| Dashboard (KPIs) | Gestão de Estoque |
-|:---:|:---:|
-| ![Dashboard](img/dashboard.png) | ![Livros](img/tabela.png) |
+ Siga os passos abaixo para executar o projeto em sua máquina local.
 
-## 🚀 Quick Start (Como Rodar)
+ ### Pré-requisitos
+ * .NET SDK 10 (ou superior)
+ * PostgreSQL
 
-Siga os passos abaixo para executar o projeto em sua máquina local.
+ ### Passo a Passo
 
-### Pré-requisitos
-* .NET SDK 10 (ou superior)
-* PostgreSQL
+ 1.  **Clone o repositório:**
+     ```bash
+     git clone [https://github.com/seu-usuario/LivrariaCentral.git](https://github.com/seu-usuario/LivrariaCentral.git)
+     cd LivrariaCentral
+     ```
 
-### Passo a Passo
+ 2.  **Configure o Banco de Dados:**
+     * Certifique-se que o PostgreSQL está rodando.
+     * Abra `src/LivrariaCentral.API/appsettings.json` e ajuste a `ConnectionStrings` com sua senha.
 
-1.  **Clone o repositório:**
-    ```bash
-    git clone https://github.com/seu-usuario/LivrariaCentral.git
-    cd LivrariaCentral
-    ```
+ 3.  **Crie o Banco (Migrations):**
+     ```bash
+     cd src/LivrariaCentral.API
+     dotnet ef database update
+     ```
 
-2.  **Configure o Banco de Dados:**
-    * Certifique-se que o PostgreSQL está rodando.
-    * Abra `src/LivrariaCentral.API/appsettings.json` e ajuste a `ConnectionStrings` com sua senha.
+ 4.  **Execute a Aplicação:**
+     Abra dois terminais.
+     
+     *Terminal 1 (Backend):*
+     ```bash
+     cd src/LivrariaCentral.API
+     dotnet run
+     ```
+     
+     *Terminal 2 (Frontend):*
+     ```bash
+     cd src/LivrariaCentral.Web
+     dotnet run
+     ```
 
-3.  **Crie o Banco (Migrations):**
-    ```bash
-    cd src/LivrariaCentral.API
-    dotnet ef database update
-    ```
+ 5.  **Acesse o Sistema:**
+     * Abra o navegador no endereço indicado pelo Frontend (ex: `http://localhost:xxxx`).
+     * **Login Inicial:** Como o sistema é fechado, utilize o Swagger (`/api/auth/registrar`) para criar seu primeiro usuário admin ou insira manualmente no banco.
 
-4.  **Execute a Aplicação:**
-    Abra dois terminais.
-    
-    *Terminal 1 (Backend):*
-    ```bash
-    cd src/LivrariaCentral.API
-    dotnet run
-    ```
-    
-    *Terminal 2 (Frontend):*
-    ```bash
-    cd src/LivrariaCentral.Web
-    dotnet run
-    ```
+ # 📖 Guia de Desenvolvimento (Passo a Passo)
 
-5.  **Acesse o Sistema:**
-    * Abra o navegador no endereço indicado pelo Frontend (ex: `http://localhost:xxxx`).
-    * **Login Inicial:** Como o sistema é fechado, utilize o Swagger (`/api/auth/registrar`) para criar seu primeiro usuário admin ou insira manualmente no banco.
-
-# 📖 Guia de Desenvolvimento (Passo a Passo)
-
-> **📝 Nota para Estudantes:**
-> 
-> O conteúdo abaixo serve como um tutorial sequencial para quem deseja replicar este projeto do zero, explicando não apenas o código, mas o **"porquê"** das decisões tomadas.
->
-> **Siga as sessões na ordem para garantir o aprendizado.**
+ > **📝 Nota para Estudantes:**
+ > 
+ > O conteúdo abaixo serve como um tutorial sequencial para quem deseja replicar este projeto do zero, explicando não apenas o código, mas o **"porquê"** das decisões tomadas.
+ >
+ > **Siga as sessões na ordem para garantir o aprendizado.**
 
  ## 🚀 Sessão 1: Configuração do Ambiente
 
- ### 1. Infraestrutura
+ Antes de colocarmos a mão na massa, precisamos preparar o terreno. Assim como um chef precisa de suas facas afiadas, nós precisamos garantir que as ferramentas corretas estão instaladas na sua máquina.
 
- **Para o Projeto será necessário:**
+ ### 1. Infraestrutura Necessária
 
-- **Banco de Dados PostgreSQL 18.**
-- **.NET SDK: 10**
-- **VIsual Studio Code**
+ Para desenvolver este projeto, utilizaremos um conjunto de tecnologias modernas e robustas. Certifique-se de ter os seguintes itens instalados e configurados:
+
+ * **🐘 Banco de Dados PostgreSQL 18:** Onde guardaremos nossos livros, usuários e vendas de forma segura.
+ * **💻 .NET SDK 10:** O kit de desenvolvimento da Microsoft necessário para criar, compilar e rodar nossa aplicação.
+ * **📝 Visual Studio Code:** Nosso editor de código (IDE), leve e poderoso.
 
  ## 🚀 Sessão 2: Criação da API
 
- ### 📝 Resumo Rápido de Comandos (Terminal)
+ Agora que o ambiente está pronto, vamos construir o **Back-end** do nosso sistema. É aqui que toda a regra de negócio e a conexão com o banco de dados vão morar.
 
- Para quem não tem o costume de usar o terminal, aqui vai um glossário essencial:
+ > **🧠 Conceito: O que é uma WebAPI?**
+ > Pense nela como o "cérebro" invisível do sistema. Diferente de um site comum, a API não entrega telas (HTML), ela entrega **Dados Puros** (geralmente JSON).
+ > * Ela recebe pedidos (ex: "Cadastrar Livro").
+ > * Ela processa as regras (ex: "Preço não pode ser zero").
+ > * Ela responde para quem pediu (o Site/Frontend).
 
- ```bash
- cd ..             # Sai da pasta atual (volta um nível)
- cd nomeDaPasta    # Entra em uma pasta
- mkdir nomeDaPasta # Cria uma nova pasta (Make Directory)
- ```
+ ### 1. Organização da Solução (Pasta Source)
 
- ### 1. Organização (Pasta Source)
+ Para manter o projeto organizado profissionalmente, não misturamos código-fonte com arquivos de configuração (como o `.git` ou `README.md`). Usaremos o padrão de mercado `src` (source).
 
- Vamos criar uma pasta `src` (source/código-fonte) na raiz para não misturar o código do projeto com arquivos de configuração soltos (como o README ou gitignore).
+ **No terminal, na raiz onde você quer criar o projeto, execute:**
 
  ```bash
  mkdir src
  cd src
  ```
 
- ### 2. Estrutura inicial da API
+ ### 2. Estrutura Inicial da API
 
- Vamos criar o projeto do tipo **WebAPI**. Este será o nosso **Back-end**.
+ Vamos usar o esqueleto oficial da Microsoft para criar nosso projeto base.
+
+ **Ainda dentro da pasta `src`, execute o comando:**
 
  ```bash
+ # Cria o projeto do tipo WebAPI com o nome "LivrariaCentral.API"
  dotnet new webapi -n LivrariaCentral.API
  ```
 
- **O que é uma WebAPI?**
- É o "cérebro" do sistema sem a parte visual. Diferente de um site comum, a API não entrega HTML (telas), ela entrega **Dados Puros** (geralmente em formato JSON).
- * Ela recebe pedidos (ex: "Cadastrar Livro").
- * Ela processa as regras (ex: "O preço não pode ser zero").
- * Ela salva no banco.
- * Ela responde para quem pediu (o Site/Frontend).
+ **✅ Checkpoint Visual:**
+ A sua estrutura de pastas deve ter ficado assim:
 
- ### 3. Instalação de Pacotes
+ ```text
+ src/
+ └── LivrariaCentral.API/
+     ├── Properties/
+     ├── appsettings.json
+     ├── LivrariaCentral.API.csproj
+     ├── LivrariaCentral.API.http
+     └── Program.cs
+ ```
 
- Agora precisamos entrar na pasta do projeto e instalar as ferramentas de banco de dados.
- O .NET 10 gerencia as versões automaticamente, então não precisamos especificar números (a menos que use uma versão antiga).
+ ### 3. Instalação de Pacotes (Ferramentas)
+
+ O .NET vem "limpo" para ser leve. Para conversar com o banco de dados PostgreSQL, precisamos instalar ferramentas adicionais (o Entity Framework).
+
+ **1. Entre na pasta do projeto criado:**
 
  ```bash
  cd LivrariaCentral.API
+ ```
 
+ **2. Instale os pacotes necessários:**
+
+ ```bash
  dotnet add package Microsoft.EntityFrameworkCore
  dotnet add package Microsoft.EntityFrameworkCore.Design
  dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
  ```
 
- > **Obs:** Caso esteja utilizando o .NET SDK 9 ou anterior, pode ser necessário adicionar `--version 9.0.0` (ou compatível) ao final de cada linha.
-
- **O que cada pacote faz:**
- * **EntityFrameworkCore:** É o núcleo do ORM. Ele permite que manipulemos o banco de dados usando classes e códigos C# em vez de escrever SQL puro.
- * **EntityFrameworkCore.Design:** Contém as ferramentas necessárias para rodar os comandos de **Migration** e scaffolding no terminal.
- * **Npgsql...PostgreSQL:** É o "driver" (ou provedor) que ensina o Entity Framework a se comunicar especificamente com o banco **PostgreSQL**.  
-
+ > **🔍 O que instalamos?**
+ > * **EntityFrameworkCore:** O "tradutor" que permite escrever códigos C# em vez de SQL puro.
+ > * **EntityFrameworkCore.Design:** As ferramentas para rodar comandos de criação de banco (Migrations) pelo terminal.
+ > * **Npgsql.PostgreSQL:** O "motorista" que ensina o Entity Framework a falar especificamente com o banco PostgreSQL.
 
  ## 🚀 Sessão 3: Configuração da API (Backend)
 
- Agora que temos a estrutura, vamos transformar esse projeto vazio em uma API real.
- Usaremos a abordagem **Code-First** (Primeiro o Código), onde criamos as classes em C# e o Entity Framework gera o Banco de Dados para nós.
+ Agora que temos a estrutura vazia, vamos transformá-la em uma API real.
+
+ > **🧠 Conceito: Code-First (Primeiro o Código)**
+ > Em vez de abrir o banco de dados e criar tabelas com SQL (CREATE TABLE...), nós criamos **Classes C#**.
+ > O Entity Framework lê essas classes e cria o banco de dados automaticamente para nós.
 
  ### 1. Estrutura de Pastas
 
- Vamos organizar a casa. Dentro da pasta do projeto API, crie as pastas para os Modelos e para o Banco de Dados.
+ Vamos organizar a casa criando as divisões para a lógica do banco de dados.
+
+ **No terminal, dentro da pasta `src/LivrariaCentral.API`, execute:**
 
  ```bash
- cd src/LivrariaCentral.API
- mkdir Models #Modelos
- mkdir Data #Banco de Dados
+ mkdir Models  # Onde ficam as classes (Entidades)
+ mkdir Data    # Onde fica a configuração do Banco
  ```
 
- ### 2. Entidade (Model)
+ ### 2. Criando a Entidade (O Molde)
 
- Como estamos gerenciando uma Livraria, precisamos definir o que é um "Livro".
+ Precisamos ensinar ao sistema o que é um "Livro".
 
- **Crie o arquivo `Livro.cs` dentro da pasta `Models`.**
-
- Esta classe representa a tabela `Livros` no banco de dados. Cada propriedade vira uma coluna.
+ **1. Localize a pasta:** `src/LivrariaCentral.API/Models`
+ **2. Crie o arquivo:** `Livro.cs`
+ **3. Adicione o código:**
 
  ```csharp
  namespace LivrariaCentral.API.Models;
 
  public class Livro
  {
-     public int Id { get; set; } // O EF Core entende automaticamente que "Id" é a Chave Primária
+     public int Id { get; set; } // O EF Core entende automaticamente que "Id" é a Chave Primária (PK)
      public string Titulo { get; set; } = string.Empty; // Inicializa vazio para evitar erros de Nulo
      public string Autor { get; set; } = string.Empty;
-     public decimal Preco { get; set; } // Decimal é o tipo correto para dinheiro (evita erros de arredondamento)
+     public decimal Preco { get; set; } // "decimal" é obrigatório para dinheiro (evita erros de arredondamento do "double")
      public int Estoque { get; set; }
-     public DateTime DataCadastro { get; set; } = DateTime.UtcNow; // Pega a hora universal (padrão mundial)
+     public DateTime DataCadastro { get; set; } = DateTime.UtcNow; // Sempre use UTC para evitar confusão de fuso horário
  }
  ```
 
- ### 3. Contexto de Banco de Dados
+ ### 3. Contexto de Banco de Dados (A Ponte)
 
- **Crie o arquivo `AppDbContext.cs` dentro da pasta `Data`.**
+ O Contexto é a classe que traduz o C# para o PostgreSQL.
 
- Este arquivo é a "ponte" entre o C# e o PostgreSQL. Ele herda de `DbContext` e ensina ao sistema quais classes devem virar tabelas.
+ **1. Localize a pasta:** `src/LivrariaCentral.API/Data`
+ **2. Crie o arquivo:** `AppDbContext.cs`
+ **3. Adicione o código:**
 
  ```csharp
  using Microsoft.EntityFrameworkCore;
@@ -224,22 +240,22 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  namespace LivrariaCentral.API.Data;
 
+ // Herdar de DbContext transforma essa classe em uma ferramenta do EF Core
  public class AppDbContext : DbContext
  {
      public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-     // Define que a classe Livro será uma tabela chamada "Livros"
+     // Esta linha diz: "Crie uma tabela chamada 'Livros' baseada na classe 'Livro'"
      public DbSet<Livro> Livros { get; set; }
  }
  ```
 
- ### 4. Connection String (Acesso ao Banco)
+ ### 4. Connection String (O Endereço do Banco)
 
- Precisamos dizer onde o banco está e qual a senha.
+ Precisamos configurar onde o banco está e qual a senha de acesso.
 
- 
-
- **Abra o arquivo `appsettings.json` na raiz de `LivrariaCentral.API` e atualize a seção "ConnectionStrings":**
+ **1. Localize o arquivo:** `src/LivrariaCentral.API/appsettings.json`
+ **2. Adicione a vírgula após "AllowedHosts" e insira o bloco "ConnectionStrings":**
 
  ```json
  {
@@ -251,25 +267,26 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
    },
    "AllowedHosts": "*",
    "ConnectionStrings": {
-     "DefaultConnection": "Host=localhost;Port=5432;Database=LivrariaCentral;Username=postgres;Password=admin"
+      "DefaultConnection": "Host=localhost;Port=5432;Database=LivrariaCentral;Username=postgres;Password=admin"
    }
  }
  ```
 
- > **⚠️ Importante:** Substitua `admin` em `Password=` pela senha que você configurou ao instalar o PostgreSQL. Se o nome do seu banco for diferente, altere o `LivrariaCentral` em `Database=` para o nome do seu banco.
-
- > **⚠️⚠️⚠️🛡️ Segurança:** Caso pretenda subir este projeto para o GitHub, **jamais envie senhas reais!** Em projetos profissionais, usamos "User Secrets" ou Variáveis de Ambiente. Para este estudo, garanta que a senha usada aqui seja apenas para testes locais e não uma senha pessoal importante.
+ > **⚠️ Atenção Crítica:**
+ > 1. Substitua `admin` pela senha que você criou ao instalar o PostgreSQL.
+ > 2. **Segurança:** Em projetos reais, jamais commitamos senhas no Git. Usamos *User Secrets* ou *Variáveis de Ambiente*. Aqui faremos assim apenas para fins didáticos locais.
 
  ### 5. Configuração dos Serviços (Program.cs)
 
- Primeiro, vamos instalar o pacote que gera a documentação automática (Swagger).
+ Agora precisamos "ligar os fios": registrar o banco de dados e ativar o Swagger (documentação).
+
+ **1. Instale o pacote do Swagger via terminal (na pasta da API):**
 
  ```bash
  dotnet add package Swashbuckle.AspNetCore
  ```
 
- Agora, substitua **todo o conteúdo** do arquivo `Program.cs` pelo código abaixo.
- Aqui nós configuramos a Injeção de Dependência do Banco e ativamos os Controllers.
+ **2. Substitua TODO o conteúdo de `src/LivrariaCentral.API/Program.cs` por:**
 
  ```csharp
  using LivrariaCentral.API.Data;
@@ -277,73 +294,75 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  var builder = WebApplication.CreateBuilder(args);
 
- // --- 1. CONFIGURAÇÃO DO BANCO (POSTGRES) ---
+ // --- 1. CONFIGURAÇÃO DOS SERVIÇOS (INJEÇÃO DE DEPENDÊNCIA) ---
 
- // Lê a string de conexão do appsettings.json
+ // Pega a conexão do arquivo appsettings.json
  var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
- // Registra o AppDbContext na injeção de dependência usando Npgsql
+ // Ensina a API a usar o PostgreSQL
  builder.Services.AddDbContext<AppDbContext>(options =>
      options.UseNpgsql(connectionString));
 
- // --------------------------------------------
-
- // Adiciona suporte a Controllers (API)
+ // Ativa os Controllers (nossas rotas de API)
  builder.Services.AddControllers();
 
- // Adiciona suporte ao Swagger (Documentação da API)
+ // Configura o Swagger (Documentação Automática)
  builder.Services.AddEndpointsApiExplorer();
  builder.Services.AddSwaggerGen();
 
  var app = builder.Build();
 
- // --- 2. PIPELINE DE REQUISIÇÃO HTTP ---
+ // --- 2. PIPELINE DE REQUISIÇÃO (MIDDLEWARES) ---
 
- // Se estiver em ambiente de desenvolvimento, ativa o Swagger visual
+ // Se estiver rodando local (Development), mostra o Swagger
  if (app.Environment.IsDevelopment())
  {
      app.UseSwagger();
      app.UseSwaggerUI();
  }
 
- // Redireciona HTTP para HTTPS
  app.UseHttpsRedirection();
-
  app.UseAuthorization();
-
- // Mapeia os Controllers para as rotas da API
  app.MapControllers();
 
- // Roda a aplicação
  app.Run();
  ```
 
- ### 6. Migrations (Inicialização do Banco)
+ ### 6. Migrations (Criando o Banco)
 
- Agora vamos criar o banco de dados físico usando os comandos do Entity Framework.
+ Chegou a hora da verdade. Vamos rodar os comandos que leem seu código C# e criam a tabela no PostgreSQL.
+
+ **No terminal (pasta da API), execute na ordem:**
 
  ```bash
- # Instala a ferramenta global do EF (se já tiver, ele avisa)
+ # 1. Instala a ferramenta global do EF (apenas na primeira vez)
  dotnet tool install --global dotnet-ef
 
- # 1. Cria o script de migração (a "receita" do banco)
+ # 2. Cria o arquivo de instrução (Migration) - O "Plano de Voo"
  dotnet ef migrations add InitialCreate
 
- # 2. Aplica o script no PostgreSQL (cria as tabelas de verdade)
+ # 3. Executa a instrução no banco - A "Decolagem"
  dotnet ef database update
  ```
 
- **Entendendo os comandos:**
- * **migrations add:** Analisa suas classes C# (`Livro`) e cria um arquivo descrevendo como criar essa tabela no SQL.
- * **database update:** Pega essa descrição e executa no banco de dados real. Se você abrir seu PostgreSQL agora, verá a tabela `Livros` lá!
+ > **✅ Checkpoint de Sucesso:**
+ > Se o comando terminar sem erros vermelhos e aparecer `Done.`, seu banco de dados foi criado!
+ > Você pode abrir seu gerenciador de banco (pgAdmin ou DBeaver) e verá a tabela `Livros` criada com as colunas certas.
 
  ## 🚀 Sessão 4: Endpoints da API (Controllers)
 
  Os **Controllers** são os "garçons" da nossa API. Eles são responsáveis por receber os pedidos HTTP (GET, POST, PUT, DELETE), processar a regra de negócio e devolver os dados.
 
- ### 1. Criar a Pasta
+ > **🧠 Conceito: O Ciclo da Requisição**
+ > 1. O Usuário pede (Request) -> 2. Controller recebe -> 3. Controller chama o Banco -> 4. Controller devolve (Response).
 
- Dentro da pasta `src/LivrariaCentral.API`, vamos criar um local para guardar nossos controladores.
+ 
+
+ ### 1. Criar a Pasta de Controladores
+
+ Dentro da pasta da API, vamos criar um local organizado para guardar nossos controladores.
+
+ **No terminal, execute:**
 
  ```bash
  cd src/LivrariaCentral.API # Apenas se não estiver nela
@@ -352,9 +371,11 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 2. Criar o Controller de Livros
 
- **Crie o arquivo `LivrosController.cs` dentro da pasta `Controllers`.**
+ Vamos implementar o CRUD completo (Create, Read, Update, Delete).
 
- Copie o código abaixo. Ele implementa o **CRUD** completo (Create, Read, Update, Delete) usando os métodos assíncronos do Entity Framework.
+ **1. Localize a pasta:** `src/LivrariaCentral.API/Controllers`
+ **2. Crie o arquivo:** `LivrosController.cs`
+ **3. Adicione o código:**
 
  ```csharp
  using Microsoft.AspNetCore.Mvc;
@@ -364,13 +385,13 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  namespace LivrariaCentral.API.Controllers;
 
- [Route("api/[controller]")]  // A rota será: api/livros
+ [Route("api/[controller]")]  // Define a rota base como: api/livros
  [ApiController]
  public class LivrosController : ControllerBase
  {
      private readonly AppDbContext _context;
 
-     // Injeção de Dependência do Banco de Dados
+     // Injeção de Dependência: Recebemos o Banco de Dados pronto para uso
      public LivrosController(AppDbContext context)
      {
          _context = context;
@@ -408,7 +429,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
          return CreatedAtAction(nameof(GetLivro), new { id = livro.Id }, livro);
      }
 
-     // PUT: api/livros/5 (Atualiza um livro)
+     // PUT: api/livros/5 (Atualiza um livro existente)
      [HttpPut("{id}")]
      public async Task<IActionResult> PutLivro(int id, Livro livro)
      {
@@ -448,24 +469,22 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 3. Executando e Testando (Swagger)
 
- Agora vamos rodar a API e ver a "mágica" acontecendo na interface gráfica, use o comando abaixo no terminal dentro de `LivrariaCentral.API`.
+ Agora vamos rodar a API e ver a "mágica" acontecendo na interface gráfica.
+
+ **1. No terminal (`src/LivrariaCentral.API`), execute:**
 
  ```bash
  dotnet run
  ```
 
- 1.  Observe no terminal a linha `Now listening on: http://localhost:xxxx`.
- 2.  Abra o navegador e digite: `http://localhost:xxxx/swagger` (substitua `xxxx` pela porta que apareceu).
- 3.  Você verá a tela do Swagger listando seus endpoints.
+ **2. Acesse o Swagger:**
+ * Observe no terminal a linha `Now listening on: http://localhost:xxxx`.
+ * Abra o navegador e digite: `http://localhost:xxxx/swagger` (substitua `xxxx` pela porta que apareceu).
 
- 
-
- **Vamos cadastrar o primeiro livro:**
-
- 1.  Clique em **POST /api/livros**.
- 2.  Clique no botão **Try it out** (no canto direito).
- 3.  Na caixa de texto, apague o conteúdo e cole este JSON (note que não precisamos enviar ID nem Data, o sistema gera sozinho):
-
+ **3. Teste Prático (Cadastro):**
+ * Clique em **POST /api/livros**.
+ * Clique no botão **Try it out** (no canto direito).
+ * Cole este JSON (note que não precisamos enviar ID nem Data):
      ```json
      {
        "titulo": "Arquitetura Limpa",
@@ -474,7 +493,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
        "estoque": 10
      }
      ```
- 4.  Clique no botão azul **Execute**.
+ * Clique em **Execute**.
 
  ### 4. Entendendo a Resposta
 
@@ -483,44 +502,54 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
  * **Code 201 (Created):** Sucesso! O registro foi criado. O corpo da resposta mostrará o livro com o `ID` gerado pelo banco.
  * **Code 200 (Success):** Sucesso na consulta ou atualização.
 
- Parabéns! Seu Back-end está completo: ele **adiciona, lê, altera e remove** dados do PostgreSQL. Isso é o que chamamos de **CRUD**.`
+ Parabéns! Seu Back-end está completo: ele **adiciona, lê, altera e remove** dados do PostgreSQL. Isso é o que chamamos de **CRUD**.
 
  ## 🚀 Sessão 5: Criação do Frontend (Blazor WebAssembly)
 
  O Frontend será uma **Single Page Application (SPA)**. Isso significa que o site carrega apenas uma vez e depois navega instantaneamente, parecendo um aplicativo de celular.
 
+ > **🧠 Conceito: SPA vs Tradicional**
+ > Em sites antigos, cada clique recarregava a página inteira (tela branca). No SPA (como Gmail ou Trello), apenas os dados mudam, a estrutura fica. É muito mais rápido.
+
  ### 1. Criação do Projeto
 
  Volte para a pasta `src` e crie o projeto web ao lado da API.
 
- ```bash
- cd ..
- # (Certifique-se de que está na pasta "src")
+ **No terminal, execute:**
 
- # Cria o projeto Blazor WebAssembly Standalone
+ ```bash
+ cd .. # Volta para pasta 'src'
+
+ # Cria o projeto Blazor WebAssembly
  dotnet new blazorwasm -n LivrariaCentral.Web
 
  # Entra na pasta
  cd LivrariaCentral.Web
  ```
 
+ **✅ Checkpoint Visual:**
+ Agora sua pasta `src` tem dois projetos irmãos:
+
+ ```text
+ src/
+ ├── LivrariaCentral.API/  (Backend)
+ └── LivrariaCentral.Web/  (Frontend - Novo)
+ ```
+
  ### 2. Instalação da Biblioteca Visual (MudBlazor)
 
- Instala o pacote de componentes (Gráficos, Tabelas, Botões).
- Vamos instalar a **versão 7** para garantir compatibilidade total com este guia.
+ Instala o pacote de componentes (Gráficos, Tabelas, Botões). Vamos usar a **versão 7** para garantir compatibilidade.
 
  ```bash
  dotnet add package MudBlazor --version 7.0.0
  ```
 
- **O que é o MudBlazor?**
- É um framework de componentes de interface (UI) criado especificamente para Blazor.
- * **Visual Profissional:** Ele segue o padrão **Material Design** (o mesmo visual clean usado pelo Google e Android).
- * **Produtividade:** Funciona como uma caixa de "LEGO". Em vez de escrevermos CSS e HTML puros, usamos componentes prontos (como `<MudButton>`, `<MudDataGrid>`).
+ > **🧠 Conceito: MudBlazor**
+ > É uma caixa de "LEGO" visual. Em vez de escrevermos CSS puro, usamos componentes prontos (como `<MudButton>`, `<MudDataGrid>`) que já vêm bonitos e responsivos.
 
  ### 3. Configuração Inicial
 
- Primeiro, vamos adicionar o projeto Web à solução geral (para o Visual Studio reconhecer os dois projetos).
+ Primeiro, vamos adicionar o projeto Web à solução geral para que o Visual Studio enxergue os dois.
 
  ```bash
  cd ..
@@ -534,8 +563,10 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  #### A. Importações Globais (_Imports.razor)
 
- **Abra o arquivo `src/LivrariaCentral.Web/_Imports.razor`.**
- Adicione as linhas abaixo no final do arquivo. Isso permite usar os componentes em qualquer página sem precisar importar toda hora.
+ Este arquivo define o que está disponível em **todas** as páginas sem precisar importar de novo.
+
+ **Abra o arquivo:** `src/LivrariaCentral.Web/_Imports.razor`
+ **Adicione ao final:**
 
  ```razor
  @using System.Net.Http
@@ -556,11 +587,10 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  #### B. Referências de CSS e JS (index.html)
 
- **Abra o arquivo `src/LivrariaCentral.Web/wwwroot/index.html`.**
- Precisamos adicionar as fontes do Google e os scripts do MudBlazor.
+ Precisamos adicionar as fontes do Google (Roboto) e os scripts que fazem os componentes funcionarem.
 
- **Substitua todo o conteúdo deste arquivo pelo código abaixo:**
- *(Já removemos o script com `fingerprint` para evitar erros de cache em desenvolvimento)*.
+ **Abra o arquivo:** `src/LivrariaCentral.Web/wwwroot/index.html`
+ **Substitua TODO o conteúdo por:**
 
  ```html
  <!DOCTYPE html>
@@ -576,8 +606,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
      <link href="LivrariaCentral.Web.styles.css" rel="stylesheet" />
      
           <link href="[https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap](https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap)" rel="stylesheet" />
-     
-          <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
  </head>
 
  <body>
@@ -596,7 +625,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
      </div>
      
      <script src="_framework/blazor.webassembly.js"></script>
-     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+          <script src="_content/MudBlazor/MudBlazor.min.js"></script>
  </body>
 
  </html>
@@ -604,9 +633,11 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 4. Configuração de Ambiente (appsettings.json)
 
- Diferente da API, o Blazor WebAssembly não cria o arquivo de configuração por padrão. Precisamos criá-lo para evitar deixar o endereço da API "chumbado" no código.
+ Diferente da API, o Blazor WebAssembly não cria o arquivo de configuração por padrão. Precisamos criá-lo para evitar deixar o endereço da API "chumbado" (fixo) no código C#.
 
- **Crie o arquivo `appsettings.json` DENTRO da pasta `wwwroot` em `LivrariaCentral.Web`:**
+ **1. Localize a pasta:** `src/LivrariaCentral.Web/wwwroot`
+ **2. Crie o arquivo:** `appsettings.json`
+ **3. Adicione o código:**
 
  ```json
  {
@@ -614,13 +645,13 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
  }
  ```
 
- > **⚠️ Importante:** O valor `http://localhost:5000` é a porta padrão que configuraremos na API. Se a sua API estiver rodando em outra porta, altere aqui.
+ > **⚠️ Importante:** O valor `http://localhost:5000` é um exemplo. Quando você rodar sua API, verifique qual porta ela pegou e atualize este arquivo se necessário.
 
  ### 5. Registro de Serviços (Program.cs)
 
- Agora vamos ensinar o Blazor a ler esse arquivo JSON e usar o endereço correto.
+ Agora vamos ensinar o Blazor a ler esse arquivo JSON e usar o endereço correto para conectar no Backend.
 
- **Substitua todo o conteúdo do arquivo `src/LivrariaCentral.Web/Program.cs`:**
+ **Substitua TODO o arquivo:** `src/LivrariaCentral.Web/Program.cs`
 
  ```csharp
  using Microsoft.AspNetCore.Components.Web;
@@ -637,6 +668,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
  var apiUrl = builder.Configuration.GetValue<string>("ApiUrl") ?? "http://localhost:5000";
 
  // --- 2. CONFIGURAR CLIENTE HTTP ---
+ // Isso cria um "HttpClient" pré-configurado que sabe onde a API mora.
  builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(apiUrl) });
 
  // --- 3. CONFIGURAR MUDBLAZOR ---
@@ -653,6 +685,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
  cd src/LivrariaCentral.Web # Apenas se necessário
  dotnet run
  ```
+
  1.  Abra o navegador no endereço indicado (ex: `http://localhost:xxxx`).
  2.  Se você ver a mensagem **"Hello World"** (ainda sem estilo bonito), está tudo certo!
 
@@ -660,12 +693,12 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  Vamos substituir o layout padrão pelo layout do MudBlazor (Menu Lateral + Barra Superior).
 
- **Abra o arquivo `src/LivrariaCentral.Web/Layout/MainLayout.razor` e substitua tudo por:**
+ **Substitua TODO o arquivo:** `src/LivrariaCentral.Web/Layout/MainLayout.razor`
 
  ```razor
  @inherits LayoutComponentBase
 
- <MudThemeProvider /> 
+  <MudThemeProvider /> 
  <MudPopoverProvider />
  <MudDialogProvider />
  <MudSnackbarProvider />
@@ -709,18 +742,11 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ## 🚀 Sessão 6: Criando o Dashboard (Visual)
 
- Vamos criar a tela inicial com **Indicadores de Desempenho (KPIs)** e gráficos.
- Por enquanto, usaremos dados "Fictícios" (Hardcoded) apenas para estruturar o layout e testar os componentes visuais. Nas próximas sessões, conectaremos isso à API.
+ Vamos criar a tela inicial com **Indicadores de Desempenho (KPIs)** e gráficos. Por enquanto, usaremos dados "Fictícios" (Hardcoded) apenas para estruturar o layout e ver como o MudBlazor organiza a tela.
 
  ### 1. Editando a Página Inicial (Home.razor)
 
- **Abra o arquivo `src/LivrariaCentral.Web/Pages/Home.razor`.**
- Substitua todo o conteúdo pelo código abaixo.
-
- Observe o uso de `<MudGrid>` e `<MudItem>`:
- * `xs="12"`: Em celulares, ocupa a linha toda (1 card por linha).
- * `sm="6"`: Em tablets, ocupa metade (2 cards por linha).
- * `md="3"`: Em computadores, ocupa 1/4 (4 cards por linha).
+ **Substitua TODO o conteúdo do arquivo:** `src/LivrariaCentral.Web/Pages/Home.razor`
 
  ```razor
  @page "/"
@@ -800,34 +826,30 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 2. Testando o Dashboard
 
- Rode o projeto Frontend para ver o resultado.
+ 1.  Rode o projeto Frontend (`dotnet run` na pasta Web).
+ 2.  Acesse o navegador.
 
- ```bash
- cd src/LivrariaCentral.Web # Apenas se necessário
- dotnet run
- ```
+ **✅ Checkpoint Visual:**
+ Você deve ver um painel de controle executivo:
+ * **Topo:** 4 Cards com ícones coloridos alinhados horizontalmente.
+ * **Esquerda:** Um gráfico de barras interativo mostrando a evolução mensal.
+ * **Direita:** Um gráfico de rosca (Donut) mostrando categorias.
 
- 1.  Abra o navegador no endereço indicado.
- 2.  **O que você deve ver:**
-     * **Topo:** 4 Cards com ícones coloridos alinhados.
-     * **Esquerda:** Um gráfico de barras interativo (passe o mouse para ver os valores).
-     * **Direita:** Um gráfico de rosca (Donut) dividindo as categorias.
+  ## 🚀 Sessão 7: Conectando com a API (Listagem Real)
 
- Em alguns casos o App.razor pode indicar erro e ficar com uma linha vermelha em baixo de `builder.RootComponents.Add<App>("#app");`, apenas feche o Visual Studio Code e abra denovo
+ Nesta etapa, vamos permitir que o Frontend converse com o Backend. Para isso, precisamos configurar o **CORS** (Cross-Origin Resource Sharing) e criar a tabela de listagem de livros que consome dados reais.
 
-
- ## 🚀 Sessão 7: Conectando com a API (Listagem Real)
-
- Nesta etapa, vamos permitir que o Frontend converse com o Backend.
- Para isso, precisamos configurar o **CORS** (Cross-Origin Resource Sharing) e criar a tabela de listagem de livros.
+ > **🧠 Conceito: O que é CORS?**
+ > Por padrão, navegadores bloqueiam quando um site (ex: `localhost:5000`) tenta acessar uma API em outra porta (ex: `localhost:5123`). O CORS é a "autorização" que o Backend dá para o Frontend acessar seus dados.
 
  
 
  ### 1. Configurando CORS na API (Backend)
 
- Por segurança, os navegadores bloqueiam quando um site (ex: porta 5000) tenta acessar uma API em outra porta (ex: 5123). Precisamos liberar isso explicitamente.
+ Vamos liberar o acesso para qualquer origem (para facilitar o desenvolvimento).
 
- **Abra o arquivo `src/LivrariaCentral.API/Program.cs` e adicione as linhas marcadas com `[NOVO] <---`:**
+ **Abra o arquivo:** `src/LivrariaCentral.API/Program.cs`
+ **Adicione as linhas marcadas com `[NOVO] <---`:**
 
  ```csharp
  // ... (códigos anteriores)
@@ -863,8 +885,8 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  O Frontend precisa saber o que é um "Livro" para poder ler o JSON que vem da API.
 
- **Crie a pasta `Models` dentro de `src/LivrariaCentral.Web`.**
- **Crie o arquivo `Livro.cs` dentro desta pasta:**
+ **1. Crie a pasta:** `src/LivrariaCentral.Web/Models`
+ **2. Crie o arquivo:** `Livro.cs`
 
  ```csharp
  namespace LivrariaCentral.Web.Models;
@@ -880,11 +902,20 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
  }
  ```
 
+ **✅ Checkpoint Visual:**
+
+ ```text
+ src/
+ └── LivrariaCentral.Web/
+     └── Models/
+         └── Livro.cs  <-- (Novo arquivo)
+ ```
+
  ### 3. Criando a Página de Listagem (Livros.razor)
 
  Vamos usar o componente `MudDataGrid` que é super poderoso: já traz busca, filtro e paginação prontos.
 
- **Crie o arquivo `Livros.razor` dentro de `src/LivrariaCentral.Web/Pages/`:**
+ **Crie o arquivo:** `src/LivrariaCentral.Web/Pages/Livros.razor`
 
  ```razor
  @page "/livros"
@@ -995,15 +1026,15 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
  ## 🚀 Sessão 8: Finalizando o CRUD (Dialogs e Ações)
 
  Vamos implementar as funcionalidades de **Adicionar**, **Editar** e **Excluir** livros na aba "Livros".
- Em vez de criar uma página nova para cada ação, usaremos **Dialogs** (Janelas Modais/Pop-ups) do MudBlazor para uma experiência de usuário mais fluida.
 
- 
+ > **🧠 Conceito: UX em SPAs**
+ > Em aplicações modernas, evitamos navegar para uma página nova apenas para preencher um formulário pequeno. Usamos **Dialogs** (Janelas Modais/Pop-ups) para manter o usuário no contexto da lista.
 
  ### 1. Criando o Componente de Formulário (Modal)
 
- Este arquivo será a "janelinha" que abre para preencher os dados do livro.
+ Este arquivo será a "janelinha" que abre sobre a tela para preencher os dados do livro.
 
- **Crie o arquivo `LivroDialog.razor` na pasta `src/LivrariaCentral.Web/Pages/`:**
+ **Crie o arquivo:** `src/LivrariaCentral.Web/Pages/LivroDialog.razor`
 
  ```razor
  @using LivrariaCentral.Web.Models
@@ -1035,9 +1066,9 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 2. Atualizando a Listagem (Livros.razor)
 
- Agora vamos voltar na página de listagem e fazer os botões funcionarem.
+ Agora vamos voltar na página de listagem e fazer os botões funcionarem, conectando o Dialog com a API.
 
- **Substitua todo o conteúdo do arquivo `src/LivrariaCentral.Web/Pages/Livros.razor`:**
+ **Substitua TODO o conteúdo do arquivo:** `src/LivrariaCentral.Web/Pages/Livros.razor`
 
  ```razor
  @page "/livros"
@@ -1178,7 +1209,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  Agora seu sistema é um software funcional capaz de gerenciar dados reais! 🎉
 
- ## 🚀 Sessão 9: Dashboard com Dados Reais
+  ## 🚀 Sessão 9: Dashboard com Dados Reais
 
  Chega de dados falsos! Vamos substituir os números "chumbados" do Dashboard por cálculos reais vindos do banco de dados.
 
@@ -1186,7 +1217,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  Vamos criar um Controller novo focado apenas em estatísticas.
 
- **Crie o arquivo `DashboardController.cs` na pasta `src/LivrariaCentral.API/Controllers/`:**
+ **Crie o arquivo:** `src/LivrariaCentral.API/Controllers/DashboardController.cs`
 
  ```csharp
  using LivrariaCentral.API.Data;
@@ -1230,7 +1261,10 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  O site precisa de uma classe (DTO) para entender o JSON que a API vai mandar.
 
- **Crie o arquivo `DashboardDados.cs` na pasta `src/LivrariaCentral.Web/Models/`:**
+ > **🧠 Conceito: DTO (Data Transfer Object)**
+ > É uma classe simples usada apenas para transportar dados. Diferente das Entidades (Livro), ela não tem regras de negócio e não vira tabela no banco.
+
+ **Crie o arquivo:** `src/LivrariaCentral.Web/Models/DashboardDados.cs`
 
  ```csharp
  namespace LivrariaCentral.Web.Models;
@@ -1247,7 +1281,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  Agora vamos editar a página inicial para buscar esses números na API assim que a tela abrir.
 
- **Substitua todo o conteúdo de `src/LivrariaCentral.Web/Pages/Home.razor`:**
+ **Substitua TODO o conteúdo do arquivo:** `src/LivrariaCentral.Web/Pages/Home.razor`
 
  ```razor
  @page "/"
@@ -1280,7 +1314,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
                  <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;" />
                  <div>
                      <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Valor em Estoque</MudText>
-                                          <MudText Typo="Typo.h5">@dados.ValorEstoque.ToString("C")</MudText>
+                     <MudText Typo="Typo.h5">@dados.ValorEstoque.ToString("C")</MudText>
                  </div>
              </MudPaper>
          </MudItem>
@@ -1305,7 +1339,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
              </MudPaper>
          </MudItem>
 
-                  <MudItem xs="12" md="8">
+         <MudItem xs="12" md="8">
              <MudPaper Class="pa-4">
                  <MudText Typo="Typo.h6">Tendência de Vendas (Simulado)</MudText>
                  <MudChart ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px"></MudChart>
@@ -1358,18 +1392,23 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  **Resultado:** O card "Valor em Estoque" deve ter subido R$ 20.000,00 automaticamente! Isso prova que o Frontend está lendo o banco de dados em tempo real.
 
- ## 🚀 Sessão 10: Registrando Vendas (Regra de Negócio Real)
+  ## 🚀 Sessão 10: Registrando Vendas (Regra de Negócio Real)
 
  Agora a brincadeira fica séria. Vamos implementar a principal funcionalidade do sistema: **A Venda**.
- Não é apenas salvar um registro; precisamos checar se tem estoque, calcular o preço total e dar baixa no produto automaticamente.
 
- 
+ > **🧠 Conceito: Transação e Atomicidade**
+ > Uma venda não é apenas salvar um registro. Ela envolve **regras de negócio**:
+ > 1. Verificar se existe estoque.
+ > 2. Calcular o valor total (Preço x Quantidade).
+ > 3. **Baixar o estoque** do produto.
+ > 4. Registrar a venda.
+ > Tudo isso deve acontecer junto. Se uma parte falhar, nada deve ser salvo.
 
  ### 1. O Modelo de Venda (Backend)
 
  Precisamos criar uma tabela para guardar o histórico de vendas.
 
- **Crie o arquivo `Venda.cs` na pasta `src/LivrariaCentral.API/Models/`:**
+ **Crie o arquivo:** `src/LivrariaCentral.API/Models/Venda.cs`
 
  ```csharp
  namespace LivrariaCentral.API.Models;
@@ -1388,7 +1427,8 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  Avise o Entity Framework que existe uma nova tabela.
 
- **Abra o arquivo `src/LivrariaCentral.API/Data/AppDbContext.cs` e adicione a linha da tabela Vendas:**
+ **Abra o arquivo:** `src/LivrariaCentral.API/Data/AppDbContext.cs`
+ **Adicione a linha da tabela Vendas:**
 
  ```csharp
  // ... imports
@@ -1403,7 +1443,9 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 3. Rodando a Migration
 
- Vamos criar essa tabela no PostgreSQL. No terminal da pasta `src/LivrariaCentral.API`, rode:
+ Vamos criar essa tabela no PostgreSQL.
+
+ **No terminal (`src/LivrariaCentral.API`), execute:**
 
  ```bash
  dotnet ef migrations add CriandoVendas
@@ -1414,7 +1456,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  Aqui está a mágica. O Endpoint não vai só salvar, ele vai checar o estoque e diminuir a quantidade **antes** de confirmar a venda.
 
- **Crie o arquivo `VendasController.cs` na pasta `src/LivrariaCentral.API/Controllers/`:**
+ **Crie o arquivo:** `src/LivrariaCentral.API/Controllers/VendasController.cs`
 
  ```csharp
  using LivrariaCentral.API.Data;
@@ -1449,7 +1491,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
              return BadRequest($"Estoque insuficiente. Restam apenas {livro.Estoque} unidades.");
          }
 
-         // 3. Cria o registro da venda (Calcula valor no servidor por segurança)
+         // 3. Cria o registro da venda (Calcula valor no servidor por segurança e não confia no front)
          novaVenda.ValorTotal = livro.Preco * novaVenda.Quantidade;
          novaVenda.DataVenda = DateTime.UtcNow;
          
@@ -1470,7 +1512,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  Vamos criar uma janelinha simples para digitar a quantidade.
 
- **Crie o arquivo `VendaDialog.razor` na pasta `src/LivrariaCentral.Web/Pages/`:**
+ **Crie o arquivo:** `src/LivrariaCentral.Web/Pages/VendaDialog.razor`
 
  ```razor
  @using MudBlazor
@@ -1509,7 +1551,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  Para enviar a venda do Site para a API, precisamos de uma classezinha auxiliar.
 
- **Crie o arquivo `VendaDTO.cs` na pasta `src/LivrariaCentral.Web/Models/`:**
+ **Crie o arquivo:** `src/LivrariaCentral.Web/Models/VendaDTO.cs`
 
  ```csharp
  namespace LivrariaCentral.Web.Models;
@@ -1525,7 +1567,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  Agora vamos adicionar o botão de cifrão ($) na tabela de livros e a lógica para chamar a API.
 
- **Substitua todo o conteúdo de `src/LivrariaCentral.Web/Pages/Livros.razor` pelo código abaixo:**
+ **Substitua TODO o conteúdo do arquivo:** `src/LivrariaCentral.Web/Pages/Livros.razor`
 
  ```razor
  @page "/livros"
@@ -1682,29 +1724,30 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
  3.  Clique no ícone **$ (Vender)**.
  4.  Venda 2 unidades.
 
- **O que deve acontecer:**
+ **✅ Checkpoint de Sucesso:**
  * O modal fecha.
  * Uma mensagem verde aparece: "Venda realizada!".
  * A quantidade na tabela muda automaticamente de 10 para 8.
 
- **Teste de Erro:**
+ **Teste de Erro (Opcional):**
  * Tente vender 100 unidades desse mesmo livro.
  * Uma mensagem vermelha deve aparecer: "Erro: Estoque insuficiente...".
 
- ## 🚀 Sessão 11: Histórico de Vendas (Consulta e Join)
+  ## 🚀 Sessão 11: Histórico de Vendas (Consulta e Join)
 
- Agora que já estamos vendendo, precisamos de um relatório para saber o que foi vendido.
- Aqui temos um desafio técnico: a tabela de `Vendas` só tem o ID do livro (`LivroId`), mas na tela queremos mostrar o **Título** do livro.
+ Agora que já estamos vendendo, precisamos de um relatório para saber o que foi vendido. Aqui temos um desafio técnico: a tabela de `Vendas` só tem o ID do livro (`LivroId`), mas na tela queremos mostrar o **Título** do livro.
 
  Para resolver isso, faremos um **Join** (Cruzamento de Tabelas) no Backend.
 
- 
+ > **🧠 Conceito: SQL JOIN no Entity Framework**
+ > Imagine que você tem duas planilhas do Excel: "Vendas" e "Livros". O comando `Join` é como um `PROCV` (VLOOKUP) que pega o ID de uma planilha e busca o Nome na outra.
 
  ### 1. Backend: Preparando a Consulta (VendasController)
 
  Precisamos de um endpoint que devolva a lista de vendas, mas que já inclua o nome do livro buscado na outra tabela.
 
- **Abra o arquivo `src/LivrariaCentral.API/Controllers/VendasController.cs` e adicione o método `GetVendas`:**
+ **Abra o arquivo:** `src/LivrariaCentral.API/Controllers/VendasController.cs`
+ **Adicione o método `GetVendas`:**
 
  ```csharp
      // ... (Método RealizarVenda fica acima deste)
@@ -1713,16 +1756,15 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
      public async Task<IActionResult> GetVendas()
      {
          // Faz a junção (Join) entre Venda e Livro para pegar o Título
-         // É similar ao PROCV do Excel ou JOIN do SQL
          var historico = await _context.Vendas
              .Join(_context.Livros,
                  venda => venda.LivroId,  // Chave na tabela Venda
                  livro => livro.Id,       // Chave na tabela Livro
-                 (venda, livro) => new    // O que vamos devolver para o site
+                 (venda, livro) => new    // O que vamos devolver para o site (Objeto Anônimo)
                  {
                      Id = venda.Id,
                      DataVenda = venda.DataVenda,
-                     LivroTitulo = livro.Titulo, // <--- Aqui está a mágica!
+                     LivroTitulo = livro.Titulo, // <--- Aqui está a mágica! Pegamos o Título da tabela Livros
                      Quantidade = venda.Quantidade,
                      ValorTotal = venda.ValorTotal
                  })
@@ -1735,9 +1777,9 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 2. Frontend: Modelo de Dados
 
- O Frontend precisa de uma classe para receber esses dados combinados (Venda + Nome do Livro).
+ O Frontend precisa de uma classe para receber esses dados combinados (Venda + Nome do Livro). Note que essa classe não existe no banco de dados, ela é exclusiva para exibição.
 
- **Crie o arquivo `VendaHistorico.cs` na pasta `src/LivrariaCentral.Web/Models/`:**
+ **Crie o arquivo:** `src/LivrariaCentral.Web/Models/VendaHistorico.cs`
 
  ```csharp
  namespace LivrariaCentral.Web.Models;
@@ -1756,7 +1798,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  Vamos criar a página que exibe a tabela. Como é só leitura (não dá pra editar uma venda passada), o código é bem direto.
 
- **Crie o arquivo `HistoricoVendas.razor` na pasta `src/LivrariaCentral.Web/Pages/`:**
+ **Crie o arquivo:** `src/LivrariaCentral.Web/Pages/HistoricoVendas.razor`
 
  ```razor
  @page "/historico"
@@ -1777,7 +1819,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
              
                           <PropertyColumn Property="x => x.DataVenda" Title="Data">
                  <CellTemplate>
-                                          @context.Item.DataVenda.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                     @context.Item.DataVenda.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
                  </CellTemplate>
              </PropertyColumn>
              
@@ -1813,16 +1855,18 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  1.  Faça algumas vendas na tela de Livros.
  2.  Clique no menu **Histórico**.
- 3.  Veja a lista ordenada da venda mais recente para a mais antiga, com o nome do livro correto e o horário ajustado para o seu fuso horário.
+ 3.  Veja a lista ordenada da venda mais recente para a mais antiga, com o nome do livro correto e o horário ajustado para o seu fuso horário local.
 
  ## 🚀 Sessão 12: Gerando Relatórios em PDF
 
- Vamos criar um botão que baixa um PDF profissional com a lista de produtos e o valor total do estoque.
- Usaremos a biblioteca **QuestPDF**, que é a solução mais moderna e performática para gerar documentos no ecossistema .NET.
+ Vamos criar um botão que baixa um PDF profissional com a lista de produtos. Usaremos a biblioteca **QuestPDF**, moderna, performática e que não depende de HTML para desenhar.
+
+ > **🧠 Conceito: Fluent API**
+ > O QuestPDF usa uma "Interface Fluente". Isso significa que encadeamos comandos como uma frase: `page.Header().Text("Olá").Bold();`. É muito legível e fácil de manter.
 
  ### 1. Instalando o QuestPDF na API
 
- Pare a API se estiver rodando. No terminal da pasta `src/LivrariaCentral.API`, rode:
+ **No terminal (`src/LivrariaCentral.API`), execute:**
 
  ```bash
  dotnet add package QuestPDF
@@ -1830,14 +1874,15 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 2. Configurando a Licença (Gratuita)
 
- O QuestPDF é gratuito para uso comunitário/estudantil, mas exige que a gente configure isso explicitamente.
+ O QuestPDF exige configuração explícita de licença para funcionar sem marcas d'água ou erros.
 
- **Abra o arquivo `src/LivrariaCentral.API/Program.cs` e adicione estas linhas logo no topo:**
+ **Abra o arquivo:** `src/LivrariaCentral.API/Program.cs`
+ **Adicione no topo:**
 
  ```csharp
  using QuestPDF.Infrastructure; // <--- Importante
 
- QuestPDF.Settings.License = LicenseType.Community; // <--- Licença Gratuita
+ QuestPDF.Settings.License = LicenseType.Community; // <--- Licença Gratuita para projetos open-source/estudo
 
  var builder = WebApplication.CreateBuilder(args);
  // ... resto do código
@@ -1845,9 +1890,9 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 3. Criando o Endpoint do Relatório
 
- Vamos criar um Controller que desenha o PDF e devolve o arquivo binário para o navegador.
+ Vamos criar um Controller que desenha o PDF e devolve o arquivo binário (stream) para o navegador.
 
- **Crie o arquivo `RelatoriosController.cs` na pasta `src/LivrariaCentral.API/Controllers/`:**
+ **Crie o arquivo:** `src/LivrariaCentral.API/Controllers/RelatoriosController.cs`
 
  ```csharp
  using LivrariaCentral.API.Data;
@@ -1893,7 +1938,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
                  // 2. Conteúdo (Tabela)
                  page.Content().PaddingVertical(1, Unit.Centimetre).Table(table =>
                  {
-                     // Definição das colunas
+                     // Definição das colunas (Largura fixa ou relativa)
                      table.ColumnsDefinition(columns =>
                      {
                          columns.ConstantColumn(50); // ID
@@ -1914,6 +1959,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
                      // Linhas da Tabela (Dados)
                      foreach (var livro in livros)
                      {
+                         // Zebrando e desenhando as bordas
                          table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(livro.Id.ToString());
                          table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(livro.Titulo);
                          table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(livro.Estoque.ToString());
@@ -1933,9 +1979,10 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
          });
 
          // --- GERANDO O ARQUIVO ---
+         // MemoryStream guarda o PDF na memória RAM temporariamente
          var stream = new MemoryStream();
          pdf.GeneratePdf(stream);
-         stream.Position = 0;
+         stream.Position = 0; // Volta o "cursor" para o início do arquivo antes de enviar
 
          // Devolve o arquivo com o tipo MIME correto (application/pdf)
          return File(stream, "application/pdf", "RelatorioEstoque.pdf");
@@ -1945,17 +1992,19 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 4. Botão de Download no Frontend
 
- Vamos colocar um botão de impressora na tela de Livros que abre o PDF em uma nova aba.
+ Precisamos usar um pequeno truque de JavaScript (`window.open`) para forçar o navegador a baixar o arquivo, já que o Blazor roda dentro de uma "caixa fechada".
 
- **Abra o arquivo `src/LivrariaCentral.Web/Pages/Livros.razor`:**
+ **Abra o arquivo:** `src/LivrariaCentral.Web/Pages/Livros.razor`
 
- 1.  Adicione a injeção do JS Runtime no topo do arquivo (junto com os outros `@inject`):
-     ```razor
-     @inject IJSRuntime JS
-     ```
+ **1. Adicione a injeção do JS Runtime no topo (junto com os outros @inject):**
 
- 2.  Adicione a função `BaixarRelatorio` no bloco `@code` (pode ser no final):
-     ```csharp
+ ```razor
+ @inject IJSRuntime JS
+ ```
+
+ **2. Adicione a função `BaixarRelatorio` no bloco `@code` (pode ser no final):**
+
+ ```csharp
      private async Task BaixarRelatorio()
      {
          // Truque: Pegamos a URL base configurada no HttpClient para não precisar digitar a porta de novo
@@ -1965,46 +2014,55 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
          // Abre o PDF em uma nova aba do navegador
          await JS.InvokeVoidAsync("open", urlRelatorio, "_blank");
      }
-     ```
- 
- 3.  Localize onde está o botão "Novo Livro" e substitua por este bloco (adicionando o botão de Imprimir ao lado):
-     ```razor
-     <div class="d-flex gap-4 mb-4">
-         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="AdicionarLivro">
-             Novo Livro
-         </MudButton>
+ ```
 
-         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Print" Color="Color.Secondary" OnClick="BaixarRelatorio">
-             Imprimir Estoque
-         </MudButton>
-     </div>
-     ```
+ **3. Localize o botão "Novo Livro" e substitua por este bloco:**
+ (Isso coloca o botão de imprimir ao lado do de adicionar)
+
+ ```razor
+ <div class="d-flex gap-4 mb-4">
+     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="AdicionarLivro">
+         Novo Livro
+     </MudButton>
+
+     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Print" Color="Color.Secondary" OnClick="BaixarRelatorio">
+         Imprimir Estoque
+     </MudButton>
+ </div>
+ ```
 
  ### 5. Testando
 
  1.  Rode a API e o Frontend.
  2.  Vá na aba **Livros**.
  3.  Clique no botão cinza **"Imprimir Estoque"**.
- 4.  O navegador deve abrir uma nova aba exibindo um PDF formatado com a lista dos seus livros!
+ 4.  O navegador deve abrir uma nova aba exibindo um PDF perfeitamente formatado com a lista dos seus livros!
 
- ## 🚀 Sessão 13: Segurança e Autenticação (Backend)
+  ## 🚀 Sessão 13: Segurança e Autenticação (Backend)
 
  Vamos implementar **JWT (JSON Web Tokens)**.
- Funciona assim: o usuário manda email/senha, a API confere e, se estiver certo, devolve um "crachá digital" (Token). Para qualquer outra requisição (como cadastrar livro), o usuário mostra esse crachá.
+
+ > **🧠 Conceito: Como funciona o Login Moderno?**
+ > 1. O usuário envia Email/Senha.
+ > 2. A API valida e, se estiver certo, devolve um **Token** (uma string gigante criptografada).
+ > 3. O usuário guarda esse Token (crachá).
+ > 4. Para criar um livro, o usuário envia o Token no cabeçalho da requisição. A API lê o Token e sabe quem é.
+
+ 
 
  ### 1. Instalando Pacotes de Segurança
 
- Pare a API. No terminal da pasta `src/LivrariaCentral.API`, rode:
+ **No terminal (`src/LivrariaCentral.API`), execute:**
 
  ```bash
  dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer
  dotnet add package BCrypt.Net-Next
  ```
- *Nota: O BCrypt serve para criptografar a senha no banco. Nunca salve senhas em texto puro!*
+ *Nota: O BCrypt serve para transformar a senha "123456" em algo ilegível no banco.*
 
  ### 2. Criando a Tabela de Usuários
 
- **Arquivo: `src/LivrariaCentral.API/Models/Usuario.cs`**
+ **Crie o arquivo:** `src/LivrariaCentral.API/Models/Usuario.cs`
 
  ```csharp
  namespace LivrariaCentral.API.Models;
@@ -2013,11 +2071,11 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
  {
      public int Id { get; set; }
      public string Email { get; set; } = string.Empty;
-     public string SenhaHash { get; set; } = string.Empty; 
+     public string SenhaHash { get; set; } = string.Empty; // Nunca salvamos senha pura!
      public string Nome { get; set; } = string.Empty;
  }
 
- // Classe auxiliar para receber os dados do Login/Registro (DTO)
+ // DTO para Login (O que o usuário envia na tela)
  public class UsuarioDTO
  {
      public string Email { get; set; } = string.Empty;
@@ -2029,25 +2087,22 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  Precisamos avisar o Entity Framework sobre a nova tabela.
 
- **Arquivo: `src/LivrariaCentral.API/Data/AppDbContext.cs`**
+ **Abra o arquivo:** `src/LivrariaCentral.API/Data/AppDbContext.cs`
 
  ```csharp
- using LivrariaCentral.API.Models; // <--- Importante: Adicione este using
- using Microsoft.EntityFrameworkCore;
-
- namespace LivrariaCentral.API.Data;
-
+ using LivrariaCentral.API.Models; // <--- Importante
+ // ...
  public class AppDbContext : DbContext
  {
-     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
+     // ...
      public DbSet<Livro> Livros { get; set; }
      public DbSet<Venda> Vendas { get; set; }
      public DbSet<Usuario> Usuarios { get; set; } // <--- ADICIONE ESTA LINHA
  }
  ```
 
- Agora rode as migrations no terminal:
+ Rode as migrations para criar a tabela no PostgreSQL:
+
  ```bash
  dotnet ef migrations add CriandoUsuarios
  dotnet ef database update
@@ -2055,27 +2110,25 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 4. Configurando o Segredo (Chave do Token)
 
- Precisamos de uma frase secreta para assinar os tokens.
+ Precisamos de uma frase secreta para assinar os tokens. Se alguém descobrir isso, pode criar tokens falsos.
 
- **Arquivo: `src/LivrariaCentral.API/appsettings.json`**
- Adicione a seção "Jwt":
+ **Abra o arquivo:** `src/LivrariaCentral.API/appsettings.json`
+ **Adicione a seção "Jwt":**
 
  ```json
  {
-   "ConnectionStrings": { ... },
-   "Logging": { ... },
    "Jwt": {
-     "Key": "MinhaChaveSuperSecretaDeLivraria123!" 
-   },
-   "AllowedHosts": "*"
+      "Key": "MinhaChaveSuperSecretaDeLivraria123!" 
+   }
+   // ...
  }
  ```
 
  ### 5. Criando o Controlador de Autenticação
 
- Aqui vamos criar as rotas `/api/auth/registrar` e `/api/auth/login`.
+ Aqui vamos criar as rotas para Registrar e Logar.
 
- **Arquivo: `src/LivrariaCentral.API/Controllers/AuthController.cs`**
+ **Crie o arquivo:** `src/LivrariaCentral.API/Controllers/AuthController.cs`
 
  ```csharp
  using System.IdentityModel.Tokens.Jwt;
@@ -2126,21 +2179,22 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
      {
          var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == request.Email);
          
-         // Verifica se usuário existe e se a senha bate com o hash
+         // Verifica se o usuário existe E se a senha bate com o hash
          if (usuario == null || !BCrypt.Net.BCrypt.Verify(request.Senha, usuario.SenhaHash))
          {
              return BadRequest("Email ou senha inválidos.");
          }
 
-         // Se passou, gera o Token JWT
+         // Se passou, gera o token
          string token = GerarToken(usuario);
          return Ok(new { token = token });
      }
 
      private string GerarToken(Usuario usuario)
      {
-         // IMPORTANTE: Use UTF8 aqui e no Program.cs
          var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!);
+         
+         // Claims são os dados que vão DENTRO do token (ex: Id, Email)
          var claims = new List<Claim>
          {
              new Claim(ClaimTypes.Name, usuario.Email),
@@ -2150,7 +2204,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
          var tokenDescriptor = new SecurityTokenDescriptor
          {
              Subject = new ClaimsIdentity(claims),
-             Expires = DateTime.UtcNow.AddHours(8), // Token vale por 8 horas
+             Expires = DateTime.UtcNow.AddHours(8), // Token expira em 8 horas
              SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
          };
 
@@ -2161,11 +2215,11 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
  }
  ```
 
-  ### 6. Blindando a API (Program.cs)
+ ### 6. Blindando a API (Program.cs)
 
  Agora vamos avisar o .NET que ele deve usar JWT e proteger as rotas.
 
- **Substitua o arquivo `src/LivrariaCentral.API/Program.cs` pelo código abaixo:**
+ **Substitua TODO o conteúdo do arquivo:** `src/LivrariaCentral.API/Program.cs`
 
  ```csharp
  using LivrariaCentral.API.Data;
@@ -2199,7 +2253,6 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
  });
 
  // --- CONFIGURAÇÃO DO JWT ---
- // IMPORTANTE: Deve ser UTF8 para bater com o Controller
  var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!);
 
  builder.Services.AddAuthentication(x =>
@@ -2232,8 +2285,8 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
  app.UseCors("AllowAll");
 
  // ATENÇÃO: A ordem aqui importa muito!
- app.UseAuthentication(); // <--- Quem é você? (Verifica o Token)
- app.UseAuthorization();  // <--- Você pode entrar aqui? (Verifica Permissão)
+ app.UseAuthentication(); // <--- Quem é você? (Verifica Token)
+ app.UseAuthorization();  // <--- Você pode entrar? (Verifica Permissão)
 
  app.MapControllers();
 
@@ -2242,36 +2295,33 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 7. Criando o Primeiro Usuário (Admin)
 
- Como não criaremos uma tela de "Cadastre-se" no site (pois é um sistema restrito para funcionários), precisamos criar o primeiro usuário via Swagger.
+ Como não temos tela de cadastro no site, vamos criar o primeiro usuário via Swagger.
 
  1.  Rode a API (`dotnet run`).
  2.  Acesse o Swagger (`http://localhost:xxxx/swagger`).
  3.  Abra a rota **POST /api/auth/registrar**.
- 4.  Clique em **Try it out** e envie este JSON:
-
+ 4.  Clique em **Try it out** e envie:
      ```json
      {
        "email": "admin@livraria.com",
        "senha": "admin"
      }
      ```
- 5.  Clique em **Execute**.
-
- Se receber um **200 OK**, seu usuário está criado! Guarde esse email e senha, pois usaremos na próxima sessão para entrar no site.
-
- ---
+ 5.  Clique em **Execute**. Se der 200 OK, parabéns! Guarde essa senha.
 
  ## 🚀 Sessão 14: Login no Frontend (O Porteiro do Site)
 
- Vamos criar a tela de login, ensinar o Blazor a lembrar quem está logado e proteger as rotas.
+ Vamos criar a tela de login, ensinar o Blazor a lembrar quem está logado (mesmo se fechar o navegador) e proteger as páginas restritas.
 
- 
+ > **🧠 Conceito: Autenticação no Blazor**
+ > O Blazor não sabe "quem é você" nativamente. Precisamos criar um **Provedor de Estado** que olha para o `LocalStorage` (o "bolso" do navegador), vê se tem um Token lá e avisa o resto do site: "Ei, o usuário está logado!".
 
  ### 1. Instalando o LocalStorage
 
- Precisamos guardar o Token no navegador para o usuário não precisar logar a cada clique.
+ Precisamos de uma biblioteca para guardar o Token no navegador.
 
- No terminal da pasta `src/LivrariaCentral.Web`, rode:
+ **No terminal (`src/LivrariaCentral.Web`), execute:**
+
  ```bash
  dotnet add package Blazored.LocalStorage
  dotnet add package Microsoft.AspNetCore.Components.Authorization
@@ -2279,8 +2329,8 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 2. Configurando as Importações Globais
 
- **Abra o arquivo:** `src/LivrariaCentral.Web/_Imports.razor`
- Adicione estas linhas no final:
+ **Abra:** `src/LivrariaCentral.Web/_Imports.razor`
+ **Adicione:**
 
  ```razor
  @using Microsoft.AspNetCore.Components.Authorization
@@ -2292,10 +2342,9 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 3. O Provedor de Autenticação (O Cérebro)
 
- Vamos criar a classe que gerencia o crachá do usuário. Ela também vai ensinar o Blazor a ler o Nome corretamente dentro do Token.
+ Esta classe é a peça chave. Ela traduz o Token JWT para algo que o Blazor entende.
 
- **Crie a pasta:** `src/LivrariaCentral.Web/Auth/`
- **Crie o arquivo:** `CustomAuthStateProvider.cs` dentro dela.
+ **Crie o arquivo:** `src/LivrariaCentral.Web/Auth/CustomAuthStateProvider.cs`
 
  ```csharp
  using System.Net.Http.Headers;
@@ -2319,6 +2368,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
      public override async Task<AuthenticationState> GetAuthenticationStateAsync()
      {
+         // 1. Tenta pegar o token do navegador
          string token = await _localStorage.GetItemAsStringAsync("authToken");
 
          var identity = new ClaimsIdentity();
@@ -2328,8 +2378,10 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
          {
              try
              {
-                 // O "unique_name" diz pro Blazor onde achar o Nome do usuário no Token
+                 // 2. Lê o token e extrai os dados (Claims)
                  identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt", "unique_name", "role");
+                 
+                 // 3. Adiciona o token no cabeçalho de todas as requisições futuras
                  _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
              }
              catch
@@ -2338,6 +2390,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
              }
          }
 
+         // 4. Retorna o estado (Logado ou Não Logado) para o Blazor
          var user = new ClaimsPrincipal(identity);
          var state = new AuthenticationState(user);
 
@@ -2347,6 +2400,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
      public static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
      {
+         // Lógica para decodificar o Base64 do JWT
          var payload = jwt.Split('.')[1];
          var jsonBytes = ParseBase64WithoutPadding(payload);
          var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
@@ -2368,9 +2422,9 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 4. Configurando o Program.cs (Web)
 
- Aqui mantemos a configuração do `appsettings.json` (que fizemos na Sessão 5) e adicionamos a Autenticação e a correção de Cultura.
+ Vamos registrar nosso provedor customizado.
 
- **Substitua todo o arquivo: `src/LivrariaCentral.Web/Program.cs`**
+ **Substitua TODO o arquivo:** `src/LivrariaCentral.Web/Program.cs`
 
  ```csharp
  using Microsoft.AspNetCore.Components.Web;
@@ -2400,6 +2454,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
  builder.Services.AddMudServices();
  builder.Services.AddBlazoredLocalStorage();
  builder.Services.AddAuthorizationCore();
+ // Registra nosso provedor customizado
  builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 
  await builder.Build().RunAsync();
@@ -2442,6 +2497,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
              var resultado = await response.Content.ReadFromJsonAsync<JsonElement>();
              string token = resultado.GetProperty("token").GetString()!;
 
+             // Salva o token e avisa o sistema que o usuário logou
              await LocalStorage.SetItemAsStringAsync("authToken", token);
              await AuthStateProvider.GetAuthenticationStateAsync();
              Nav.NavigateTo("/");
@@ -2456,9 +2512,9 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 6. Protegendo o App (App.razor)
 
- Configurar o roteador para verificar se o usuário está logado.
+ Envolvemos todo o site com o componente `<CascadingAuthenticationState>`, que propaga a informação de login para todos os cantos.
 
- **Substitua todo o arquivo: `src/LivrariaCentral.Web/App.razor`**
+ **Substitua TODO o arquivo:** `src/LivrariaCentral.Web/App.razor`
 
  ```razor
  <CascadingAuthenticationState>
@@ -2490,9 +2546,9 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 7. Atualizando o Menu (MainLayout.razor)
 
- Vamos mostrar o nome do usuário logado e o botão de Sair.
+ Vamos usar o componente `<AuthorizeView>` para mostrar conteúdo diferente dependendo se o usuário está logado ou não.
 
- **Substitua todo o arquivo: `src/LivrariaCentral.Web/Layout/MainLayout.razor`**
+ **Substitua TODO o arquivo:** `src/LivrariaCentral.Web/Layout/MainLayout.razor`
 
  ```razor
  @inherits LayoutComponentBase
@@ -2511,7 +2567,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
          <MudText Typo="Typo.h6" Class="ml-3">Livraria Central</MudText>
          <MudSpacer />
          
-                  <AuthorizeView>
+         <AuthorizeView>
              <Authorized>
                  <MudText Class="mr-4">Olá @context.User.Identity?.Name</MudText>
                  <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="Logout">Sair</MudButton>
@@ -2524,7 +2580,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
      <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
          <MudNavMenu>
-             <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+                          <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
              <MudNavLink Href="/livros" Icon="@Icons.Material.Filled.LibraryBooks">Livros</MudNavLink>
              <MudNavLink Href="/historico" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.History">Histórico</MudNavLink>
          </MudNavMenu>
@@ -2556,30 +2612,29 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 8. Trancando as Portas (Authorize)
 
- Agora adicione o atributo `[Authorize]` no topo das páginas que você quer proteger (Home, Livros, Histórico).
+ Agora que temos o sistema de chaves, vamos colocar cadeados nas páginas. Adicione o atributo `[Authorize]` no topo das páginas que você quer proteger.
 
- **Abra o arquivo `src/LivrariaCentral.Web/Pages/Livros.razor` e adicione:**
+ **Abra:** `src/LivrariaCentral.Web/Pages/Livros.razor`
+ **Abra:** `src/LivrariaCentral.Web/Pages/Home.razor`
+ **Abra:** `src/LivrariaCentral.Web/Pages/HistoricoVendas.razor`
+
+ **Adicione na linha 2:**
 
  ```razor
- @page "/livros"
+ @page "/..."
  @attribute [Authorize] // <--- ADICIONE ISSO AQUI
-
- @using ...
  ```
 
- *(Faça o mesmo nos arquivos `Home.razor` e `HistoricoVendas.razor`)*
+  ## 🚀 Sessão 15: Logs e Monitoramento (A Caixa Preta)
 
- ---
+ Vamos usar o **Serilog** para criar um arquivo diário com o histórico de tudo que acontece no sistema. Isso é vital para descobrir por que um erro aconteceu quando você não estava olhando.
 
- ## 🚀 Sessão 15: Logs e Monitoramento (A Caixa Preta)
-
- Vamos configurar a API para criar um arquivo diário (ex: `log-20260206.txt`) registrando tudo o que acontece. Além disso, vamos registrar **QUEM** fez cada ação (Auditoria).
-
- 
+ > **🧠 Conceito: Structured Logging**
+ > Diferente de um `Console.WriteLine` simples, o Serilog grava dados estruturados. Isso permite que, no futuro, você pesquise logs filtrando por propriedades, como: `Find where UserName == "admin"`.
 
  ### 1. Instalando o Serilog
 
- Pare a API. No terminal da pasta `src/LivrariaCentral.API`, rode:
+ **No terminal (`src/LivrariaCentral.API`), execute:**
 
  ```bash
  dotnet add package Serilog.AspNetCore
@@ -2588,9 +2643,9 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 2. Configurando a "Caixa Preta" (Program.cs)
 
- Vamos configurar o Serilog para gravar em arquivo e no console.
+ Vamos blindar a inicialização da API. Usaremos um bloco `try/catch` global para garantir que, se o banco de dados falhar ao ligar, o erro seja registrado antes da aplicação morrer.
 
- **Substitua todo o conteúdo do arquivo `src/LivrariaCentral.API/Program.cs` por este código blindado:**
+ **Substitua TODO o conteúdo do arquivo:** `src/LivrariaCentral.API/Program.cs`
 
  ```csharp
  using LivrariaCentral.API.Data;
@@ -2604,7 +2659,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
  QuestPDF.Settings.License = LicenseType.Community;
 
  // 1. Configuração Inicial (Bootstrap Logger)
- // Garante que erros na inicialização sejam pegos antes mesmo do app subir
+ // Garante que erros na inicialização sejam pegos antes mesmo do app subir completamente
  Log.Logger = new LoggerConfiguration()
      .WriteTo.Console()
      .CreateBootstrapLogger();
@@ -2615,39 +2670,33 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
      
      var builder = WebApplication.CreateBuilder(args);
 
-     // 2. Conecta o Serilog no Host (Configuração Completa)
+     // 2. Conecta o Serilog no Host (Substitui o log padrão do .NET)
      builder.Host.UseSerilog((context, configuration) => configuration
          .ReadFrom.Configuration(context.Configuration) // Lê configurações do appsettings
-         .WriteTo.Console()                             // Escreve no terminal preto
-         .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)); // Cria arquivo diário
+         .WriteTo.Console()                            // Escreve no terminal
+         .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)); // Cria um arquivo por dia
 
-     // --- CONFIGURAÇÃO DO BANCO ---
+     // ... (Mesmas configurações de Banco, JWT, Cors de antes)
      var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-     builder.Services.AddDbContext<AppDbContext>(options =>
-         options.UseNpgsql(connectionString));
-
+     builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+     
      builder.Services.AddControllers();
      builder.Services.AddEndpointsApiExplorer();
      builder.Services.AddSwaggerGen();
-
-     // --- CONFIGURAÇÃO DO CORS ---
+     
+     // Configuração do CORS
      builder.Services.AddCors(options =>
      {
-         options.AddPolicy("AllowAll",
-             policy =>
-             {
-                 policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-             });
+         options.AddPolicy("AllowAll", policy => { policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
      });
 
-     // --- CONFIGURAÇÃO DO JWT ---
+     // Configuração do JWT
      var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!);
      builder.Services.AddAuthentication(x =>
      {
          x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
          x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-     })
-     .AddJwtBearer(x =>
+     }).AddJwtBearer(x =>
      {
          x.RequireHttpsMetadata = false;
          x.SaveToken = true;
@@ -2668,7 +2717,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
          app.UseSwaggerUI();
      }
 
-     // 3. LOGS DE REQUISIÇÃO (Mostra cada chamada HTTP no console)
+     // 3. LOGS DE REQUISIÇÃO (Mostra cada chamada HTTP no console de forma limpa)
      app.UseSerilogRequestLogging();
 
      app.UseHttpsRedirection();
@@ -2683,6 +2732,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
  }
  catch (Exception ex)
  {
+     // Se algo crítico quebrar no boot (ex: senha do banco errada), cai aqui
      Log.Fatal(ex, "A aplicação falhou ao iniciar!");
  }
  finally
@@ -2693,41 +2743,41 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
 
  ### 3. Limpando a Sujeira (Appsettings.json)
 
- Vamos configurar o log para não encher o console com mensagens inúteis de autorização.
+ O log padrão do ASP.NET é muito "barulhento" (registra cada arquivo HTML carregado). Vamos filtrar para mostrar apenas o que importa (Avisos e Erros do sistema, Informações nossas).
 
- **Abra o arquivo `src/LivrariaCentral.API/appsettings.json` e atualize a seção "Logging":**
+ **Abra o arquivo:** `src/LivrariaCentral.API/appsettings.json`
+ **Atualize a seção "Logging":**
 
  ```json
-   "Logging": {
-     "LogLevel": {
-       "Default": "Information",
-       "Microsoft.AspNetCore": "Warning",
-       "Microsoft.AspNetCore.Authorization": "Error" 
-     }
-   },
+    "Logging": {
+      "LogLevel": {
+        "Default": "Information",
+        "Microsoft.AspNetCore": "Warning", // Ignora msgs de "Info" do .NET
+        "Microsoft.AspNetCore.Authorization": "Error" 
+      }
+    },
  ```
 
  ### 4. Auditoria de Login (AuthController)
 
- Vamos registrar quem entrou no sistema.
+ Vamos registrar quem entrou no sistema. Precisamos injetar o `ILogger` no construtor.
 
- **Abra `src/LivrariaCentral.API/Controllers/AuthController.cs` e altere o conteúdo:**
+ **Abra:** `src/LivrariaCentral.API/Controllers/AuthController.cs`
 
  ```csharp
  public class AuthController : ControllerBase
  {
      private readonly AppDbContext _context;
      private readonly IConfiguration _configuration;
-     private readonly ILogger<AuthController> _logger; // <--- Adicione
+     private readonly ILogger<AuthController> _logger; // <--- Novo campo
 
+     // Injeção de Dependência atualizada
      public AuthController(AppDbContext context, IConfiguration configuration, ILogger<AuthController> logger)
      {
          _context = context;
          _configuration = configuration;
-         _logger = logger; // <--- Injete
+         _logger = logger; // <--- Recebendo o logger
      }
-
-     // ... (Método Registrar mantém igual) ...
 
      [HttpPost("login")]
      public async Task<IActionResult> Login(UsuarioDTO request)
@@ -2736,335 +2786,94 @@ Siga os passos abaixo para executar o projeto em sua máquina local.
          
          if (usuario == null || !BCrypt.Net.BCrypt.Verify(request.Senha, usuario.SenhaHash))
          {
-             _logger.LogWarning("Tentativa de login falhou para o email: {Email}", request.Email); // <--- Log de Falha
+             // Log de Aviso (Warning) - Alguém tentou entrar e errou
+             _logger.LogWarning("Tentativa de login falhou para: {Email}", request.Email);
              return BadRequest("Email ou senha inválidos.");
          }
 
          string token = GerarToken(usuario);
          
-         _logger.LogInformation("Usuário [{Nome}] ({Email}) realizou login com sucesso.", usuario.Nome, usuario.Email); // <--- Log de Sucesso
+         // Log de Informação (Information) - Sucesso
+         _logger.LogInformation("Usuário [{Nome}] realizou login.", usuario.Nome);
 
          return Ok(new { token = token });
      }
-     // ...
+     
+     // ... (Resto do código: Método Registrar e GerarToken continuam iguais)
  }
  ```
 
- ### 5. Auditoria de Livros (LivrosController)
-
- **Abra `src/LivrariaCentral.API/Controllers/LivrosController.cs` e altere o conteúdo:**
-
- ```csharp
- using Microsoft.AspNetCore.Authorization;
- // ...
-
- [Route("api/livros")]
- [ApiController]
- [Authorize] // <--- Garante que User.Identity não seja nulo
- public class LivrosController : ControllerBase
- {
-     private readonly AppDbContext _context;
-     private readonly ILogger<LivrosController> _logger; // <--- Logger
-
-     public LivrosController(AppDbContext context, ILogger<LivrosController> logger)
-     {
-         _context = context;
-         _logger = logger;
-     }
-
-     // ... (GetLivros e GetLivro mantém iguais) ...
-
-     [HttpPost]
-     public async Task<ActionResult<Livro>> PostLivro(Livro livro)
-     {
-         _context.Livros.Add(livro);
-         await _context.SaveChangesAsync();
-
-         // Registra QUEM cadastrou o livro
-         _logger.LogInformation("Livro '{Titulo}' cadastrado por: {Usuario}", livro.Titulo, User.Identity?.Name);
-
-         return CreatedAtAction(nameof(GetLivro), new { id = livro.Id }, livro);
-     }
-
-     [HttpDelete("{id}")]
-     public async Task<IActionResult> DeleteLivro(int id)
-     {
-         var livro = await _context.Livros.FindAsync(id);
-         if (livro == null) return NotFound();
-
-         _context.Livros.Remove(livro);
-         await _context.SaveChangesAsync();
-
-         // Registra QUEM excluiu o livro
-         _logger.LogInformation("Livro '{Titulo}' (ID: {Id}) excluído por: {Usuario}", livro.Titulo, id, User.Identity?.Name);
-
-         return NoContent();
-     }
-     // ...
- }
- ```
-
- ### 6. Auditoria de Vendas (VendasController)
-
- **Abra `src/LivrariaCentral.API/Controllers/VendasController.cs` e altere o conteúdo:**
-
- ```csharp
- using Microsoft.AspNetCore.Authorization;
- // ...
-
- [ApiController]
- [Route("api/vendas")]
- [Authorize]
- public class VendasController : ControllerBase
- {
-     private readonly AppDbContext _context;
-     private readonly ILogger<VendasController> _logger;
-
-     public VendasController(AppDbContext context, ILogger<VendasController> logger)
-     {
-         _context = context;
-         _logger = logger;
-     }
-
-     [HttpPost]
-     public async Task<IActionResult> RealizarVenda(Venda novaVenda)
-     {
-         try
-         {
-             var livro = await _context.Livros.FindAsync(novaVenda.LivroId);
-             
-             if (livro == null) 
-             {
-                 _logger.LogWarning("Usuário {User} tentou vender livro inexistente (ID {Id}).", User.Identity?.Name, novaVenda.LivroId);
-                 return NotFound("Livro não encontrado.");
-             }
-
-             if (livro.Estoque < novaVenda.Quantidade)
-             {
-                 _logger.LogWarning("Estoque insuficiente. Vendedor: {User}, Livro: {Titulo}", User.Identity?.Name, livro.Titulo);
-                 return BadRequest($"Estoque insuficiente.");
-             }
-
-             novaVenda.ValorTotal = livro.Preco * novaVenda.Quantidade;
-             novaVenda.DataVenda = DateTime.UtcNow;
-
-             _context.Vendas.Add(novaVenda);
-             livro.Estoque -= novaVenda.Quantidade;
-             
-             await _context.SaveChangesAsync();
-
-             // LOG DE SUCESSO
-             _logger.LogInformation("Venda por [{User}]: Livro '{Titulo}', Qtd {Qtd}, Total {Total}", User.Identity?.Name, livro.Titulo, novaVenda.Quantidade, novaVenda.ValorTotal);
-
-             return Ok(new { mensagem = "Venda realizada com sucesso!", novoEstoque = livro.Estoque });
-         }
-         catch (Exception ex)
-         {
-             _logger.LogError(ex, "Erro crítico na venda de {User}", User.Identity?.Name);
-             return StatusCode(500, "Erro interno.");
-         }
-     }
-
-     [HttpGet]
-     public async Task<IActionResult> GetVendas()
-     {
-         _logger.LogInformation("Usuário [{User}] consultou o Histórico de Vendas.", User.Identity?.Name);
-         
-         var historico = await _context.Vendas
-             .Join(_context.Livros,
-                 venda => venda.LivroId,
-                 livro => livro.Id,
-                 (venda, livro) => new 
-                 {
-                     Id = venda.Id,
-                     DataVenda = venda.DataVenda,
-                     LivroTitulo = livro.Titulo,
-                     Quantidade = venda.Quantidade,
-                     ValorTotal = venda.ValorTotal
-                 })
-             .OrderByDescending(v => v.DataVenda)
-             .ToListAsync();
-
-         return Ok(historico);
-     }
- }
- ```
-
- ---
+ **✅ Checkpoint Visual:**
+ 1. Rode a API.
+ 2. Tente fazer um Login pelo Swagger (com senha certa e depois errada).
+ 3. Olhe na pasta do projeto: deve ter aparecido uma pasta nova chamada `logs`.
+ 4. Abra o arquivo de texto lá dentro. Você verá o histórico do que aconteceu!
 
  ## 🚀 Sessão 16: Deploy Profissional (Windows e Linux)
 
- Chegamos ao **Grand Finale**! 🏆
- Vamos tirar o sistema do `localhost` e prepará-lo para rodar em um servidor real.
-
- Usaremos a arquitetura de **Proxy Reverso**:
- * O **Backend** roda escondido (Serviço).
- * O **Servidor Web (IIS/Nginx)** entrega o site e repassa os pedidos de API para o Backend.
-
- 
+ Chegamos ao **Grand Finale**! 🏆 Vamos tirar o sistema do `localhost` e prepará-lo para rodar em um servidor real.
 
  ### 🛠️ Passo 1: Preparando o Código da API
 
- Para que a API rode como um "Serviço do Windows" ou "Systemd do Linux" sem erros, precisamos instalar as extensões nativas.
+ **1. Instale os pacotes na API:**
 
- 1. **Instale os pacotes na API:**
-    No terminal `src/LivrariaCentral.API`:
-    ```bash
-    dotnet add package Microsoft.Extensions.Hosting.WindowsServices
-    dotnet add package Microsoft.Extensions.Hosting.Systemd
-    ```
+ ```bash
+ dotnet add package Microsoft.Extensions.Hosting.WindowsServices
+ dotnet add package Microsoft.Extensions.Hosting.Systemd
+ ```
 
- 2. **Configure o `Program.cs` da API:**
-    Adicione as linhas `UseWindowsService` e `UseSystemd` logo após criar o builder. Isso garante que a API entenda os sinais de "Iniciar" e "Parar" do sistema operacional.
+ **2. Configure o `Program.cs`:**
 
-    ```csharp
-    var builder = WebApplication.CreateBuilder(args);
+ ```csharp
+ var builder = WebApplication.CreateBuilder(args);
 
-    // --- CONFIGURAÇÃO DE SERVIÇO (DEPLOY) ---
-    builder.Host.UseWindowsService(); // Habilita rodar como Serviço do Windows
-    builder.Host.UseSystemd();        // Habilita rodar como Daemon do Linux
-    // ----------------------------------------
-
-    // O Serilog já estava aqui da sessão anterior
-    builder.Host.UseSerilog((context, configuration) => ... );
-    
-    // ... resto do código
-    ```
-
- ---
+ // --- CONFIGURAÇÃO DE SERVIÇO (DEPLOY) ---
+ builder.Host.UseWindowsService(); // Habilita rodar como Serviço do Windows
+ builder.Host.UseSystemd();        // Habilita rodar como Daemon do Linux
+ ```
 
  ### 🏗️ Passo 2: Gerando os Arquivos (Publish)
 
- Vamos gerar a versão final, otimizada e sem código fonte, pronta para copiar para o servidor.
-
- Rode estes comandos na **raiz da solução** (onde está o `.sln`):
+ Rode estes comandos na **raiz da solução**:
 
  ```bash
- # 1. Compila o Frontend (Gera HTML/CSS/DLLs na pasta deploy/frontend)
+ # 1. Compila o Frontend
  dotnet publish src/LivrariaCentral.Web -c Release -o ./deploy/frontend
 
- # 2. Compila o Backend para WINDOWS (Gera .exe na pasta deploy/backend)
+ # 2. Compila o Backend para WINDOWS
  dotnet publish src/LivrariaCentral.API -c Release -r win-x64 --self-contained true -o ./deploy/backend
-
- # (OU, se seu servidor for LINUX, use este comando:)
- # dotnet publish src/LivrariaCentral.API -c Release -r linux-x64 --self-contained true -o ./deploy/backend
  ```
-
- > **🐈 Pulo do Gato:** Antes de subir para o servidor, abra o arquivo `deploy/frontend/wwwroot/appsettings.json` e altere o `ApiUrl` para o endereço real do seu servidor (ex: `http://meusite.com/api` ou mantenha `http://localhost:5000` se for usar a config de Nginx abaixo).
-
- ---
 
  ### 🪟 Passo 3: Configuração no Windows (IIS + Serviço)
 
- #### A. Instalando a API (Windows Service)
- O Backend vai rodar "invisível" em segundo plano.
-
- 1. Abra o **CMD** ou **PowerShell** como **Administrador**.
- 2. Crie o serviço (Atenção: o espaço depois do `=` é obrigatório!):
-    ```cmd
-    sc create LivrariaAPI binPath= "C:\deploy\backend\LivrariaCentral.API.exe" start= auto
-    ```
- 3. Inicie o serviço:
-    ```cmd
-    sc start LivrariaAPI
-    ```
- 4. Teste: Abra o navegador no servidor e acesse `http://localhost:5000/swagger`. Se abrir, o backend está vivo!
-
- #### B. Instalando o Frontend (IIS)
-
- 1. Instale o **.NET Core Hosting Bundle** (procure no Google e instale no servidor). Ele configura o IIS para entender .NET.
- 2. Instale o módulo **URL Rewrite** do IIS (Obrigatório para Blazor funcionar).
- 3. Abra o **Gerenciador do IIS (Inetmgr)**.
- 4. Botão direito em "Sites" -> "Adicionar Site":
-    * **Nome do Site:** LivrariaWeb
-    * **Caminho Físico:** `C:\deploy\frontend\wwwroot`
-    * **Porta:** 80
- 5. Acesse `http://localhost` e o site deve abrir!
-
- ---
+ 1.  **Crie o serviço:**
+     ```cmd
+     sc create LivrariaAPI binPath= "C:\deploy\backend\LivrariaCentral.API.exe" start= auto
+     sc start LivrariaAPI
+     ```
+ 2.  **No IIS:** Crie um site apontando para `C:\deploy\frontend\wwwroot` na porta 80.
 
  ### 🐧 Passo 4: Configuração no Linux (Nginx + Systemd)
 
- Se você usa Ubuntu, Debian ou CentOs, este é o caminho.
+ 1.  **Crie o serviço Systemd:** `/etc/systemd/system/livraria-api.service`
+ 2.  **Configure o Nginx (Proxy Reverso):**
 
- #### A. Instalando a API (Systemd)
+ ```nginx
+ server {
+     listen 80;
+     server_name _;
 
- 1. Copie a pasta `backend` gerada para `/var/www/livraria-api`.
- 2. **Importante:** Dê permissão de execução para o arquivo:
-    ```bash
-    sudo chmod +x /var/www/livraria-api/LivrariaCentral.API
-    ```
- 3. Crie o arquivo de serviço:
-    ```bash
-    sudo nano /etc/systemd/system/livraria-api.service
-    ```
- 4. Cole o conteúdo abaixo (Salve com CTRL+O, Saia com CTRL+X):
-    ```ini
-    [Unit]
-    Description=API Livraria .NET
+     location / {
+         root /var/www/livraria-web;
+         try_files $uri $uri/ /index.html =404;
+     }
 
-    [Service]
-    WorkingDirectory=/var/www/livraria-api
-    ExecStart=/var/www/livraria-api/LivrariaCentral.API
-    Restart=always
-    # Reinicia o serviço automaticamente se ele cair
-    RestartSec=10
-    SyslogIdentifier=livraria-api
-    User=www-data
-    Environment=ASPNETCORE_ENVIRONMENT=Production
-    Environment=ASPNETCORE_URLS=http://localhost:5000
-
-    [Install]
-    WantedBy=multi-user.target
-    ```
- 5. Ative e Inicie o serviço:
-    ```bash
-    sudo systemctl enable livraria-api.service
-    sudo systemctl start livraria-api.service
-    ```
-
- #### B. Instalando o Frontend (Nginx)
-
- 1. Copie a pasta `frontend/wwwroot` para `/var/www/livraria-web`.
- 2. Instale o Nginx: `sudo apt install nginx`.
- 3. Configure o site:
-    ```bash
-    sudo nano /etc/nginx/sites-available/livraria
-    ```
- 4. Cole a configuração (Proxy Reverso):
-    ```nginx
-    server {
-        listen 80;
-        server_name _; # Aceita qualquer domínio ou IP
-
-        # CONFIGURAÇÃO DO FRONTEND (Arquivos Estáticos)
-        location / {
-            root /var/www/livraria-web;
-            index index.html;
-            # O segredo do SPA: Se não achar o arquivo, manda pro index.html
-            try_files $uri $uri/ /index.html =404;
-        }
-
-        # CONFIGURAÇÃO DO BACKEND (Repassa chamadas /api para a porta 5000)
-        location /api {
-            proxy_pass http://localhost:5000;
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection keep-alive;
-            proxy_set_header Host $host;
-            proxy_cache_bypass $http_upgrade;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-        }
-    }
-    ```
- 5. Ative o site e reinicie o Nginx:
-    ```bash
-    sudo ln -s /etc/nginx/sites-available/livraria /etc/nginx/sites-enabled/
-    sudo nginx -t # Testa se a config está válida
-    sudo service nginx restart
-    ```
-
-
- **Parabéns!** 🎉
- Seu sistema Fullstack .NET agora está rodando em produção, seguro e performático. Você completou a jornada de Zero a Hero! 🚀
+     location /api {
+         proxy_pass http://localhost:5000;
+         proxy_http_version 1.1;
+         proxy_set_header Upgrade $http_upgrade;
+         proxy_set_header Connection keep-alive;
+         proxy_cache_bypass $http_upgrade;
+     }
+ }
+ ```
